@@ -1,0 +1,14 @@
+# Lo que npm instala se reconstruye con `npm ci` desde package-lock.json: no se sube.
+node_modules/
+
+# Lo que Vite y tsc generan se reconstruye con `npm run build`: no se sube.
+dist/
+*.tsbuildinfo
+
+# Las figuras compiladas con tsc se regeneran: solo se sube el .tsx.
+programas/**/fig*.js
+
+# Variables locales de cada quien (Vite lee .env.local y .env.*.local): nunca se suben.
+*.local
+
+.DS_Store

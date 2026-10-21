@@ -1,0 +1,8 @@
+1. sin red, se monta el componente:
+  status=pending fetchStatus=paused   sin datos
+2. vuelve la red:
+  status=pending fetchStatus=fetching sin datos
+  status=success fetchStatus=idle     4 servicios
+3. la API se cae y se pide otra vez:
+  status=success fetchStatus=fetching 4 servicios
+  status=error   fetchStatus=idle     4 servicios

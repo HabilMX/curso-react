@@ -1,0 +1,7 @@
+  (dibujo del envío 0)
+  (dibujo del envío 1)
+envío 1: «Revisa los campos marcados.» → cambios en role="alert": 1
+  (dibujo del envío 2)
+envío 2: «Revisa los campos marcados.» → cambios en role="alert": 0
+  (dibujo del envío 3)
+envío 3: «ya existe un servicio llamado correo» → cambios en role="alert": 1

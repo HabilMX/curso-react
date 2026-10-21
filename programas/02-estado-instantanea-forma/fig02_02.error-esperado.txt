@@ -1,0 +1,17 @@
+
+~/curso-react/figuras/fig02_02.tsx
+  22:5  error  Error: This value cannot be modified
+
+Modifying a value returned from 'useState()', which should not be modified directly. Use the setter function to update instead.
+
+~/curso-react/figuras/fig02_02.tsx:22:5
+  20 |
+  21 |   function mutar(): void {
+> 22 |     notas.pagos = "se reinició a las 9:40";
+     |     ^^^^^ `notas` cannot be modified
+  23 |     establecerNotas(notas);
+  24 |   }
+  25 |  react-hooks/immutability
+
+✖ 1 problem (1 error, 0 warnings)
+

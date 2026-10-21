@@ -1,0 +1,6 @@
+A, con valor por omisión:
+  en pantalla: "0 avisos"
+  después del clic: "0 avisos"
+B, con el hook que lanza:
+  error al dibujar: useAvisos necesita un <ProveedorAvisos> más arriba en el árbol
+  en pantalla: ""

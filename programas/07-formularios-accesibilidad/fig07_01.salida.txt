@@ -1,0 +1,7 @@
+1. no controlado (defaultValue):
+  escribí «correo2» → el campo dice «correo2»
+2. controlado (value + onChange):
+  escribí «correo2» → el campo dice «CORREO2»
+3. value sin onChange:
+  [aviso de React] You provided a `value` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultValue`. Otherwise, set either `onChange` or `readOnly`.
+  escribí «correo2» → el campo dice «correo»

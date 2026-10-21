@@ -1,0 +1,6 @@
+un contexto con { cuantos, despachar }:
+  en pantalla: "3 avisos"
+  dibujos de la bandeja: 4   dibujos del botón: 4
+dos contextos, estado y despacho:
+  en pantalla: "3 avisos"
+  dibujos de la bandeja: 4   dibujos del botón: 1

@@ -1,0 +1,10 @@
+replace: false
+  tecleó «p»: /?q=p (PUSH)
+  tecleó «pa»: /?q=pa (PUSH)
+  tecleó «pag»: /?q=pag (PUSH)
+  botón Atrás:  /?q=pa
+replace: true
+  tecleó «p»: /?q=p (REPLACE)
+  tecleó «pa»: /?q=pa (REPLACE)
+  tecleó «pag»: /?q=pag (REPLACE)
+  botón Atrás:  /servicios/pagos

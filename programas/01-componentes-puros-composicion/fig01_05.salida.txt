@@ -1,0 +1,6 @@
+con 2 fallas:
+  fallas && …     <p class="resumen">4 servicios revisados<strong> · 2 con falla</strong></p>
+  fallas > 0 && … <p class="resumen">4 servicios revisados<strong> · 2 con falla</strong></p>
+con 0 fallas:
+  fallas && …     <p class="resumen">4 servicios revisados0</p>
+  fallas > 0 && … <p class="resumen">4 servicios revisados</p>

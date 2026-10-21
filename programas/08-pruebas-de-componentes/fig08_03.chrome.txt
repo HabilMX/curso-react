@@ -1,0 +1,12 @@
+1. el foco en un botón que se desactiva
+   después de focus(): foco en #enviar
+   después de disabled = true: foco en #enviar
+   dos cuadros después: foco en body
+2. el foco en un elemento con display: none
+   display calculado: none
+   después de focus(): foco en #enviar
+3. el diseño
+   getBoundingClientRect(): 81.21875 × 21 en (8, 8)
+   offsetWidth: 81
+4. la hoja de estilos
+   opacity: 0.6, cursor: not-allowed

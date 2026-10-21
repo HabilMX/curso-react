@@ -1,0 +1,18 @@
+con alRecibir en las dependencias:
+ dibujo 1
+  arranca el intervalo
+ dibujo 2
+  detiene el intervalo
+  arranca el intervalo
+ dibujo 3
+  detiene el intervalo
+  arranca el intervalo
+ desmontar
+  detiene el intervalo
+con useEffectEvent:
+ dibujo 1
+  arranca el intervalo
+ dibujo 2
+ dibujo 3
+ desmontar
+  detiene el intervalo

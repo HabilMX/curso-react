@@ -1,0 +1,12 @@
+sin error:
+  html:        <input id="nombre" aria-invalid="false" aria-describedby="nombre-ayuda" name="nombre">
+  nombre:      «Nombre»
+  descripción: «Un nombre corto y único, por ejemplo: correo»
+con error:
+  html:        <input id="nombre" aria-invalid="true" aria-describedby="nombre-error nombre-ayuda" name="nombre">
+  nombre:      «Nombre»
+  descripción: «escribe un valor Un nombre corto y único, por ejemplo: correo»
+sin relaciones:
+  html:        <input name="nombre">
+  nombre:      «»
+  descripción: «»

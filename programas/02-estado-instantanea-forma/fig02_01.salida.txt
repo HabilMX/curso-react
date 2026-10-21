@@ -1,0 +1,6 @@
+con el valor (revisiones + 1, tres veces):
+  dentro del clic, revisiones vale 0
+  después del clic, el botón dice 1
+con la forma actualizadora (actual => actual + 1, tres veces):
+  dentro del clic, revisiones vale 0
+  después del clic, el botón dice 3

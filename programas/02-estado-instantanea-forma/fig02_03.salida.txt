@@ -1,0 +1,6 @@
+sin key:
+  escribes en pagos:    «Nota sobre pagos» → borrador «llamar al proveedor»
+  eliges reportes:      «Nota sobre reportes» → borrador «llamar al proveedor»
+con key={nombre}:
+  escribes en pagos:    «Nota sobre pagos» → borrador «llamar al proveedor»
+  eliges reportes:      «Nota sobre reportes» → borrador «»

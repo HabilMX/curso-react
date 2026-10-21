@@ -1,0 +1,41 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+  button[aria-disabled="true"] { opacity: 0.6; cursor: not-allowed; }
+  .oculto { display: none; }
+</style>
+<button type="submit" id="enviar">Dar de alta</button>
+<button type="button" id="escondido" class="oculto">Escondido</button>
+<pre id="salida"></pre>
+<script>
+  const lineas = [];
+  const log = (t) => lineas.push(t);
+  const enviar = document.getElementById("enviar");
+  const escondido = document.getElementById("escondido");
+  const quien = () => { const a = document.activeElement; return a === null ? "nadie" : a.id === "" ? a.tagName.toLowerCase() : "#" + a.id; };
+  const cuadro = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+  (async () => {
+    log("1. el foco en un botón que se desactiva");
+    enviar.focus();
+    log("   después de focus(): foco en " + quien());
+    enviar.disabled = true;
+    log("   después de disabled = true: foco en " + quien());
+    await cuadro();
+    log("   dos cuadros después: foco en " + quien());
+    enviar.disabled = false;
+    enviar.focus();
+    log("2. el foco en un elemento con display: none");
+    escondido.focus();
+    log("   display calculado: " + getComputedStyle(escondido).display);
+    log("   después de focus(): foco en " + quien());
+    log("3. el diseño");
+    const c = enviar.getBoundingClientRect();
+    log("   getBoundingClientRect(): " + c.width + " × " + c.height + " en (" + c.x + ", " + c.y + ")");
+    log("   offsetWidth: " + enviar.offsetWidth);
+    log("4. la hoja de estilos");
+    enviar.setAttribute("aria-disabled", "true");
+    const e = getComputedStyle(enviar);
+    log("   opacity: " + e.opacity + ", cursor: " + e.cursor);
+    document.getElementById("salida").textContent = lineas.join("\n");
+  })();
+</script>

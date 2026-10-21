@@ -1,0 +1,9 @@
+key={posicion}
+  filas creadas desde cero: 1 de 5
+  correo (nació como catálogo) | catálogo (nació como pagos) | pagos (nació como inventario) | inventario (nació como reportes) | reportes
+key={`${posicion}-${nombre}`}
+  filas creadas desde cero: 5 de 5
+  correo | catálogo | pagos | inventario | reportes
+key={nombre}
+  filas creadas desde cero: 1 de 5
+  correo | catálogo | pagos | inventario | reportes

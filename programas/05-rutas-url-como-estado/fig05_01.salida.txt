@@ -1,0 +1,5 @@
+/                          → [disposición] reporte
+/servicios/pagos           → [disposición] servicio «pagos»
+/servicios/cat%C3%A1logo   → [disposición] servicio «catálogo»
+/servicios                 → [disposición] no existe /servicios
+/servicios/pagos/extra     → [disposición] no existe /servicios/pagos/extra

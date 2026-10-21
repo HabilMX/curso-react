@@ -1,0 +1,107 @@
+body {
+  font-family: system-ui, sans-serif;
+  margin: 2rem auto;
+  max-width: 40rem;
+  padding: 0 1rem;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  border-left: 0.5rem solid #888;
+  margin: 0.5rem 0;
+  padding: 0.5rem 0.75rem;
+}
+
+li.disponible {
+  border-color: #1a7f37;
+}
+
+li.falla {
+  border-color: #cf222e;
+}
+
+.tarjeta {
+  border: 1px solid #d0d7de;
+  border-radius: 0.5rem;
+  padding: 0 1rem 1rem;
+}
+
+.resumen strong {
+  color: #cf222e;
+}
+
+.seleccionar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  font-weight: bold;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.seleccionar[aria-pressed="true"] {
+  text-decoration-thickness: 3px;
+}
+
+.detalle {
+  background: #f6f8fa;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  padding: 0.5rem 1rem 1rem;
+}
+
+.editor-nota textarea {
+  display: block;
+  margin: 0.5rem 0;
+  width: 100%;
+}
+
+.viejo,
+.limite-de-error {
+  border-left: 0.5rem solid #bf8700;
+  padding-left: 0.75rem;
+}
+
+header nav a {
+  margin-right: 1rem;
+}
+
+header nav a.active {
+  font-weight: bold;
+}
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.preferencias {
+  border: none;
+  display: flex;
+  gap: 1rem;
+  padding: 0;
+}
+
+.bandeja ul {
+  margin: 0.5rem 0;
+}
+
+.bandeja li.aviso-exito {
+  border-color: #1a7f37;
+}
+
+.bandeja li.aviso-error {
+  border-color: #cf222e;
+}
+
+main.compacto li {
+  margin: 0.125rem 0;
+  padding: 0.125rem 0.5rem;
+}

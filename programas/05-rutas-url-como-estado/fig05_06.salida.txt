@@ -1,0 +1,10 @@
+1. sin ErrorBoundary:
+  pantalla:    Unexpected Application Error!la página se rompió al dibujar
+  encabezado:  no está
+  role=alert:  no está
+  avisos de consola: 2
+2. con ErrorBoundary en la ruta raíz:
+  pantalla:    Algo salió mal al dibujar el panella página se rompió al dibujar
+  encabezado:  no está
+  role=alert:  está
+  avisos de consola: 2

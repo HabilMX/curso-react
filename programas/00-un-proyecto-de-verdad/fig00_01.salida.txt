@@ -1,0 +1,8 @@
+sin StrictMode:
+  panel: empieza a sincronizar
+  panel: deja de sincronizar
+con StrictMode:
+  panel: empieza a sincronizar
+  panel: deja de sincronizar
+  panel: empieza a sincronizar
+  panel: deja de sincronizar

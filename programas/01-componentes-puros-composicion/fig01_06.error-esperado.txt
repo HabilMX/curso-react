@@ -1,0 +1,40 @@
+
+~/curso-react/figuras/fig01_06.tsx
+  51:8  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+~/curso-react/figuras/fig01_06.tsx:51:8
+  49 |         actualizar ({vueltas})
+  50 |       </button>
+> 51 |       <ContadorDeDentro />
+     |        ^^^^^^^^^^^^^^^^ This component is created during render
+  52 |     </section>
+  53 |   );
+  54 | }
+
+~/curso-react/figuras/fig01_06.tsx:37:3
+  35 |   const [vueltas, establecerVueltas] = useState(0);
+  36 |
+> 37 |   function ContadorDeDentro() {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 38 |     const [clics, establecerClics] = useState(0);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 39 |     return (
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 40 |       <button type="button" className="mas" onClick={() => establecerClics((n) => n + 1)}>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 41 |         clics: {clics}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 42 |       </button>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 43 |     );
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 44 |   }
+     | ^^^^ The component is created during render here
+  45 |
+  46 |   return (
+  47 |     <section>  react-hooks/static-components
+
+✖ 1 problem (1 error, 0 warnings)
+

@@ -1,0 +1,37 @@
+
+~/curso-react/figuras/fig03_02.tsx
+  10:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+~/curso-react/figuras/fig03_02.tsx:10:5
+   8 |
+   9 |   useEffect(() => {
+> 10 |     establecerFallas(estados.filter((estado) => estado.tipo === "falla").length);
+     |     ^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  11 |   }, [estados]);
+  12 |
+  13 |   return <p>{fallas} servicios con falla</p>;              react-hooks/set-state-in-effect
+  22:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+~/curso-react/figuras/fig03_02.tsx:22:7
+  20 |     if (pedido) {
+  21 |       void fetch(`/api/servicios/${encodeURIComponent(nombre)}/reintento`, { method: "POST" });
+> 22 |       establecerPedido(false);
+     |       ^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  23 |     }
+  24 |   }, [pedido, nombre]);
+  25 |  react-hooks/set-state-in-effect
+
+✖ 2 problems (2 errors, 0 warnings)
+

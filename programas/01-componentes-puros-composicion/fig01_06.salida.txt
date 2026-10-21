@@ -1,0 +1,2 @@
+definido fuera: dos clics → «clics: 2»; el padre se actualiza → «clics: 2»
+definido dentro: dos clics → «clics: 2»; el padre se actualiza → «clics: 0»

@@ -1,0 +1,16 @@
+1) primera vez:
+  render: Lista
+  render: Fila catálogo
+  render: Fila inventario
+  commit: cambios en el DOM = 1
+2) mismos datos:
+  render: Lista
+  render: Fila catálogo
+  render: Fila inventario
+  commit: cambios en el DOM = 0
+3) cambia un número:
+  render: Lista
+  render: Fila catálogo
+  render: Fila inventario
+  commit: cambios en el DOM = 1
+DOM final: <ul><li>catálogo: 42 ms</li><li>inventario: 97 ms</li></ul>

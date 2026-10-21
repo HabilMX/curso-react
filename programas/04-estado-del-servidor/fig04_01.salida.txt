@@ -1,0 +1,8 @@
+a mano, un Effect por componente:
+  al abrir:          2 llamada(s) a la API
+  al volver, de inmediato se ve: «cargandocargando»
+  al volver:         2 llamada(s) a la API
+con TanStack Query, misma clave:
+  al abrir:          1 llamada(s) a la API
+  al volver, de inmediato se ve: «4 servicios4 servicios»
+  al volver:         0 llamada(s) a la API

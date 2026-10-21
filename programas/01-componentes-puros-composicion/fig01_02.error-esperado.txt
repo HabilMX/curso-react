@@ -1,0 +1,17 @@
+
+~/curso-react/figuras/fig01_02.tsx
+  19:3  error  Error: Cannot reassign variables declared outside of the component/hook
+
+Variable `revision` is declared outside of the component/hook. Reassigning this value during render is a form of side effect, which can cause unpredictable behavior depending on when the component happens to re-render. If this variable is used in rendering, use useState instead. Otherwise, consider updating it in an effect. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#side-effects-must-run-outside-of-render).
+
+~/curso-react/figuras/fig01_02.tsx:19:3
+  17 |
+  18 | function ResumenImpuro({ servicios }: { readonly servicios: Servicio[] }) {
+> 19 |   revision = revision + 1;
+     |   ^^^^^^^^ `revision` cannot be reassigned
+  20 |   const ordenados = servicios.sort((a, b) => a.nombre.localeCompare(b.nombre));
+  21 |   const hora = new Date().toISOString().slice(11, 19);
+  22 |  react-hooks/globals
+
+✖ 1 problem (1 error, 0 warnings)
+

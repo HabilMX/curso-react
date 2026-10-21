@@ -1,0 +1,6 @@
+sin key:
+  dirección: pagos · borrador: nota sobre pagos
+  dirección: inventario · borrador: nota sobre pagos
+con key={nombre}:
+  dirección: pagos · borrador: nota sobre pagos
+  dirección: inventario · borrador: nota sobre inventario

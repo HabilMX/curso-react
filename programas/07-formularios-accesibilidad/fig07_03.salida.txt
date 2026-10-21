@@ -1,0 +1,6 @@
+defaultValue fijo en "":
+  pending visto: mismo=false, hijo=false, hijo=true
+  después de la acción, el campo dice «»
+defaultValue desde el estado:
+  pending visto: mismo=false, hijo=false, hijo=true
+  después de la acción, el campo dice «correo»

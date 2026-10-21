@@ -1,0 +1,7 @@
+1. useSearchParams sin enrutador:
+  [consola] useLocation() may be used only in the context of a <Router> component. The above error occurred in the <Filtros> component. React will try to recreate this component tree from scratch using the error boundary you provided, Limite.
+  pantalla: [límite propio] useLocation() may be used only in the context of a <Router> component.
+2. una ruta que lanza, dentro de RouterProvider:
+  [consola] la página se rompió al dibujar The above error occurred in the <Rota> component. React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+  [consola] React Router caught the following error during render la página se rompió al dibujar
+  pantalla: Unexpected Application Error!la página se rompió al dibujar

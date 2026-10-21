@@ -1,0 +1,6 @@
+seis agregados: [6:f, 5:e, 4:d, 3:c, 2:b] siguienteId=7
+descartado el 3: [6:f, 5:e, 4:d, 2:b] siguienteId=7
+todos descartados: [] siguienteId=7
+la misma acción sobre el mismo estado da lo mismo: true
+el estado de antes sigue intacto: 5 avisos
+el estado inicial sigue vacío: 0 avisos

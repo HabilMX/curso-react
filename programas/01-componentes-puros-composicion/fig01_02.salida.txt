@@ -1,0 +1,4 @@
+1) el arreglo antes de dibujar:   pagos, catálogo, reportes
+2) el arreglo después de dibujar: catálogo, pagos, reportes
+3) se montó una vez y el contador dice: 2
+4) mismas props, ¿misma hora en los dos dibujos? no

@@ -1,0 +1,2 @@
+React atrapó: No QueryClient set, use QueryClientProvider to set one
+En pantalla: Algo salió mal al dibujar el panel: No QueryClient set, use QueryClientProvider to set one

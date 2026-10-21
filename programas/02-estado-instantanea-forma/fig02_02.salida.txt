@@ -1,0 +1,3 @@
+al montar:      pantalla «notas guardadas: 0», dibujos: 1
+clic en «mutar»: pantalla «notas guardadas: 0», dibujos: 1
+clic en «copiar»: pantalla «notas guardadas: 1», dibujos: 2

@@ -1,0 +1,8 @@
+primer reporte, con pagos elegido:
+  lista: catálogo=disponible, pagos=falla
+  guarda el objeto: pagos está falla
+  guarda el nombre: pagos está falla
+llega el siguiente sondeo (pagos se recuperó):
+  lista: catálogo=disponible, pagos=disponible
+  guarda el objeto: pagos está falla
+  guarda el nombre: pagos está disponible

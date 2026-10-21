@@ -1,0 +1,7 @@
+sin limpieza:
+  a los 100 ms: inventario: detalle de inventario
+  a los 500 ms: inventario: detalle de pagos
+con limpieza:
+  (pagos: petición cancelada)
+  a los 100 ms: inventario: detalle de inventario
+  a los 500 ms: inventario: detalle de inventario

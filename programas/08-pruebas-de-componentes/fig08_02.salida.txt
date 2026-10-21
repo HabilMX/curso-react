@@ -1,0 +1,45 @@
+nativo:
+   getByText("Descartar"): lo encuentra
+   getByRole("button", { name: "Descartar: Se dio de alta correo" }): lo encuentra
+   getByRole("button", { name: "Descartar" }): Unable to find an accessible element with the role "button" and name "Descartar"
+   getByLabelText("Nombre"): lo encuentra
+   getByRole("textbox", { name: "Nombre" }): lo encuentra
+imitación:
+   getByText("Descartar"): lo encuentra
+   getByRole("button", { name: "Descartar: Se dio de alta correo" }): Unable to find an accessible element with the role "button" and name "Descartar: Se dio de alta correo"
+   getByRole("button", { name: "Descartar" }): Unable to find an accessible element with the role "button" and name "Descartar"
+   getByLabelText("Nombre"): Unable to find a label with the text of: Nombre
+   getByRole("textbox", { name: "Nombre" }): Unable to find an accessible element with the role "textbox" and name "Nombre"
+logRoles del nativo:
+region:
+
+Name "Nativo":
+<section
+  aria-label="Nativo"
+/>
+
+--------------------------------------------------
+paragraph:
+
+Name "":
+<p />
+
+--------------------------------------------------
+button:
+
+Name "Descartar: Se dio de alta correo":
+<button
+  aria-label="Descartar: Se dio de alta correo"
+  type="button"
+/>
+
+--------------------------------------------------
+textbox:
+
+Name "Nombre":
+<input
+  id="nombre"
+  name="nombre"
+/>
+
+--------------------------------------------------

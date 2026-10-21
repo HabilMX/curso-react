@@ -1,0 +1,11 @@
+1. antes de que lleguen los datos
+   getByRole("list")   lanza: Unable to find an accessible element with the role "list"
+   queryByRole("list") devuelve: null
+   getByRole("status") lanza: Found multiple elements with the role "status"
+   getAllByRole("status") encuentra: 2
+   getByText("Cargando…") tiene role="status"
+2. esperando con findBy
+   findByRole("list") la encontró, con 2 elementos
+   queryByText("Cargando…") ahora devuelve: null
+3. lo que nunca aparece
+   findByRole("table") rechaza: Unable to find role="table"

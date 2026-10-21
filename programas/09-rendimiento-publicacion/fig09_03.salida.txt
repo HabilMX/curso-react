@@ -1,0 +1,6 @@
+1. texto como hijo de JSX:
+  <strong>&lt;img src=x onerror=&quot;alert(1)&quot;&gt;</strong>
+2. texto en un atributo:
+  <li title="&lt;img src=x onerror=&quot;alert(1)&quot;&gt;">pagos</li>
+3. una URL javascript: en href:
+  <a href="javascript:throw new Error(&#x27;React has blocked a javascript: URL as a security precaution.&#x27;)">pagos</a>

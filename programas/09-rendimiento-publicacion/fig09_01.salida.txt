@@ -1,0 +1,6 @@
+A. el borrador vive en el panel:
+  5 teclas → la lista se dibujó 6 veces: mount, update, update, update, update, update
+  dibujos de la lista que tardaron 20 ms o más: 6
+B. el borrador vive en CampoNota:
+  5 teclas → la lista se dibujó 1 vez: mount
+  dibujos de la lista que tardaron 20 ms o más: 1

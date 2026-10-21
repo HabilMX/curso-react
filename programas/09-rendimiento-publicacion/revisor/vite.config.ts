@@ -14,5 +14,8 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     setupFiles: ["./src/pruebas/preparar.ts"],
+    // Sin esto, Vitest entrega cada .css como un texto vacío, también con `?raw`,
+    // y la prueba de la hoja de estilos pasaría sin haber leído nada.
+    css: { include: [/panel\.css/] },
   },
 });

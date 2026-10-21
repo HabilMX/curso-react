@@ -34,25 +34,9 @@ li.falla {
   color: #cf222e;
 }
 
-.seleccionar {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font: inherit;
-  font-weight: bold;
-  padding: 0;
-  text-decoration: underline;
-}
-
-.seleccionar[aria-pressed="true"] {
-  text-decoration-thickness: 3px;
-}
-
-.detalle {
-  background: #f6f8fa;
-  border-radius: 0.5rem;
-  margin: 1rem 0;
-  padding: 0.5rem 1rem 1rem;
+.actualizado {
+  color: #57606a;
+  font-size: 0.875rem;
 }
 
 .editor-nota textarea {

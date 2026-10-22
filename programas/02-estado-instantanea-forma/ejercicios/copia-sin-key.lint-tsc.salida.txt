@@ -1,0 +1,5 @@
+# Corrido el 21-oct-2026 con Node.js 24.22.0 (macOS), sobre una copia del punto de control. Rutas mostradas a partir de ~/curso-react.
+$ npx tsc -b
+tsc: 0
+$ npm run lint
+lint: 0

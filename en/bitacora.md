@@ -8,7 +8,7 @@ This is yours. It is what makes the course *your* course.
 
 ---
 
-## Lesson 0 — A real project: Vite, StrictMode and the linter
+## Lesson 0 — A real project: Vite, StrictMode, and the linter
 
 _date:_
 
@@ -24,7 +24,7 @@ _date:_
 - A component I split up and what I gained from it:
 - A `0` that showed up on screen without my asking for it:
 
-## Lesson 2 — State: snapshot, immutability and shape
+## Lesson 2 — State: snapshot, immutability, and shape
 
 _date:_
 
@@ -62,7 +62,7 @@ _date:_
 - A screen where context was unnecessary and props were enough:
 - A reducer action and the test I wrote for it:
 
-## Lesson 7 — Forms, actions and accessibility
+## Lesson 7 — Forms, actions, and accessibility
 
 _date:_
 
@@ -77,7 +77,7 @@ _date:_
 - A test that stayed green when it should not have, and what I discovered:
 - What I left untested and why I decided it does not matter:
 
-## Lesson 9 — Performance, publishing and when to use a framework
+## Lesson 9 — Performance, publishing, and when to use a framework
 
 _date:_
 

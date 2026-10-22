@@ -17,5 +17,5 @@ export type ValoresAlta = ValoresDe<typeof camposAlta>;
 export type ErroresAlta = ErroresDe<typeof camposAlta>;
 export type TextosAlta = Readonly<Record<keyof typeof camposAlta, string>>;
 
-// Si el contrato y el esquema dejan de coincidir, esta línea deja de compilar.
+// Si el tipo que la API espera y el esquema dejan de coincidir, esta línea deja de compilar.
 export const comprobarContrato: (valores: ValoresAlta) => NuevoServicio = (valores) => valores;

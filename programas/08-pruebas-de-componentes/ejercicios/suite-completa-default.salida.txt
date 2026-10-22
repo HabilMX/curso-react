@@ -1,0 +1,22 @@
+$ npx vitest run --reporter=default src/avisos src/compartido src/reporte/resumen.test.ts src/reporte/PaginaReporte.test.tsx src/app src/detalle/PaginaServicio.test.tsx src/alta
+
+ RUN  v5.0.5 ~/curso-react/revisor
+
+ ✓ src/reporte/resumen.test.ts (3 tests) 5ms
+ ✓ src/avisos/avisos.test.ts (4 tests) 6ms
+ ✓ src/compartido/esquema.test.ts (2 tests) 4ms
+ ✓ src/app/rutas.test.tsx (3 tests) 463ms
+ ✓ src/reporte/PaginaReporte.test.tsx (7 tests) 631ms
+ ✓ src/detalle/PaginaServicio.test.tsx (3 tests) 687ms
+   ✓ la página de un servicio (3)
+     ✓ muestra el detalle del servicio de la dirección 384ms
+ ✓ src/alta/FormularioAlta.test.tsx (5 tests) 909ms
+   ✓ el formulario de alta (5)
+     ✓ con datos válidos envía el alta y confirma 355ms
+
+ Test Files  7 passed (7)
+      Tests  27 passed (27)
+   Start at  16:09:48
+   Duration  4.25s (environment 62%, transform 13%, tests 13%, setup 8%, import 4%, worker 1%)
+
+[código de salida: 0]

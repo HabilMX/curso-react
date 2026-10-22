@@ -12,7 +12,7 @@
 
 **Qué no hace esta lección.** No toca el servidor de práctica: sigue en su versión C, la misma de la lección 4, con las mismas rutas. No usa los *loaders* ni las *actions* de React Router: los datos los sigue trayendo TanStack Query, por razones que se explican en 5.1. No mueve las notas a un contexto de React: suben un nivel, a la disposición de las rutas, y la [Lección 6](06-reducer-contexto.md) discute si ese es su lugar definitivo. No agrega la pantalla de alta, que llega con su ruta `/servicios/nuevo` en la [Lección 7](07-formularios-accesibilidad.md). No prueba las rutas con un enrutador en memoria dentro de una suite: eso es la [Lección 8](08-pruebas-de-componentes.md), aunque las figuras de esta lección ya usan ese enrutador. Y no escribe el servidor que publica `dist/` con reescritura: esta lección demuestra por qué hace falta; la [Lección 9](09-rendimiento-publicacion.md) lo escribe.
 
-**Sobre las corridas.** Todo se ejecutó el 21 de octubre de 2026 con Node.js 24.22.0 y npm 11.19.1, en macOS, con las versiones exactas del `package.json` de esta lección, y con Python 3.12 para el servidor estático de 5.3. El punto de control se instaló desde cero con `npm ci`; `npm run lint` y `npm run build` terminaron bien y produjeron `dist/assets/index-CLDgPzLo.js`, el mismo nombre que dio el punto de control al verificarse en un contenedor Linux (Debian 12, imagen `node:24.22.0-bookworm`). No se corrió en una Linux Mint real; nada de lo que se muestra depende del sistema. `npm ci` imprime en macOS un aviso de `install-scripts` sobre `fsevents@2.3.3`: es una dependencia opcional que solo se instala en macOS para vigilar archivos, no hace falta aprobarla y en tu Mint no aparecerá. Lo que se ve «en el navegador» se midió con Chrome sin ventana (`--headless --dump-dom`) contra `vite preview`, con la opción `--virtual-time-budget`, que adelanta los relojes de la página para no esperar de verdad: por eso las horas de la bitácora del servidor de práctica (en UTC) no sirven para medir demoras en esta lección, solo para contar peticiones. Las corridas del límite de error (5.1.6, ejercicio 3) y las de `curl` de 5.3 se hicieron con la API de práctica en el puerto 3199 y con `vite preview` y el servidor de Python en el 4199, porque en la máquina de las corridas los puertos de siempre estaban ocupados por otros procesos; la lección las muestra con los puertos del curso (3100, 4173 y 4190), que es lo único que cambia. Las figuras se ejecutaron con su propio `package.json` en [`programas/05-rutas-url-como-estado/`](../programas/05-rutas-url-como-estado), junto a `revisor/`; las rutas largas se muestran a partir de `~/curso-react`.
+**Sobre las corridas.** Todo se ejecutó el 21 de octubre de 2026 con Node.js 24.22.0 y npm 11.19.1, en macOS, con las versiones exactas del `package.json` de esta lección, y con Python 3.12 para el servidor estático de 5.3. El punto de control se instaló desde cero con `npm ci`; `npm run lint` y `npm run build` terminaron bien y produjeron `dist/assets/index-CyH_ELFs.js`, el mismo nombre que dio el punto de control al verificarse en un contenedor Linux (Debian 12, imagen `node:24.22.0-bookworm`). No se corrió en una Linux Mint real; nada de lo que se muestra depende del sistema. `npm ci` imprime en macOS un aviso de `install-scripts` sobre `fsevents@2.3.3`: es una dependencia opcional que solo se instala en macOS para vigilar archivos, no hace falta aprobarla y en tu Mint no aparecerá. Lo que se ve «en el navegador» se midió con Chrome sin ventana (`--headless --dump-dom`) contra `vite preview`, con la opción `--virtual-time-budget`, que adelanta los relojes de la página para no esperar de verdad: por eso las horas de la bitácora del servidor de práctica (en UTC) no sirven para medir demoras en esta lección, solo para contar peticiones. Las capturas del detalle se tomaron con una `PaginaServicio` que, si fallaba una actualización, escondía el detalle y el editor de la nota; la de 5.2.1 corrige eso y entrega lo mismo cuando las peticiones salen bien, que es todo lo que esas capturas registran. Las corridas del límite de error (5.1.6, ejercicio 3) y las de `curl` de 5.3 se hicieron con la API de práctica en el puerto 3199 y con `vite preview` y el servidor de Python en el 4199, porque en la máquina de las corridas los puertos de siempre estaban ocupados por otros procesos; la lección las muestra con los puertos del curso (3100, 4173 y 4190), que es lo único que cambia. Las figuras se ejecutaron con su propio `package.json` en [`programas/05-rutas-url-como-estado/`](../programas/05-rutas-url-como-estado), junto a `revisor/`; las rutas largas se muestran a partir de `~/curso-react`. El servidor de práctica (el mismo archivo desde la lección 4) responde `400` con `{"detalle":"nombre de servicio inválido"}` a una dirección con un `%` mal formado, como `/api/servicios/%`, y a su ruta `/reintento`; antes respondía `500`. Se midió con `curl` contra una copia, antes y después, y el proceso siguió vivo en los dos casos.
 
 ## Al terminar vas a poder
 
@@ -131,7 +131,7 @@ export const rutas: RouteObject[] = [
 
 Léelo de afuera hacia adentro, porque así lo lee React Router:
 
-- **La ruta de afuera**, `path: "/"`, dibuja `Disposicion`: el encabezado, la navegación y el lugar donde va la página. Todas las demás rutas son sus **hijas** (`children`), así que la disposición se dibuja siempre, sea cual sea la página. La documentación lo dice así: la ruta del padre se agrega automáticamente a la de cada hija, y las hijas se dibujan en el `<Outlet />` del padre ([React Router, «Routing»](https://reactrouter.com/start/data/routing)).
+- **La ruta de afuera**, `path: "/"`, dibuja `Disposicion`: el encabezado, la navegación y el lugar donde va la página. Todas las demás rutas son sus **hijas** (`children`), así que la disposición envuelve a cualquier página hija (con una excepción que verás en 5.1.6: si un error sube hasta el límite de esta misma ruta, el límite se dibuja en lugar de la disposición). La documentación lo dice así: la ruta del padre se agrega automáticamente a la de cada hija, y las hijas se dibujan en el `<Outlet />` del padre ([React Router, «Routing»](https://reactrouter.com/start/data/routing)).
 - **La ruta índice**, `index: true`, no tiene `path`: es la página que se dibuja en el `<Outlet />` cuando la dirección es exactamente la del padre, `/`. Es el reporte.
 - **`servicios/:nombre`** no empieza con `/` porque es relativa al padre: la dirección completa es `/servicios/:nombre`. Los dos puntos marcan un **segmento dinámico**: cuando la dirección coincide, lo que haya en esa posición se entrega como el parámetro `nombre`.
 - **`*`** coincide con cualquier cosa que ninguna hermana atrapó. Es la página «no encontrada».
@@ -217,7 +217,7 @@ $ node fig05_01.js
 /servicios/pagos/extra     → [disposición] no existe /servicios/pagos/extra
 ```
 
-Cinco direcciones, cinco respuestas, y en las cinco aparece `[disposición]`: la ruta de afuera siempre se dibuja. El tercer renglón adelanta algo de 5.2: la dirección traía `cat%C3%A1logo`, codificada, y el parámetro llegó como `catálogo`. Los dos últimos muestran que un segmento dinámico es **exactamente un segmento**: `/servicios` (le falta) y `/servicios/pagos/extra` (le sobra) no coinciden con `servicios/:nombre`, y los atrapa `*`.
+Cinco direcciones, cinco respuestas, y en las cinco aparece `[disposición]`: mientras nada se rompa, la ruta de afuera se dibuja en todas. El tercer renglón adelanta algo de 5.2: la dirección traía `cat%C3%A1logo`, codificada, y el parámetro llegó como `catálogo`. Los dos últimos muestran que un segmento dinámico es **exactamente un segmento**: `/servicios` (le falta) y `/servicios/pagos/extra` (le sobra) no coinciden con `servicios/:nombre`, y los atrapa `*`.
 
 #### 5.1.3 Crear el enrutador una sola vez, fuera de React
 
@@ -580,7 +580,7 @@ Lo último es conectarlo: la línea `ErrorBoundary: ErrorDeRuta` de `rutas.tsx`,
 <div id="raiz"><div role="alert" class="limite-de-error"><h2>Algo salió mal al dibujar el panel</h2><p>la página se rompió al dibujar</p><button type="button">Recargar la página</button></div></div>
 ```
 
-Es el aviso de la lección 4, palabra por palabra, con su `role="alert"` y su botón. Y en la misma copia, `/?q=pag` siguió dibujando la lista con su encabezado: el límite solo aparece cuando algo se rompe. Dos detalles más. El título se quedó en `Revisor`, el de `index.html`: la página que lanzó nunca terminó de dibujarse, y su Effect de `useTituloDocumento` nunca llegó a ejecutarse. Y el encabezado desapareció, igual que en la figura 6: este límite es el último recurso, el que reemplaza todo. Si quieres que la persona conserve el encabezado y la navegación cuando se rompe **una** página, el límite tiene que estar más adentro; es el ejercicio 3.
+Es el aviso de la lección 4, palabra por palabra, con su `role="alert"` y su botón. Y en la misma copia, `/?q=pag` siguió dibujando la lista con su encabezado: el límite solo aparece cuando algo se rompe. Dos detalles más. El título se quedó en `Revisor`, el de `index.html`: la página que lanzó nunca terminó de dibujarse, y su Effect de `useTituloDocumento` nunca llegó a ejecutarse. Y el encabezado desapareció, igual que en la figura 6: este límite es el último recurso, el que reemplaza todo. Una consecuencia que conviene ver antes de que te sorprenda: aquí el error lo provoca la propia dirección (`?q=romper`), así que el botón «Recargar la página» vuelve a abrir esa misma dirección, vuelve a lanzar y vuelve a mostrar el aviso; recargar no es una salida. Como el encabezado ya no está, tampoco hay un enlace a mano, y la persona tiene que cambiar la dirección a mano. Es una limitación real de este límite de raíz y una razón más para el ejercicio 3, donde el límite más cercano deja a la vista el enlace «Volver al reporte». Si quieres que la persona conserve el encabezado y la navegación cuando se rompe **una** página, el límite tiene que estar más adentro; es el ejercicio 3.
 
 ¿Sobra entonces `LimiteDeError`? No. Los límites de ruta solo ven lo que se dibuja **dentro** de las rutas. Lo que está afuera, como `QueryClientProvider`, queda fuera de su alcance, y para eso sigue `LimiteDeError` en `main.tsx`. Cada uno cuida su piso, y los dos muestran el mismo aviso.
 
@@ -613,10 +613,15 @@ export function PaginaServicio() {
   return (
     <Tarjeta titulo={`Servicio ${nombre}`}>
       {consulta.isPending && <p role="status">Cargando detalle…</p>}
-      {consulta.isError && (
+      {consulta.isError && consulta.data === undefined && (
         <p role="alert">No se pudo cargar el detalle: {consulta.error.message}</p>
       )}
-      {consulta.isSuccess && (
+      {consulta.isError && consulta.data !== undefined && (
+        <p role="alert" className="viejo">
+          Mostrando el último detalle que llegó: la actualización falló ({consulta.error.message}).
+        </p>
+      )}
+      {consulta.data !== undefined && (
         <>
           <dl>
             <dt>Estado</dt>
@@ -654,7 +659,7 @@ export function PaginaServicio() {
 
 La primera línea del componente es la que más hay que entender: `const { nombre = "" } = useParams();`. `useParams` devuelve los segmentos dinámicos de la dirección como un objeto; aquí, `{ nombre: "pagos" }` ([React Router, `useParams`](https://reactrouter.com/api/hooks/useParams)). Su tipo dice que cada valor es `string | undefined`, y no es pesimismo de TypeScript: el hook no sabe en qué ruta lo estás llamando, y un componente podría usarse en una ruta sin `:nombre`. El `= ""` le da un valor por omisión para que el resto del componente trabaje con un `string`. En «El error que vas a ver» vas a quitarlo para ver los cuatro errores que aparecen. En la práctica, esta página solo se dibuja en `servicios/:nombre`, así que `nombre` nunca llega vacío.
 
-Con ese nombre, la página hace lo que hacía `PanelDetalle`: pide el detalle con la misma consulta de la lección 4, `consultaDetalle(nombre)`, cuya clave `["servicio", nombre]` distingue el caché de cada servicio, y ofrece la mutación «Volver a revisar». Lo nuevo es lo que ya no hace falta. En la lección 4, `ContenidoReporte` comprobaba que el servicio elegido existiera en la lista antes de mostrar su panel. Ahora cualquiera puede escribir `/servicios/nada` en la barra de direcciones, y la página no tiene una lista contra la cual comprobar. No hace falta: la API responde 404 para un servicio que no existe, `cargarDetalle` lo convierte en error, y la página muestra la alerta. Así lo entregó Chrome:
+Con ese nombre, la página hace lo que hacía `PanelDetalle`: pide el detalle con la misma consulta de la lección 4, `consultaDetalle(nombre)`, cuya clave `["servicio", nombre]` distingue el caché de cada servicio, y ofrece la mutación «Volver a revisar». Lo nuevo es lo que ya no hace falta. En la lección 4, `ContenidoReporte` comprobaba que el servicio elegido existiera en la lista antes de mostrar su panel. Una cosa del bloque de datos viene de la lección 4 y conviene no perderla: la página dibuja el detalle si hay `data`, y no solo si `isSuccess`, porque cuando una actualización falla `status` pasa a `error` y `data` sigue ahí; con `isSuccess`, el detalle viejo y, peor, el `EditorNota` con el borrador que la persona estaba escribiendo desaparecerían de pantalla justo cuando la red tropieza. Ahora cualquiera puede escribir `/servicios/nada` en la barra de direcciones, y la página no tiene una lista contra la cual comprobar. No hace falta: la API responde 404 para un servicio que no existe, `cargarDetalle` lo convierte en error, y la página muestra la alerta. Así lo entregó Chrome:
 
 ```text
 <title>nada · Revisor</title>
@@ -762,7 +767,7 @@ con key={nombre}:
 
 Sin `key`, la dirección dice `inventario` pero el borrador sigue hablando de `pagos`: `useState` solo usa su valor inicial la primera vez que el componente se monta, y aquí no se volvió a montar. Con `key={nombre}`, React trata cada nombre como un componente distinto, destruye el viejo y crea uno nuevo. En el `revisor`, sin esa `key`, el borrador de la nota de `pagos` aparecería en la página de `inventario`, listo para guardarse en el servicio equivocado.
 
-¿Y por qué la `key` está en `EditorNota` y no en toda la página? Porque lo único que guarda estado propio es el borrador. La consulta del detalle no necesita reiniciarse: su clave incluye el nombre, así que al cambiar el nombre TanStack Query cambia de entrada de caché por sí solo. Y hoy, honestamente, la interfaz del `revisor` no ofrece un camino directo de un detalle a otro: siempre pasas por la lista, y eso desmonta la página. La `key` protege contra el día en que alguien agregue un enlace «servicio siguiente», y es tan barata que no vale la pena esperar a ese día para ponerla.
+¿Y por qué la `key` está en `EditorNota` y no en toda la página? Porque el estado que más daño haría es el borrador, que es el que la persona escribió a mano. La consulta del detalle no necesita reiniciarse: su clave incluye el nombre, así que al cambiar el nombre TanStack Query cambia de entrada de caché por sí solo. Hay un segundo estado propio que la `key` de `EditorNota` no cubre: el de la mutación `useReintentar`, que vive en `PaginaServicio` y conserva su `isError`, su `error` y su `isPending` mientras el componente sea el mismo. Si algún día un enlace llevara de un detalle a otro y la mutación del primero hubiera fallado, el aviso «No se pudo volver a revisar» seguiría en pantalla bajo el segundo servicio. La salida es mover la `key` a la ruta (`key={nombre}` sobre `PaginaServicio`, con lo que se reinicia todo) o llamar a `reintento.reset()` cuando cambie el nombre ([TanStack Query, `useMutation`](https://tanstack.com/query/latest/docs/framework/react/reference/useMutation)). Y hoy, honestamente, la interfaz del `revisor` no ofrece un camino directo de un detalle a otro: siempre pasas por la lista, y eso desmonta la página. La `key` protege contra el día en que alguien agregue un enlace «servicio siguiente», y es tan barata que no vale la pena esperar a ese día para ponerla.
 
 #### 5.2.4 Los filtros en la búsqueda: `useSearchParams`
 
@@ -850,7 +855,7 @@ export function useFiltrosEnUrl(): {
 `useSearchParams` devuelve dos cosas, igual que `useState`: los parámetros actuales, como un objeto `URLSearchParams` del navegador, y una función para cambiarlos que **provoca una navegación** a la dirección nueva ([React Router, `useSearchParams`](https://reactrouter.com/api/hooks/useSearchParams)). `URLSearchParams` es una interfaz estándar con métodos para leer y escribir la búsqueda; su `get` devuelve `null` cuando el parámetro no está ([MDN, `URLSearchParams`](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams)). Cinco decisiones de este archivo merecen su propio renglón:
 
 - **Los filtros se calculan, no se guardan.** No hay un `useState` con los filtros que se «sincronice» con la dirección: cada dibujo los lee de la dirección. Es la regla de la lección 2, «no guardes lo que puedes calcular», aplicada a una fuente de verdad nueva. Si hubiera un `useState` además de la dirección, tendrías dos verdades que pueden discrepar, y la tentación de mantenerlas de acuerdo con un Effect, que es justo lo que el primer criterio del curso prohíbe.
-- **`fallas` vale `"1"` o no existe.** La lectura es `parametros.get("fallas") === "1"`, y al apagar el filtro se **borra** el parámetro en lugar de escribir `fallas=0`. Lo mismo con `q` vacío. Así la dirección sin filtros es `/`, limpia, y no `/?fallas=0&q=`.
+- **`fallas` vale `"1"` o no existe.** La lectura es `parametros.get("fallas") === "1"`: cualquier otro valor, incluido un `?fallas=0` escrito a mano, se lee como filtro apagado. Y al apagar el filtro se **borra** el parámetro en lugar de escribir `fallas=0`. Lo mismo con `q` vacío. Así la dirección sin filtros es `/`, limpia, y no `/?fallas=0&q=`.
 - **La función que cambia recibe solo lo que cambió.** `cambiarFiltros({ soloFallas: true })` no toca el texto, porque `{ ...filtros, ...cambio }` mezcla el cambio con lo que ya había. Por eso el tipo es `Partial<Filtros>`.
 - **Se copia en vez de mutar.** La forma con función, `establecerParametros((actuales) => …)`, recibe los parámetros actuales; el código crea una copia con `new URLSearchParams(actuales)` y cambia la copia. La documentación advierte que el objeto que entrega el hook es mutable, y que si lo cambias sin llamar a la función de cambio, sus valores cambian entre dibujos sin que la dirección lo refleje. Copiar evita esa trampa y conserva cualquier otro parámetro que la dirección traiga. La misma página advierte otra diferencia con `useState`: dos llamadas seguidas en el mismo instante **no** se encadenan como lo haría la forma actualizadora de React. En el `revisor` cada evento llama una sola vez, así que no muerde.
 - **`replace: true`.** Es la decisión que más se nota, y tiene figura propia.
@@ -1352,7 +1357,7 @@ $ curl -s "http://localhost:4173/servicios/cat%C3%A1logo" | head -12
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Revisor</title>
-    <script type="module" crossorigin src="/assets/index-CLDgPzLo.js"></script>
+    <script type="module" crossorigin src="/assets/index-CyH_ELFs.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-yYL09Z4k.css">
   </head>
   <body>
@@ -1360,7 +1365,7 @@ $ curl -s "http://localhost:4173/servicios/cat%C3%A1logo" | head -12
   </body>
 ```
 
-Es `index.html`, con código 200. Y fíjate en las rutas de los archivos: `/assets/index-CLDgPzLo.js`, con `/` al principio. Eso importa más de lo que parece. Si dijera `assets/index-CLDgPzLo.js`, sin la barra, el navegador la resolvería **relativa a la dirección actual**, y desde `/servicios/pagos` pediría `/servicios/assets/index-CLDgPzLo.js`, que no existe. La barra inicial hace que el JavaScript se pida siempre al mismo lugar, sea cual sea la profundidad de la dirección.
+Es `index.html`, con código 200. Y fíjate en las rutas de los archivos: `/assets/index-CyH_ELFs.js`, con `/` al principio. Eso importa más de lo que parece. Si dijera `assets/index-CyH_ELFs.js`, sin la barra, el navegador la resolvería **relativa a la dirección actual**, y desde `/servicios/pagos` pediría `/servicios/assets/index-CyH_ELFs.js`, que no existe. La barra inicial hace que el JavaScript se pida a la raíz del dominio, sea cual sea la profundidad de la dirección. Eso vale mientras la aplicación se publique en la raíz: Vite arma esas rutas con su opción `base`, que por omisión es `/` ([Vite, «Shared Options», `base`](https://vite.dev/config/shared-options#base)). Si algún día la publicas bajo un subdirectorio, como `/revisor/`, hay que fijar `base` en la configuración, porque con `/assets/…` el navegador pediría los archivos a la raíz del dominio y no los encontraría.
 
 El respaldo de `vite preview` es generoso, quizá demasiado. Esto respondió a tres direcciones más:
 
@@ -1387,7 +1392,7 @@ $ curl -s -o /dev/null -w "%{http_code} %{content_type}\n" http://127.0.0.1:4190
 200 text/html
 $ curl -s -o /dev/null -w "%{http_code} %{content_type}\n" http://127.0.0.1:4190/servicios/pagos
 404 text/html;charset=utf-8
-$ curl -s -o /dev/null -w "%{http_code} %{content_type}\n" http://127.0.0.1:4190/assets/index-CLDgPzLo.js
+$ curl -s -o /dev/null -w "%{http_code} %{content_type}\n" http://127.0.0.1:4190/assets/index-CyH_ELFs.js
 200 text/javascript
 ```
 
@@ -1416,7 +1421,7 @@ La bitácora de Python lo deja por escrito:
 127.0.0.1 - - [21/Oct/2026 02:37:43] "GET / HTTP/1.1" 200 -
 127.0.0.1 - - [21/Oct/2026 02:37:43] code 404, message File not found
 127.0.0.1 - - [21/Oct/2026 02:37:43] "GET /servicios/pagos HTTP/1.1" 404 -
-127.0.0.1 - - [21/Oct/2026 02:37:43] "GET /assets/index-CLDgPzLo.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Oct/2026 02:37:43] "GET /assets/index-CyH_ELFs.js HTTP/1.1" 200 -
 127.0.0.1 - - [21/Oct/2026 02:37:43] code 404, message File not found
 127.0.0.1 - - [21/Oct/2026 02:37:43] "GET /servicios/pagos HTTP/1.1" 404 -
 ```
@@ -1527,9 +1532,9 @@ src/detalle/PaginaServicio.tsx(12,45): error TS2345: Argument of type 'string | 
   Type 'undefined' is not assignable to type 'string'.
 src/detalle/PaginaServicio.tsx(13,35): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
   Type 'undefined' is not assignable to type 'string'.
-src/detalle/PaginaServicio.tsx(45,13): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+src/detalle/PaginaServicio.tsx(50,13): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
   Type 'undefined' is not assignable to type 'string'.
-src/detalle/PaginaServicio.tsx(46,33): error TS2538: Type 'undefined' cannot be used as an index type.
+src/detalle/PaginaServicio.tsx(51,33): error TS2538: Type 'undefined' cannot be used as an index type.
 ```
 
 Cuatro errores, uno por cada lugar que **exige** un `string`: la consulta del detalle, la mutación, la propiedad `nombre` de `EditorNota` y el índice `notas[nombre]`. Los otros tres usos (el título de la pestaña, el de la tarjeta y la `key`) no se quejan: una plantilla de texto convierte `undefined` en la palabra `"undefined"` y la pinta en pantalla sin avisar, y ese es un error que TypeScript no atrapa. Es el mismo aviso de 5.2.1 visto desde el compilador: `useParams` no puede prometer que el parámetro existe. Hay tres arreglos razonables: el valor por omisión `= ""` que usa el punto de control; una comprobación al principio que dibuje otra cosa si falta; o, en el modo framework, los tipos generados por ruta. Lo que no es razonable es silenciarlo con `nombre!`: esa admiración le dice a TypeScript «confía en mí», y es exactamente lo que el compilador estaba evitando. (Este error se provocó en una copia del punto de control; el original pasa `tsc -b` limpio.)
@@ -1654,7 +1659,7 @@ Si pusiste las notas en la dirección, piensa en lo que pasaría al compartir el
 
 ## Cómo sé que lo logré
 
-- [ ] `npm ci`, `npm run lint` y `npm run build` terminan bien dentro de `~/curso-react/revisor/`, y `npm run build` deja `dist/assets/index-CLDgPzLo.js` si tu código es idéntico al del punto de control.
+- [ ] `npm ci`, `npm run lint` y `npm run build` terminan bien dentro de `~/curso-react/revisor/`, y `npm run build` deja `dist/assets/index-CyH_ELFs.js` si tu código es idéntico al del punto de control.
 - [ ] `npm ls react-router` muestra `react-router@8.5.0`, y `npm ls react-router-dom` responde `└── (empty)` y sale con código 1, que aquí es lo esperado: no encontró el paquete.
 - [ ] Con el servidor de práctica y `npm run preview` encendidos, abrir `http://localhost:4173/?fallas=1` en una pestaña nueva muestra la casilla marcada y solo `pagos` y `reportes`; el título de la pestaña es `(2) Revisor`.
 - [ ] `http://localhost:4173/servicios/pagos` muestra el detalle de `pagos` y el título `pagos · Revisor`; `http://localhost:4173/no-existe` muestra «Página no encontrada» con el encabezado del `revisor` arriba.

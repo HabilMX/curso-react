@@ -1,0 +1,13 @@
+20c20
+<       {consulta.isError && consulta.data === undefined && (
+---
+>       {consulta.isError && (
+23,28c23
+<       {consulta.isError && consulta.data !== undefined && (
+<         <p role="alert" className="viejo">
+<           Mostrando el último detalle que llegó: la actualización falló ({consulta.error.message}).
+<         </p>
+<       )}
+<       {consulta.data !== undefined && (
+---
+>       {consulta.isSuccess && (

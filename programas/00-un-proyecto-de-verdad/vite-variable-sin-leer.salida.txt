@@ -1,0 +1,16 @@
+# Experimento de 0.4 (qué variables viajan), corrido el 21-oct-2026 con Node.js 24.22.0
+# sobre una copia del punto de control. Nadie en src/ lee VITE_NADIE_LA_LEE.
+$ VITE_NADIE_LA_LEE=valor-que-nadie-lee npx vite build
+...
+✓ built in 66ms
+$ grep -c 'valor-que-nadie-lee' dist/assets/*.js
+0
+
+# Ahora se agrega al final de src/main.tsx el renglón  console.log(import.meta.env);  y se vuelve a construir.
+$ VITE_NADIE_LA_LEE=valor-que-nadie-lee npx vite build
+...
+✓ built in 89ms
+$ grep -c 'valor-que-nadie-lee' dist/assets/*.js
+1
+# El texto que quedó en el JavaScript, alrededor del valor:
+...PROD:!0,SSR:!1,VITE_CADA_MS:`10000`,VITE_NADIE_LA_LEE:`valor-que-nadie-lee`});

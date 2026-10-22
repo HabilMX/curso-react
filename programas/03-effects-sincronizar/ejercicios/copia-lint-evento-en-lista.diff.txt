@@ -1,0 +1,11 @@
+--- revisor/src/reporte/useReporte.ts	2026-10-21 01:41:41
++++ copia-lint-evento-en-lista/src/reporte/useReporte.ts	2026-10-21 16:02:58
+@@ -41,7 +41,7 @@
+       control.abort();
+       clearInterval(temporizador);
+     };
+-  }, [cargar, cadaMs, intento]);
++  }, [cargar, cadaMs, intento, avisarRecibido]);
+ 
+   function recargar(): void {
+     establecerCarga({ tipo: "cargando" });

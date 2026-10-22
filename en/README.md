@@ -20,16 +20,16 @@ It is the same problem as in our Go, Rust, TypeScript and Web Fundamentals cours
 
 | Lesson | | What you build | What you learn |
 |---|---|---|---|
-| 0 | [A real project: Vite, StrictMode and the linter](00-un-proyecto-de-verdad.md) | the dashboard from lesson 9 of TypeScript, moved to Vite | what Vite adds; `react-ts`, structure by feature, proxy to the API, `VITE_` variables, React linter enabled |
+| 0 | [A real project: Vite, StrictMode, and the linter](00-un-proyecto-de-verdad.md) | the dashboard from lesson 9 of TypeScript, moved to Vite | what Vite adds; `react-ts`, structure by feature, proxy to the API, `VITE_` variables, React linter enabled |
 | 1 | [Pure components and composition](01-componentes-puros-composicion.md) | the dashboard split into pieces | render and *commit*; purity; `children`; stable `key`; the `0` trap; never a component inside another |
-| 2 | [State: snapshot, immutability and shape](02-estado-instantanea-forma.md) | “failures only” filter, note per service, selection | state as a snapshot; updater form; copy, do not mutate; five rules of shape; lifting state up; `key` to reset |
+| 2 | [State: snapshot, immutability, and shape](02-estado-instantanea-forma.md) | “failures only” filter, note per service, selection | state as a snapshot; updater form; copy, do not mutate; five rules of shape; lifting state up; `key` to reset |
 | 3 | [Effects: synchronizing, not “when it loads”](03-effects-sincronizar.md) | polling every 10 s and detail view that resets | starting and stopping synchronization; cleanup; response race condition; StrictMode; honest dependencies; `useEffectEvent` |
 | 4 | [Server state with TanStack Query](04-estado-del-servidor.md) | the cached report and “retry” button | `useQuery`, `queryKey`, `signal`; `status` and `fetchStatus`; `refetchInterval`; `useMutation`; the empty state; Error Boundary |
 | 5 | [Routes and the URL as state](05-rutas-url-como-estado.md) | list, detail, 404 and filters in the URL | `createBrowserRouter`, `<Outlet />`, `useSearchParams`, `NavLink`; reloading a client route |
 | 6 | [Shared state: reducer and context](06-reducer-contexto.md) | notifications tray and preferences | `useReducer` and pure reducer; two-part context; hook that requires a provider; what state lives where |
-| 7 | [Forms, actions and accessibility](07-formularios-accesibilidad.md) | registering a service | `<form action>`, `useActionState`, `useFormStatus`, `useOptimistic`; validation; `aria-invalid`; live regions; keyboard |
+| 7 | [Forms, actions, and accessibility](07-formularios-accesibilidad.md) | registering a service | `<form action>`, `useActionState`, `useFormStatus`, `useOptimistic`; validation; `aria-invalid`; live regions; keyboard |
 | 8 | [Component tests](08-pruebas-de-componentes.md) | the dashboard's test suite | Vitest and Testing Library; queries by role; `findBy`; `user-event`; the test that turns red when you revert the fix |
-| 9 | [Performance, publishing and when to use a framework](09-rendimiento-publicacion.md) | the `revisor` measured and published | Profiler; React Compiler 1.0; `vite build`; rewrite to `index.html`; Server Components and when to migrate |
+| 9 | [Performance, publishing, and when to use a framework](09-rendimiento-publicacion.md) | the `revisor` measured and published | Profiler; React Compiler 1.0; `vite build`; rewrite to `index.html`; Server Components and when to migrate |
 
 At the end of each lesson there are exercises with their solutions. And the [logbook](bitacora.md) is yours: write down there what was hard for you.
 

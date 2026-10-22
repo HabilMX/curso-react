@@ -1,0 +1,13 @@
+$ npx vitest run --reporter=default src/detalle/EditorNotaIngenua.test.tsx
+
+ RUN  v5.0.5 ~/curso-react/revisor
+
+ ✓ src/detalle/EditorNotaIngenua.test.tsx (1 test) 318ms
+   ✓ el borrador de una nota no se arrastra a otro servicio (versión ingenua) 317ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  16:10:14
+   Duration  1.76s (environment 43%, tests 19%, transform 16%, import 15%, setup 7%)
+
+[código de salida: 0]

@@ -1,4 +1,4 @@
-// Servidor de práctica del curso de React. Responde el mismo contrato público que
+// Servidor de práctica del curso de React. Responde los mismos datos públicos que
 // la API del curso de TypeScript (GET /api/estados y GET /salud) con datos fijos,
 // más el detalle de un servicio, para que el panel tenga a quién preguntarle. No se
 // explica en el curso: el curso es de pantalla. Se arranca con `npm run servidor`.
@@ -83,7 +83,15 @@ const servidor = createServer((solicitud, respuesta) => {
   const servicio = /^\/api\/servicios\/([^/]+)$/.exec(ruta);
 
   if (servicio !== null) {
-    const nombre = decodeURIComponent(servicio[1] ?? "");
+    let nombre: string;
+
+    try {
+      nombre = decodeURIComponent(servicio[1] ?? "");
+    } catch {
+      enviarJson(respuesta, 400, { detalle: "nombre de servicio inválido" });
+      return;
+    }
+
     const estado = estados.find((candidato) => candidato.nombre === nombre);
     const demora = DEMORA_DETALLE_MS[nombre] ?? DEMORA_DETALLE_PREDETERMINADA_MS;
 

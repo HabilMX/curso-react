@@ -1,0 +1,10 @@
+--- revisor/src/detalle/useDetalle.ts	2026-10-21 01:41:40
++++ copia-sin-abort/src/detalle/useDetalle.ts	2026-10-21 16:02:58
+@@ -25,7 +25,6 @@
+       },
+     );
+ 
+-    return () => control.abort();
+   }, [nombre]);
+ 
+   return carga;

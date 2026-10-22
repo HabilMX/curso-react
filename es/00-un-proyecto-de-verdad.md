@@ -8,11 +8,20 @@
 
 **Qué aprendes:** qué agrega Vite sobre un empaquetador armado a mano; la plantilla `react-ts`, sus tres `tsconfig` y la estructura por funcionalidad; el *proxy* hacia la API (sin CORS en desarrollo); las variables `VITE_` y por qué ahí no va ningún secreto; `eslint-plugin-react-hooks` activo desde el primer día
 
-**De dónde vienes.** De la lección 9 del [curso de TypeScript](https://github.com/HabilMX/curso-typescript) de esta casa, o de un lugar parecido: un panel de React que funciona. Ese panel tiene un componente `Panel`, un hook propio `useReporte` que pide `GET /api/estados` con un `AbortController`, una frontera de red `cargar.ts` que valida la respuesta con `esReportePublico`, y un `cliente.tsx` que lo monta. Se empaquetaba con un comando de esbuild de una línea y lo servía el mismo proceso de Node que respondía la API. Si no llevaste ese curso, no importa: todo el código del panel aparece completo en esta lección, y el curso trae un servidor de práctica que responde el mismo contrato. Trabajas en una carpeta nueva, `~/curso-react/revisor/`.
+**De dónde vienes.** De la lección 9 del [curso de TypeScript](https://github.com/HabilMX/curso-typescript) de esta casa, o de un lugar parecido: un panel de React que funciona. Ese panel tiene un componente `Panel`, un hook propio `useReporte` que pide `GET /api/estados` con un `AbortController`, una frontera de red `cargar.ts` que valida la respuesta con `esReportePublico`, y un `cliente.tsx` que lo monta. Se empaquetaba con un comando de esbuild de una línea y lo servía el mismo proceso de Node que respondía la API. Si no llevaste ese curso, no importa: todo el código del panel aparece completo en esta lección, y el curso trae un servidor de práctica que responde con la misma forma de datos. Trabajas en una carpeta nueva, `~/curso-react/revisor/`.
 
 **Qué no hace esta lección.** No cambia lo que el panel hace: ni una pantalla nueva, ni un estado nuevo, ni una regla nueva. El código de React es el mismo de la lección 9 de TypeScript, con dos cambios pequeños que se explican donde aparecen. Tampoco explica a fondo los Effects ni StrictMode: aquí los enciendes y ves qué hacen; la [Lección 3](03-effects-sincronizar.md) los desarma pieza por pieza. No publica nada: la política de seguridad de contenido (CSP), la reescritura a `index.html` y el servidor de producción llegan en la [Lección 9](09-rendimiento-publicacion.md). Y no tiene pruebas automáticas todavía: Vitest y Testing Library llegan en la [Lección 8](08-pruebas-de-componentes.md).
 
-**Sobre las corridas.** Todo se ejecutó el 21 de octubre de 2026 con Node.js 24.22.0 (la versión LTS más reciente ese día) y npm 11.19.1, en macOS, con las versiones exactas que fija el `package.json` de esta lección. Como el curso supone Linux Mint, el punto de control se volvió a instalar desde cero con `npm ci` dentro de un contenedor Linux (Debian 12 con la imagen oficial `node:24.22.0`), y ahí `npm run lint` y `npm run build` dieron la misma salida, con los mismos nombres de archivo en `dist/`. No se corrió en una Linux Mint real, pero nada de lo que se muestra depende del sistema, salvo la palabra `darwin-arm64` de `vite --version`, que en tu Mint dirá `linux-x64`. Lo que se ve «en el navegador» se midió con Chrome sin ventana (`--headless`), que carga la página, ejecuta su JavaScript y entrega el documento resultante: es un navegador real, no una simulación. Las rutas largas que imprimen ESLint y Vite se muestran a partir de `~/curso-react`. Las horas de la bitácora del servidor de práctica están en UTC. Los programas están en [`programas/00-un-proyecto-de-verdad/`](../programas/00-un-proyecto-de-verdad), en el repositorio del curso: `revisor/` es el punto de control y las figuras están junto a él.
+**Sobre las corridas.** Todo se ejecutó el 21 de octubre de 2026 con Node.js 24.22.0 (línea 24 LTS) y npm 11.19.1, en macOS, con las versiones exactas que fija el `package.json` de esta lección. Como el curso supone Linux Mint, el punto de control se volvió a instalar desde cero con `npm ci` dentro de un contenedor Linux (Debian 12 con la imagen oficial `node:24.22.0`), y ahí `npm run lint` y `npm run build` dieron la misma salida, con los mismos nombres de archivo en `dist/`. No se corrió en una Linux Mint real, pero nada de lo que se muestra depende del sistema, salvo la palabra `darwin-arm64` de `vite --version`, que en tu Mint dirá `linux-x64`. Lo que se ve «en el navegador» se midió con Chrome sin ventana (`--headless`), que carga la página, ejecuta su JavaScript y entrega el documento resultante: es un navegador real, no una simulación. Las rutas largas que imprimen ESLint y Vite se muestran a partir de `~/curso-react`. Las horas de la bitácora del servidor de práctica están en UTC. Un día antes, el 20 de octubre, había salido la 24.22.1 de la misma línea, con el mismo npm; las corridas de la lección no se hicieron con ella, pero el punto de control se repitió después con esa versión desde una copia limpia (`npm ci`, `npm run lint` y `npm run build`) y produjo los mismos nombres de archivo en `dist/`, `index-tGGc24Rg.css` e `index-BWNt33lQ.js`; la salida está en `node-24.22.1.salida.txt`. Los programas están en [`programas/00-un-proyecto-de-verdad/`](../programas/00-un-proyecto-de-verdad), en el repositorio del curso: `revisor/` es el punto de control y las figuras están junto a él.
+
+**Antes de empezar: ¿tienes Node.js 24?** Esta lección no instala Node.js; lo da por instalado, así que lo primero es comprobarlo. Abre una terminal y escribe:
+
+```text
+$ node -v
+v24.22.1
+```
+
+Tu número final puede ser otro (aquí se muestra el de la versión más reciente de la línea 24 el día de la revisión), pero debe empezar con `v24`. Si el comando no existe, o dice otra cosa, instala Node.js 24 LTS siguiendo las instrucciones de la página de descargas ([Node.js, «Download»](https://nodejs.org/en/download)), que propone un método según tu sistema, y vuelve a escribir `node -v`. No es un trámite: Vite 8 pide Node.js 20.19 o superior, o 22.12 o superior ([Vite, «Getting Started»](https://vite.dev/guide/)), y el servidor de práctica se ejecuta con `node servidor/practica.ts`, que necesita la 24.12 o una posterior (lo explica 0.2.2). Si tu distribución trae un Node.js más viejo en sus repositorios, el comando existirá y los números no coincidirán con los de la lección: por eso se comprueba antes.
 
 ## Al terminar vas a poder
 
@@ -25,7 +34,7 @@
 
 ## El porqué antes del cómo
 
-El panel de la lección 9 de TypeScript funciona, y funciona por buenas razones: el contrato está validado, el efecto se limpia, la falla de la API se ve como falla. Lo que no tiene es un **proyecto** alrededor. Pregúntale a ese panel cuatro cosas y verás los huecos.
+El panel de la lección 9 de TypeScript funciona, y funciona por buenas razones: la respuesta de la API está validada, el efecto se limpia, la falla de la API se ve como falla. Lo que no tiene es un **proyecto** alrededor. Pregúntale a ese panel cuatro cosas y verás los huecos.
 
 **¿Cuánto tardas en ver un cambio?** Cada vez que tocabas `Panel.tsx` había que volver a empaquetar con esbuild, reiniciar el servidor de Node y recargar la página. Son quince segundos, cien veces al día. Un servidor de desarrollo que vigila tus archivos y le avisa al navegador qué módulo cambió convierte esos quince segundos en menos de uno, y conserva el estado de la pantalla mientras tanto.
 
@@ -35,9 +44,9 @@ El panel de la lección 9 de TypeScript funciona, y funciona por buenas razones:
 
 **¿Quién te avisa cuando rompes una regla de React?** El compilador de TypeScript revisa tipos; no sabe que un hook no se puede llamar después de un `return`, ni que la lista de dependencias de un efecto tiene que nombrar lo que el efecto usa. La lección 9 de TypeScript lo dijo con todas sus letras: «ESLint, en este proyecto, no revisa listas de dependencias; el paquete oficial que lo hace es `eslint-plugin-react-hooks`, y es una buena siguiente instalación». Esa siguiente instalación es hoy, y es la primera de este curso, porque **un criterio que el curso repite en cada lección —si el linter se queja, se cambia el código— solo tiene sentido si el linter está encendido desde el primer día.**
 
-Las cuatro respuestas caben en una herramienta y dos interruptores. La herramienta es **Vite**, la que el propio equipo de React propone cuando quieres construir una aplicación sin un framework ([React, «Build a React app from Scratch»](https://react.dev/learn/build-a-react-app-from-scratch)) y la que reemplazó a Create React App, que el equipo de React retiró para proyectos nuevos el 14 de febrero de 2025 ([React, «Sunsetting Create React App»](https://react.dev/blog/2025/02/14/sunsetting-create-react-app)). Los interruptores son **`StrictMode`**, que hace que React ponga a prueba tus componentes mientras desarrollas, y **`eslint-plugin-react-hooks`**, que revisa las reglas de React antes de ejecutar nada.
+Las cuatro respuestas caben en una herramienta y dos interruptores. La herramienta es **Vite**, una de las que el propio equipo de React cita, junto con Parcel y Rsbuild, cuando quieres construir una aplicación sin un framework ([React, «Build a React app from Scratch»](https://react.dev/learn/build-a-react-app-from-scratch)) y la que reemplazó a Create React App, que el equipo de React retiró para proyectos nuevos el 14 de febrero de 2025 ([React, «Sunsetting Create React App»](https://react.dev/blog/2025/02/14/sunsetting-create-react-app)). Los interruptores son **`StrictMode`**, que hace que React ponga a prueba tus componentes mientras desarrollas, y **`eslint-plugin-react-hooks`**, que revisa las reglas de React antes de ejecutar nada.
 
-La lección tiene siete partes: qué es Vite y qué hace (0.1); el proyecto, sus `tsconfig` y sus carpetas (0.2); el *proxy* (0.3); las variables `VITE_` (0.4); `StrictMode` (0.5); el linter (0.6); y el recorrido completo con el servidor de práctica (0.7). Al final, esto es lo que vas a ver, y vas a saber de dónde sale cada renglón:
+Son tres conceptos nuevos, los del párrafo anterior. El primero es **la herramienta, Vite**, y ocupa cuatro secciones porque responde las tres primeras preguntas: qué es Vite y qué hace (0.1); el proyecto, sus `tsconfig` y sus carpetas (0.2); el *proxy* (0.3); y las variables `VITE_` (0.4). El segundo es el primer interruptor, **`StrictMode`** (0.5). El tercero es el segundo interruptor, **el linter de React** (0.6). La sección 0.7 no agrega un concepto: es el recorrido completo con el servidor de práctica, donde los tres se ven juntos. Al final, esto es lo que vas a ver, y vas a saber de dónde sale cada renglón:
 
 ```text
 $ npm run build
@@ -65,10 +74,10 @@ dist/assets/index-BWNt33lQ.js   221.66 kB │ gzip: 69.47 kB
 
 El comando de esbuild de la lección 9 de TypeScript hacía un solo trabajo: tomar `cliente.tsx`, seguir sus `import`, juntarlo todo en un `cliente.js` y escribirlo en disco. Vite hace **dos trabajos distintos**, y casi todo lo que vas a leer sobre él se entiende mejor si los separas:
 
-1. **El servidor de desarrollo** (`npm run dev`). No junta tu código en un archivo. Sirve cada módulo de tu código por separado, cuando el navegador lo pide, traducido al vuelo de TypeScript y JSX a JavaScript. Los navegadores modernos saben cargar módulos de JavaScript (`<script type="module">` y sus `import`) sin ayuda, así que no hace falta empaquetar para desarrollar. Por eso arranca en un instante sin importar el tamaño del proyecto, y por eso, cuando cambias un archivo, solo ese módulo se vuelve a enviar: es el **reemplazo de módulos en caliente** (HMR, *Hot Module Replacement*), que en React se llama *Fast Refresh* y conserva el estado de los componentes que no cambiaron ([Vite, «Why Vite»](https://vite.dev/guide/why)). Con las **dependencias** (lo que vive en `node_modules/`, como `react`) sí hace una excepción: las **preempaqueta** una vez, al arrancar, para convertir a módulos de JavaScript las que vienen en el formato viejo de Node (CommonJS) y para que una librería hecha de cientos de archivos internos llegue al navegador en una sola petición y no en cientos. Ese preempaquetado solo ocurre en desarrollo y no toca tu código ([Vite, «Dependency Pre-Bundling»](https://vite.dev/guide/dep-pre-bundling)).
+1. **El servidor de desarrollo** (`npm run dev`). No junta tu código en un archivo. Sirve cada módulo de tu código por separado, cuando el navegador lo pide, traducido al vuelo de TypeScript y JSX a JavaScript. Los navegadores modernos saben cargar módulos de JavaScript (`<script type="module">` y sus `import`) sin ayuda, así que no hace falta empaquetar para desarrollar. Por eso arranca en poco tiempo, porque no empaqueta tu código (el tiempo de arranque crece mucho menos con el tamaño del proyecto que en una herramienta que empaqueta todo antes de servir), y por eso, cuando cambias un archivo, solo ese módulo se vuelve a enviar: es el **reemplazo de módulos en caliente** (HMR, *Hot Module Replacement*), que en React se llama *Fast Refresh* y conserva el estado de los componentes que no cambiaron ([Vite, «Why Vite»](https://vite.dev/guide/why)). Con las **dependencias** (lo que vive en `node_modules/`, como `react`) sí hace una excepción: las **preempaqueta** una vez, al arrancar, para convertir a módulos de JavaScript las que vienen en el formato viejo de Node (CommonJS) y para que una librería hecha de cientos de archivos internos llegue al navegador en una sola petición y no en cientos. Ese preempaquetado solo ocurre en desarrollo y no toca tu código ([Vite, «Dependency Pre-Bundling»](https://vite.dev/guide/dep-pre-bundling)).
 2. **La construcción** (`npm run build`). Aquí sí se empaqueta, porque servir cientos de módulos sueltos en producción obliga al navegador a hacer una petición por cada `import` anidado. El resultado es una carpeta `dist/` con un `index.html`, un JavaScript y una hoja de estilos con nombres que cambian cuando cambia su contenido.
 
-Desde Vite 8, publicado el 12 de marzo de 2026, los dos trabajos los hace la misma pieza: **Rolldown**, un empaquetador escrito en Rust, con **Oxc** para leer, traducir y reducir el código. Antes, Vite usaba esbuild en desarrollo y Rollup para construir, y mantenerlos de acuerdo exigía código de pegamento ([Vite, «Announcing Vite 8»](https://vite.dev/blog/announcing-vite8)). Para ti la consecuencia práctica es una sola: lo que ves en desarrollo y lo que se construye pasan por las mismas reglas de traducción.
+Desde Vite 8, publicado el 12 de marzo de 2026, los dos trabajos los hace la misma pieza: **Rolldown**, un empaquetador escrito en Rust, con **Oxc** para leer, traducir y reducir el código. Antes, Vite usaba esbuild en desarrollo y Rollup para construir, y mantenerlos de acuerdo exigía código de pegamento ([Vite, «Announcing Vite 8»](https://vite.dev/blog/announcing-vite8)). Para ti la consecuencia práctica es una sola: lo que ves en desarrollo y lo que se construye pasan por el mismo traductor (en desarrollo, sin empaquetar ni reducir el código).
 
 #### 0.1.2 `index.html` es la puerta de entrada
 
@@ -138,7 +147,7 @@ Los dos guiones sueltos (`--`) separan las opciones de npm de las opciones del c
 - **El linter.** La plantilla de este mes trae **Oxlint**, un linter muy rápido escrito en Rust, con algunas reglas de React. El curso usa ESLint con `eslint-plugin-react-hooks`, que es el paquete que publica el propio equipo de React para revisar sus reglas ([React, «eslint-plugin-react-hooks»](https://react.dev/reference/eslint-plugin-react-hooks)) y el que incluye los diagnósticos del React Compiler que la Lección 9 usa. Oxlint no es una mala elección; es otra, y mezclar dos linters en un curso es ruido. El creador tiene una opción `--eslint` que cambia Oxlint por ESLint, pero se midió el mismo día y agrega además `eslint-plugin-react-refresh` y `globals`, dos paquetes que este curso no usa; por eso aquí se crea sin esa opción y se quita Oxlint a mano, como se explica abajo.
 - **TypeScript.** La plantilla fija TypeScript 6. El curso de TypeScript trabaja con TypeScript 7, y aquí se conserva igual que allá: TypeScript 7 es el que revisa los tipos (`tsc`), y TypeScript 6 se queda, con el nombre `typescript`, solo para que ESLint pueda leer los archivos `.ts`. La razón es medible: `typescript-eslint` declara que soporta TypeScript `>=4.8.4 <6.1.0` ([typescript-eslint, «Dependency Versions»](https://typescript-eslint.io/users/dependency-versions/)), así que todavía no corre con la 7. Son dos papeles distintos; no cambies uno por el otro.
 
-Si no llevaste el curso de TypeScript, no hace falta entender el truco de los alias para seguir: basta saber que `npx tsc --version` dice `Version 7.0.2` y que `npx tsc6 --version` existe solo para ESLint. Un detalle curioso que se midió: el paquete `@typescript/typescript6` está en su versión 6.0.2, pero su ejecutable responde `Version 6.0.3`. No afecta nada; lo anoto porque si lo ves, no es un error tuyo.
+Si no llevaste el curso de TypeScript, no hace falta entender el truco de los alias para seguir: basta saber que `npx tsc --version` dice `Version 7.0.2` y que `npx tsc6 --version` existe solo para ESLint. Un detalle curioso que se midió: el paquete `@typescript/typescript6` está en su versión 6.0.2, pero su ejecutable responde `Version 6.0.3`. No afecta nada; se deja anotado porque, si lo ves, no es un error tuyo.
 
 El punto de control de esta lección no conserva el contador de ejemplo ni la carpeta `public/`: sus archivos se reemplazan por los del panel. Antes de instalar nada, quita lo que la plantilla trae de Oxlint, para que tu proyecto termine igual al del curso: borra el archivo `.oxlintrc.json`, borra en `package.json` el renglón `"oxlint"` de `devDependencies`, y deja su bloque `scripts` igual al que se muestra más abajo (el `lint` de la plantilla dice `oxlint`; el del curso, `eslint . --max-warnings 0`, y se agrega `servidor`). Las dependencias se instalan así, en dos comandos, desde `~/curso-react/revisor/`:
 
@@ -316,7 +325,7 @@ revisor/
 └── vite.config.ts
 ```
 
-`src/reporte/` es la funcionalidad. `src/compartido/` guarda lo que usan varias: hoy, solo el contrato. Los demás archivos de `src/` son los que tocan la aplicación entera: el arranque y la configuración. Esto es el contrato, el mismo de la lección 8 de TypeScript; el único cambio es que `esRegistro` ahora vive aquí mismo, porque el archivo de configuración del servidor del que se importaba no forma parte de este proyecto:
+`src/reporte/` es la funcionalidad. `src/compartido/` guarda lo que usan varias: hoy, solo los tipos de la API (`contrato.ts`). Los demás archivos de `src/` son los que tocan la aplicación entera: el arranque y la configuración. Esos tipos son los mismos de la lección 8 de TypeScript; el único cambio es que `esRegistro` ahora vive aquí mismo, porque el archivo de configuración del servidor del que se importaba no forma parte de este proyecto:
 
 ```ts
 // revisor/src/compartido/contrato.ts
@@ -608,7 +617,7 @@ La respuesta es la del servidor de práctica, servida desde el origen de la pág
 
 El intervalo de actualización es configuración: un valor que puede cambiar entre tu máquina, la de tu compañera y la versión publicada, sin que cambie el código. En un servidor de Node lo leerías de `process.env`. En una página del navegador **no hay entorno**: el código corre en la computadora de quien abre la página, y lo único que esa persona recibe es el JavaScript que tú le mandas. Así que, cuando Vite te ofrece «variables de entorno», lo que en realidad hace es **escribir su valor dentro del código** en el momento de servir o construir.
 
-La regla de Vite es una sola: solo las variables cuyo nombre empieza con `VITE_` llegan al código del cliente, a través de `import.meta.env`, y su valor se reemplaza de forma estática al construir ([Vite, «Env Variables and Modes»](https://vite.dev/guide/env-and-mode)). Las puedes definir en la terminal o en un archivo `.env` en la raíz del proyecto, que Vite lee siempre, junto con `.env.local`. El punto de control trae este:
+La regla de Vite es una sola: solo las variables cuyo nombre empieza con `VITE_` llegan al código del cliente, a través de `import.meta.env`, y su valor se reemplaza de forma estática al construir ([Vite, «Env Variables and Modes»](https://vite.dev/guide/env-and-mode)). Las puedes definir en la terminal o en un archivo `.env` en la raíz del proyecto, que Vite lee siempre, junto con `.env.local`. Si una misma variable aparece en más de un lugar, gana el más específico: las que ya existen en la terminal cuando Vite arranca tienen la prioridad más alta y los archivos `.env` no las sobrescriben; entre archivos, uno de un modo concreto (`.env.production`, por ejemplo) pesa más que uno general ([Vite, «Env Variables and Modes»](https://vite.dev/guide/env-and-mode)). El punto de control trae este:
 
 ```bash
 # Variables que Vite expone al navegador. TODO lo que empieza con VITE_ termina
@@ -673,7 +682,13 @@ $ grep -o '.\{30\}15000.\{30\}' dist/assets/*.js
 .test(e)?d:Number(e)}var p=f(`15000`);function m(e){return typeof
 ```
 
-Ahí está, `f(`15000`)`, dentro del JavaScript minificado: `f` es `leerCadaMs` con el nombre acortado. (Se usa `npx vite build` y no `npm run build` solo para pasar la variable en la misma línea; el resultado es igual.) Y si alguien define una «clave», le pasa exactamente lo mismo. Este experimento agrega temporalmente un renglón a `main.tsx` que imprime una variable con prefijo y otra sin él, construye con los dos valores definidos en la terminal, y busca:
+Ahí está, `f(`15000`)`, dentro del JavaScript minificado: `f` es `leerCadaMs` con el nombre acortado. (Se usa `npx vite build` y no `npm run build` solo para pasar la variable en la misma línea; el resultado es igual.) Y si alguien define una «clave», le pasa exactamente lo mismo. Este experimento agrega temporalmente un renglón al final de `src/main.tsx` que imprime una variable con prefijo y otra sin él:
+
+```ts
+console.log("con prefijo:", import.meta.env.VITE_CLAVE_API, "sin prefijo:", import.meta.env.CLAVE_API);
+```
+
+Construye con los dos valores definidos en la terminal, y busca:
 
 ```text
 $ VITE_CLAVE_API=clave-de-mentira-123 CLAVE_API=otra-clave-456 npx vite build
@@ -682,7 +697,27 @@ $ grep -o 'con prefijo:.\{0,80\}' dist/assets/*.js
 con prefijo:`,`clave-de-mentira-123`,`sin prefijo:`,void 0);
 ```
 
-La de `VITE_` quedó escrita, legible para cualquiera que abra las herramientas de desarrollo de su navegador. La que no tiene prefijo quedó como `void 0`, es decir, `undefined`: Vite no la expuso. Por eso la documentación de Vite advierte que las variables `VITE_*` no deben contener información sensible, como claves de API ([Vite, «Env Variables and Modes»](https://vite.dev/guide/env-and-mode)). Fíjate también en que la construcción terminó bien aunque el código leía dos variables que `vite-env.d.ts` no declara: `vite build` no revisa tipos. `npx tsc -b` sí lo habría detenido con dos `TS2339`; por eso el script de construcción del curso empieza con él. (Si repites el experimento, quita después el renglón y vuelve a construir.)
+La de `VITE_` quedó escrita, legible para cualquiera que abra las herramientas de desarrollo de su navegador. La que no tiene prefijo quedó como `void 0`, es decir, `undefined`: Vite no la expuso. Por eso la documentación de Vite advierte que las variables `VITE_*` no deben contener información sensible, como claves de API ([Vite, «Env Variables and Modes»](https://vite.dev/guide/env-and-mode)). Fíjate también en que la construcción terminó bien aunque el código leía dos variables que `vite-env.d.ts` no declara: `vite build` no revisa tipos. `npx tsc -b` sí lo habría detenido con dos `TS2339`; por eso el script de construcción del curso empieza con él. (Si repites el experimento, quita después el renglón y vuelve a construir. La salida completa, con los dos `TS2339`, está en `vite-clave-api.salida.txt`.)
+
+Un matiz que conviene medir, porque cambia lo que significa «escrito en el JavaScript». Al construir, Vite reemplaza **las lecturas** que encuentra en tu código, como `import.meta.env.VITE_CADA_MS`; una variable `VITE_` que ningún archivo lee no viaja. Define una que nadie lee y busca su valor:
+
+```text
+$ VITE_NADIE_LA_LEE=valor-que-nadie-lee npx vite build
+...
+$ grep -c 'valor-que-nadie-lee' dist/assets/*.js
+0
+```
+
+Pero basta con que una sola línea lea el objeto entero (`console.log(import.meta.env);`, agregada al final de `main.tsx` para el experimento) para que viajen **todas** las variables `VITE_` que existan en ese momento:
+
+```text
+$ VITE_NADIE_LA_LEE=valor-que-nadie-lee npx vite build
+...
+$ grep -c 'valor-que-nadie-lee' dist/assets/*.js
+1
+```
+
+Por eso la regla no se apoya en que «ese valor nadie lo lee»: cualquier variable `VITE_` se escribe pensando que puede acabar en el JavaScript público (salida en `vite-variable-sin-leer.salida.txt`). Es lo que documenta Vite al avisar que los valores `VITE_*` se incluyen en el código al construir y no deben llevar información sensible; la parte de «solo las que se leen» es lo que midió este experimento con Vite 8.3.5, no algo que su guía afirme.
 
 La regla práctica tiene dos mitades. **Qué sí va en `VITE_`:** lo que no te importaría ver publicado en un cartel, como un intervalo, el nombre del ambiente o la dirección pública de una API. **Qué no va nunca:** claves, contraseñas, tokens, nada que dé permiso a algo. Un secreto que el navegador necesita deja de ser secreto en cuanto el navegador lo tiene; si una funcionalidad necesita una clave, la clave vive en un servidor y la pantalla le pide al servidor que haga el trabajo. Y una pieza más: los archivos `.env.local` existen para valores de tu máquina que no quieres compartir, y Vite recomienda poner `*.local` en el `.gitignore` para que nunca se suban.
 
@@ -749,7 +784,7 @@ con StrictMode:
   panel: deja de sincronizar
 ```
 
-Las figuras se corren en una carpeta aparte, `~/curso-react/figuras/`, con su propio `package.json` (está en la carpeta de programas de la lección, junto a `revisor/`); se compilan con `tsc` y se ejecutan con `node`, como en el curso de TypeScript. Con `StrictMode`, React montó el efecto, lo limpió de inmediato y lo volvió a montar, como si alguien hubiera salido de la pantalla y regresado en un instante. ¿Para qué? Porque eso **sí pasa** en una aplicación real: la persona cambia de pantalla y vuelve, o cambia una dependencia del efecto. Si el efecto no sabe limpiar lo que hizo, esa salida y regreso deja basura: dos conexiones abiertas, dos temporizadores, dos peticiones que compiten. `StrictMode` provoca esa situación en cada montaje para que la veas hoy y no cuando alguien lo note en producción.
+Las figuras se corren en una carpeta aparte, `~/curso-react/figuras/`, y esa carpeta no existe hasta que la armas. Copia en ella, desde `programas/00-un-proyecto-de-verdad/` (la carpeta que está junto a `revisor/`), cinco archivos: `package.json`, `package-lock.json`, `eslint.config.js`, `fig00_01.tsx` y `fig00_02.tsx`; luego corre `npm ci` dentro de `~/curso-react/figuras/` para instalar `react`, `jsdom` y el linter con las versiones exactas. Sin el `eslint.config.js` de esa carpeta, `npx eslint fig00_02.tsx` (0.6) no sabe qué reglas aplicar. Las figuras se compilan con `tsc` y se ejecutan con `node`, como en el curso de TypeScript. Con `StrictMode`, React montó el efecto, lo limpió de inmediato y lo volvió a montar, como si alguien hubiera salido de la pantalla y regresado en un instante. ¿Para qué? Porque eso **sí pasa** en una aplicación real: la persona cambia de pantalla y vuelve, o cambia una dependencia del efecto. Si el efecto no sabe limpiar lo que hizo, esa salida y regreso deja basura: dos conexiones abiertas, dos temporizadores, dos peticiones que compiten. `StrictMode` provoca esa situación en cada montaje para que la veas hoy y no cuando alguien lo note en producción.
 
 En el `revisor` se ve en la bitácora del servidor de práctica. Esto es lo que registró cuando Chrome abrió el panel servido por `npm run dev`:
 
@@ -910,11 +945,11 @@ El punto de control pasa limpio. No es casualidad ni mérito del linter: el cód
 
 ### 0.7 El servidor de práctica y el recorrido completo
 
-El último archivo es el servidor de práctica. El curso es de pantalla y este servidor no se explica renglón por renglón: es un proceso de Node que responde el mismo contrato público que la API del curso de TypeScript, `GET /api/estados` y `GET /salud`, con cuatro servicios fijos y una demora de 300 ms para que alcances a ver «Cargando…». Usa los tipos de `src/compartido/contrato.ts`, así que si el contrato cambia, `tsc -b` señala también al servidor. Y escribe una línea por petición, que es lo que usaste en 0.5 para ver las dos peticiones de `StrictMode`.
+El último archivo es el servidor de práctica. El curso es de pantalla y este servidor no se explica renglón por renglón: es un proceso de Node que responde los mismos datos públicos que la API del curso de TypeScript, `GET /api/estados` y `GET /salud`, con cuatro servicios fijos y una demora de 300 ms para que alcances a ver «Cargando…». Usa los tipos de `src/compartido/contrato.ts`, así que si esos tipos cambian, `tsc -b` señala también al servidor. Y escribe una línea por petición, que es lo que usaste en 0.5 para ver las dos peticiones de `StrictMode`.
 
 ```ts
 // revisor/servidor/practica.ts
-// Servidor de práctica del curso de React. Responde el mismo contrato público que
+// Servidor de práctica del curso de React. Responde los mismos datos públicos que
 // la API del curso de TypeScript (GET /api/estados y GET /salud) con datos fijos,
 // para que el panel tenga a quién preguntarle. No se explica en el curso: el curso
 // es de pantalla. Se arranca con `npm run servidor`.
@@ -1053,7 +1088,7 @@ $ npm run preview
 
 `http://localhost:4173/` muestra el mismo panel, ahora desde los archivos de `dist/` y sin `StrictMode` activo, que es lo que confirmó la bitácora de 0.5. Apaga todo con Ctrl+C en cada terminal; el servidor de práctica se despide con `servidor de práctica detenido`.
 
-Una última comprobación, la que hace cualquier verificación automática: borrar `node_modules/`, reinstalar exactamente lo del archivo de bloqueo con `npm ci` y repetir. En el contenedor Linux de «Sobre las corridas», desde una copia sin `node_modules/` ni `dist/`, `npm ci`, `npm run lint` y `npm run build` terminaron bien, y la construcción produjo los mismos tres archivos con los mismos nombres (`index-tGGc24Rg.css` e `index-BWNt33lQ.js`). Que el nombre coincida no es un detalle: los nombres de `dist/` salen del contenido, así que dos máquinas que producen los mismos nombres produjeron el mismo paquete.
+Una última comprobación, la que hace cualquier verificación automática: borrar `node_modules/`, reinstalar exactamente lo del archivo de bloqueo con `npm ci` y repetir. En el contenedor Linux de «Sobre las corridas», desde una copia sin `node_modules/` ni `dist/`, `npm ci`, `npm run lint` y `npm run build` terminaron bien, y la construcción produjo los mismos tres archivos con los mismos nombres (`index-tGGc24Rg.css` e `index-BWNt33lQ.js`). Que el nombre coincida no es un detalle: los nombres de `dist/` salen del contenido, así que si dos máquinas producen los mismos nombres, es muy probable que el paquete sea el mismo (el nombre lleva solo un fragmento del hash del contenido), y si los nombres difieren, el contenido es distinto.
 
 ## El error que vas a ver
 
@@ -1092,7 +1127,7 @@ Es el trabajo de `strictImportMetaEnv` (0.4). Sin esa línea en `vite-env.d.ts`,
 
 **Correr solo `vite build` o solo `npm run dev`.** Ninguno de los dos revisa tipos. Un flujo que no pasa por `tsc -b` puede entregar un paquete con errores de tipo; por eso el script `build` empieza con él.
 
-**Poner un secreto en una variable `VITE_`.** Todo lo que empieza con `VITE_` queda escrito en el JavaScript público, como viste con `grep`. Cambiarle el nombre a la variable para que no lo lleve no lo vuelve seguro: si el navegador lo necesita, el navegador lo tiene. Las claves viven en un servidor.
+**Poner un secreto en una variable `VITE_`.** Cualquier variable `VITE_` puede quedar escrita en el JavaScript público (la que el código lee, seguro; todas, si una línea lee el objeto entero), como viste con `grep`. Cambiarle el nombre a la variable para que no lo lleve no lo vuelve seguro: si el navegador lo necesita, el navegador lo tiene. Las claves viven en un servidor.
 
 **Abrir CORS con `*` en la API para que funcione en desarrollo.** Resuelve una molestia de tu máquina con una decisión de seguridad que afecta a todos. En desarrollo, el *proxy* de Vite elimina el problema sin tocar la API.
 
@@ -1222,7 +1257,7 @@ Responde sin mirar la lección:
 - [MDN, «Cross-Origin Resource Sharing (CORS)»](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS): la política del mismo origen para `fetch()` y el encabezado `Access-Control-Allow-Origin`. Consultado el 21 de octubre de 2026.
 - [TypeScript, «TSConfig Reference»](https://www.typescriptlang.org/tsconfig/): `moduleResolution`, `noEmit`, `verbatimModuleSyntax`, `isolatedModules`, `erasableSyntaxOnly` y las referencias de proyecto. Consultado el 21 de octubre de 2026.
 - [typescript-eslint, «Dependency Versions»](https://typescript-eslint.io/users/dependency-versions/): las versiones de TypeScript y ESLint que soporta. Consultado el 21 de octubre de 2026.
-- [Node.js, «Modules: TypeScript»](https://nodejs.org/api/typescript.html) y [«Previous Releases»](https://nodejs.org/en/about/previous-releases): ejecutar `.ts` directamente con Node y sus condiciones; la línea 24 LTS y su versión más reciente. Consultado el 21 de octubre de 2026.
+- [Node.js, «Modules: TypeScript»](https://nodejs.org/api/typescript.html), [«Download»](https://nodejs.org/en/download) y [«Previous Releases»](https://nodejs.org/en/about/previous-releases): ejecutar `.ts` directamente con Node y sus condiciones; las versiones de la línea 24 LTS. Consultado el 21 de octubre de 2026.
 
 ### Términos de esta lección
 

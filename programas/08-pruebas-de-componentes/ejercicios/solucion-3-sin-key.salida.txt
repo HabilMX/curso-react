@@ -1,0 +1,33 @@
+$ npx vitest run --reporter=default src/detalle/EditorNota.test.tsx
+
+ RUN  v5.0.5 ~/curso-react/revisor
+
+ ❯ src/detalle/EditorNota.test.tsx (1 test | 1 failed) 179ms
+   × el borrador de una nota no se arrastra a otro servicio 178ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/detalle/EditorNota.test.tsx > el borrador de una nota no se arrastra a otro servicio
+AssertionError: expected 'revisar el lunes' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ revisar el lunes
+
+ ❯ src/detalle/EditorNota.test.tsx:23:24
+     21|   await act(() => enrutador.navigate("/servicios/reportes"));
+     22|   const editor = (await screen.findByRole("textbox", { name: "Nota sob…
+     23|   expect(editor.value).toBe("");
+       |                        ^
+     24| });
+     25|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  16:10:16
+   Duration  1.21s (environment 32%, transform 25%, import 18%, tests 16%, setup 9%, worker 1%)
+
+[código de salida: 1]

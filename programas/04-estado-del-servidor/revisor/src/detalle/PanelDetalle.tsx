@@ -21,10 +21,15 @@ export function PanelDetalle({
     <aside className="detalle" aria-label={`Detalle de ${nombre}`}>
       <h3>{nombre}</h3>
       {consulta.isPending && <p role="status">Cargando detalle…</p>}
-      {consulta.isError && (
+      {consulta.isError && consulta.data === undefined && (
         <p role="alert">No se pudo cargar el detalle: {consulta.error.message}</p>
       )}
-      {consulta.isSuccess && (
+      {consulta.isError && consulta.data !== undefined && (
+        <p role="alert" className="viejo">
+          Mostrando el último detalle que llegó: la actualización falló ({consulta.error.message}).
+        </p>
+      )}
+      {consulta.data !== undefined && (
         <dl>
           <dt>Estado</dt>
           <dd>

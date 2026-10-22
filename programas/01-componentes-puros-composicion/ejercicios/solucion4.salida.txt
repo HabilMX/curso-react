@@ -1,0 +1,4 @@
+# Corrido el 21-oct-2026 con Node.js 24.22.0 (macOS) en ~/curso-react/figuras/, con el package.json de esta carpeta.
+$ node solucion4.js
+<section>0</section>
+<section></section>

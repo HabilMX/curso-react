@@ -1,4 +1,4 @@
-# Lesson 5 — Routes and the URL as State
+# Lesson 5 — Routes and the URL as state
 
 *It is 11:10 PM and you are on call. At 11:04 PM `pagos` started failing, and the operations person handling the incident messages you in chat: “Can you send me the dashboard already filtered, just with what's failing?”. You paste the URL you have in your browser. She opens it and sees all four services, unfiltered, because the “Solo fallas” checkbox lived in your browser tab's memory and not in the URL. You explain in writing: “check the box, then click on pagos”. She does so, sees the details, and to get fresh data hits F5. The browser responds with a server error page: `404 File not found`. At 11:12 PM she calls to ask if the dashboard is down too. It wasn't down. It was missing two things: a URL that says what you are seeing and a server that knows what to answer when someone reloads that URL. This lesson builds both.*
 
@@ -12,7 +12,7 @@
 
 **What this lesson does not do.** It does not touch the practice server: it stays at version C, the same one from Lesson 4, with the same routes. It does not use React Router loaders or actions: data continues to be fetched by TanStack Query, for reasons explained in 5.1. It does not move notes into a React context: they move up one level, to the route layout, and [Lesson 6](06-reducer-contexto.md) discusses whether that is their permanent home. It does not add the creation screen, which arrives with its `/servicios/nuevo` route in [Lesson 7](07-formularios-accesibilidad.md). It does not test routes with an in-memory router inside a test suite: that is [Lesson 8](08-pruebas-de-componentes.md), although this lesson's figures already use that router. And it does not write the server that serves `dist/` with URL rewriting: this lesson demonstrates why it is needed; [Lesson 9](09-rendimiento-publicacion.md) writes it.
 
-**About the runs.** Everything was run on October 21, 2026 with Node.js 24.22.0 and npm 11.19.1, on macOS, with the exact versions from this lesson's `package.json`, and with Python 3.12 for the static server in 5.3. The checkpoint was installed from scratch with `npm ci`; `npm run lint` and `npm run build` finished cleanly and produced `dist/assets/index-CLDgPzLo.js`, the same name produced by the checkpoint when verified inside a Linux container (Debian 12, `node:24.22.0-bookworm` image). It was not run on real Linux Mint; nothing shown here depends on the OS. On macOS, `npm ci` prints an `install-scripts` warning about `fsevents@2.3.3`: this is an optional dependency installed only on macOS for file watching; there is no need to approve it, and it will not appear on your Mint. What is seen “in the browser” was measured using headless Chrome (`--headless --dump-dom`) against `vite preview`, with the `--virtual-time-budget` option, which advances the page clocks so there is no real-time waiting: because of this, the practice server log timestamps (in UTC) cannot be used to measure latency in this lesson, only to count requests. The runs for the error boundary (5.1.6, Exercise 3) and the `curl` runs in 5.3 were performed with the practice API on port 3199 and with `vite preview` and the Python server on port 4199, because on the test machine the usual ports were occupied by other processes; the lesson displays them with the course's standard ports (3100, 4173, and 4190), which is the only thing that changes. The figures were run with their own `package.json` in [`programas/05-rutas-url-como-estado/`](../programas/05-rutas-url-como-estado), alongside `revisor/`; long paths are shown starting from `~/curso-react`.
+**About the runs.** Everything was run on October 21, 2026 with Node.js 24.22.0 and npm 11.19.1, on macOS, with the exact versions from this lesson's `package.json`, and with Python 3.12 for the static server in 5.3. The checkpoint was installed from scratch with `npm ci`; `npm run lint` and `npm run build` finished cleanly and produced `dist/assets/index-CyH_ELFs.js`, the same name produced by the checkpoint when verified inside a Linux container (Debian 12, `node:24.22.0-bookworm` image). It was not run on real Linux Mint; nothing shown here depends on the OS. On macOS, `npm ci` prints an `install-scripts` warning about `fsevents@2.3.3`: this is an optional dependency installed only on macOS for file watching; there is no need to approve it, and it will not appear on your Mint. What is seen “in the browser” was measured using headless Chrome (`--headless --dump-dom`) against `vite preview`, with the `--virtual-time-budget` option, which advances the page clocks so there is no real-time waiting: because of this, the practice server log timestamps (in UTC) cannot be used to measure latency in this lesson, only to count requests. The detail captures were taken with a `PaginaServicio` that, if a refresh failed, hid the detail and the note editor; the one in 5.2.1 fixes that and delivers the same thing when the requests succeed, which is all those captures record. The runs for the error boundary (5.1.6, Exercise 3) and the `curl` runs in 5.3 were performed with the practice API on port 3199 and with `vite preview` and the Python server on port 4199, because on the test machine the usual ports were occupied by other processes; the lesson displays them with the course's standard ports (3100, 4173, and 4190), which is the only thing that changes. The figures were run with their own `package.json` in [`programas/05-rutas-url-como-estado/`](../programas/05-rutas-url-como-estado), alongside `revisor/`; long paths are shown starting from `~/curso-react`. The practice server (the same file since Lesson 4) responds `400` with `{"detalle":"nombre de servicio inválido"}` to an address with a malformed `%`, such as `/api/servicios/%`, and to its `/reintento` route; it used to respond `500`. It was measured with `curl` against a copy, before and after, and the process stayed alive in both cases.
 
 ## By the end you will be able to
 
@@ -131,7 +131,7 @@ export const rutas: RouteObject[] = [
 
 Read it from the outside in, because that is how React Router reads it:
 
-- **The outer route**, `path: "/"`, renders `Disposicion`: the header, the navigation, and the outlet where the page goes. All other routes are its **children** (`children`), so the layout always renders, regardless of the page. The documentation states it like this: the parent route's path is automatically prepended to each child's, and children render inside the parent's `<Outlet />` ([React Router, «Routing»](https://reactrouter.com/start/data/routing)).
+- **The outer route**, `path: "/"`, renders `Disposicion`: the header, the navigation, and the outlet where the page goes. All other routes are its **children** (`children`), so the layout wraps any child page (with one exception you will see in 5.1.6: if an error rises to this same route's boundary, the boundary renders in place of the layout). The documentation states it like this: the parent route's path is automatically prepended to each child's, and children render inside the parent's `<Outlet />` ([React Router, «Routing»](https://reactrouter.com/start/data/routing)).
 - **The index route**, `index: true`, has no `path`: it is the page that renders in the `<Outlet />` when the URL matches the parent exactly, `/`. That is the report.
 - **`servicios/:nombre`** does not start with `/` because it is relative to the parent: the full path is `/servicios/:nombre`. The colon marks a **dynamic segment**: when the URL matches, whatever is in that position is delivered as the `nombre` parameter.
 - **`*`** matches anything that no sibling route caught. It is the “not found” page.
@@ -217,7 +217,7 @@ $ node fig05_01.js
 /servicios/pagos/extra     → [disposición] no existe /servicios/pagos/extra
 ```
 
-Five URLs, five responses, and across all five `[disposición]` appears: the outer route always renders. The third line previews something from 5.2: the URL carried `cat%C3%A1logo`, percent-encoded, and the parameter arrived as `catálogo`. The last two show that a dynamic segment is **exactly one segment**: `/servicios` (missing a segment) and `/servicios/pagos/extra` (having an extra one) do not match `servicios/:nombre`, and are caught by `*`.
+Five URLs, five responses, and across all five `[disposición]` appears: as long as nothing breaks, the outer route renders in all of them. The third line previews something from 5.2: the URL carried `cat%C3%A1logo`, percent-encoded, and the parameter arrived as `catálogo`. The last two show that a dynamic segment is **exactly one segment**: `/servicios` (missing a segment) and `/servicios/pagos/extra` (having an extra one) do not match `servicios/:nombre`, and are caught by `*`.
 
 #### 5.1.3 Creating the router once, outside React
 
@@ -580,7 +580,7 @@ Finally, we wire it up: the `ErrorBoundary: ErrorDeRuta` line in `rutas.tsx`, wh
 <div id="raiz"><div role="alert" class="limite-de-error"><h2>Algo salió mal al dibujar el panel</h2><p>la página se rompió al dibujar</p><button type="button">Recargar la página</button></div></div>
 ```
 
-It is the notice from Lesson 4, word for word, with its `role="alert"` and button. And in the same copy, `/?q=pag` continued rendering the list with its header: the boundary only appears when something breaks. Two more details: the document title remained `Revisor`, the one from `index.html`: the page that threw never finished rendering, and its `useTituloDocumento` Effect never ran. And the header disappeared, just as in Figure 6: this boundary is the last line of defense, replacing everything. If you want the user to retain the header and navigation when **one** page breaks, the boundary must be placed further down; that is Exercise 3.
+It is the notice from Lesson 4, word for word, with its `role="alert"` and button. And in the same copy, `/?q=pag` continued rendering the list with its header: the boundary only appears when something breaks. Two more details: the document title remained `Revisor`, the one from `index.html`: the page that threw never finished rendering, and its `useTituloDocumento` Effect never ran. And the header disappeared, just as in Figure 6: this boundary is the last line of defense, replacing everything. A consequence worth seeing before it surprises you: here the error is caused by the address itself (`?q=romper`), so the “Recargar la página” button reopens that same address, throws again, and shows the notice again; reloading is not a way out. Since the header is gone, there is no link at hand either, and the person has to change the address by hand. It is a real limitation of this root boundary and one more reason for Exercise 3, where the closest boundary leaves the “Volver al reporte” link in view. If you want the user to retain the header and navigation when **one** page breaks, the boundary must be placed further down; that is Exercise 3.
 
 Is `LimiteDeError` redundant then? No. Route boundaries only see what renders **inside** routes. Anything outside them, such as `QueryClientProvider`, falls outside their reach, and `LimiteDeError` in `main.tsx` remains in place to guard that layer. Each watches its own floor, and both present the same notice.
 
@@ -613,10 +613,15 @@ export function PaginaServicio() {
   return (
     <Tarjeta titulo={`Servicio ${nombre}`}>
       {consulta.isPending && <p role="status">Cargando detalle…</p>}
-      {consulta.isError && (
+      {consulta.isError && consulta.data === undefined && (
         <p role="alert">No se pudo cargar el detalle: {consulta.error.message}</p>
       )}
-      {consulta.isSuccess && (
+      {consulta.isError && consulta.data !== undefined && (
+        <p role="alert" className="viejo">
+          Mostrando el último detalle que llegó: la actualización falló ({consulta.error.message}).
+        </p>
+      )}
+      {consulta.data !== undefined && (
         <>
           <dl>
             <dt>Estado</dt>
@@ -654,7 +659,7 @@ export function PaginaServicio() {
 
 The first line of the component is the key to understand: `const { nombre = "" } = useParams();`. `useParams` returns the URL's dynamic segments as an object; here, `{ nombre: "pagos" }` ([React Router, `useParams`](https://reactrouter.com/api/hooks/useParams)). Its TypeScript type indicates that each value is `string | undefined`, and this is not pessimism: the hook does not know which route you are calling it in, and a component could be used in a route without `:nombre`. The `= ""` provides a default value so the rest of the component works with a `string`. In “The error you will see”, you will remove it to observe the four compiler errors that arise. In practice, this page is only ever rendered at `servicios/:nombre`, so `nombre` never arrives empty.
 
-With that name, the page does what `PanelDetalle` used to do: it requests details using the same query from Lesson 4, `consultaDetalle(nombre)`, whose key `["servicio", nombre]` isolates each service's cache, and offers the “Volver a revisar” mutation. What is new is what is no longer needed. In Lesson 4, `ContenidoReporte` verified that the selected service existed in the list before displaying its panel. Now anyone can type `/servicios/nada` into the address bar, and the page has no list against which to check. Nor does it need one: the API responds with 404 for a non-existent service, `cargarDetalle` turns that into an error, and the page renders the alert. Here is what Chrome delivered:
+With that name, the page does what `PanelDetalle` used to do: it requests details using the same query from Lesson 4, `consultaDetalle(nombre)`, whose key `["servicio", nombre]` isolates each service's cache, and offers the “Volver a revisar” mutation. What is new is what is no longer needed. In Lesson 4, `ContenidoReporte` verified that the selected service existed in the list before displaying its panel. One thing in the data block comes from Lesson 4 and is worth not losing: the page renders the detail if there is `data`, and not only if `isSuccess`, because when a refresh fails `status` becomes `error` and `data` is still there; with `isSuccess`, the old detail and, worse, the `EditorNota` with the draft the person was typing would vanish from the screen exactly when the network stumbles. Now anyone can type `/servicios/nada` into the address bar, and the page has no list against which to check. Nor does it need one: the API responds with 404 for a non-existent service, `cargarDetalle` turns that into an error, and the page renders the alert. Here is what Chrome delivered:
 
 ```text
 <title>nada · Revisor</title>
@@ -669,7 +674,7 @@ And here is what the practice server log recorded:
 08:15:01.468 GET /api/servicios/nada 404
 ```
 
-Three requests for a single visit. This is not `StrictMode`, because this is the production build where no extra cycle runs: it is the `retry: 2` configured on the query client in Lesson 4, which retries **any** error, including a 404 that is never going to change. (The timestamps are clustered because of Chrome's accelerated virtual clock; with a normal browser, retries arrive spaced out.) This is a behavior you can refine—retrying only when an error is transient—but it is beyond this lesson's scope; note it in your logbook as something you observed.
+Three requests for a single visit. This is not `StrictMode`, because this is the production build where no additional cycle runs: it is the `retry: 2` configured on the query client in Lesson 4, which retries **any** error, including a 404 that is never going to change. (The timestamps are clustered because of Chrome's accelerated virtual clock; with a normal browser, retries arrive spaced out.) This is a behavior you can refine—retrying only when an error is transient—but it is beyond this lesson's scope; note it in your logbook as something you observed.
 
 #### 5.2.2 Encoding when writing, decoding when reading
 
@@ -762,7 +767,7 @@ con key={nombre}:
 
 Without `key`, the address indicates `inventario` but the draft still says `nota sobre pagos`: `useState` only consumes its initial value the very first time the component mounts, and here it was never remounted. With `key={nombre}`, React treats each name as a completely distinct component, unmounting the old one and creating a fresh one. In `revisor`, without that `key`, the draft note for `pagos` would persist on the `inventario` page, ready to be saved under the wrong service.
 
-Why is the `key` placed on `EditorNota` rather than on the entire page? Because the draft note is the only part that maintains internal local state. The detail query does not need resetting: its query key includes the name, so upon changing names TanStack Query switches cache entries automatically. Furthermore, today `revisor`'s interface does not offer a direct link from one service detail page to another: you always transition through the list, which unmounts the page anyway. The `key` guards against the day someone introduces a “next service” link, and it is so lightweight that waiting for that day to add it is not worth the risk.
+Why is the `key` placed on `EditorNota` rather than on the entire page? Because the state that would do the most harm is the draft, which is what the person wrote by hand. The detail query does not need resetting: its query key includes the name, so upon changing names TanStack Query switches cache entries automatically. There is a second piece of state of its own that the `key` on `EditorNota` does not cover: that of the `useReintentar` mutation, which lives in `PaginaServicio` and keeps its `isError`, its `error`, and its `isPending` as long as the component is the same. If one day a link led from one detail page to another and the first one's mutation had failed, the notice “No se pudo volver a revisar” would remain on screen under the second service. The way out is to move the `key` to the route (`key={nombre}` on `PaginaServicio`, which resets everything) or to call `reintento.reset()` when the name changes ([TanStack Query, `useMutation`](https://tanstack.com/query/latest/docs/framework/react/reference/useMutation)). And, honestly, today `revisor`'s interface does not offer a direct link from one service detail page to another: you always transition through the list, which unmounts the page anyway. The `key` guards against the day someone introduces a “next service” link, and it is so lightweight that waiting for that day to add it is not worth the risk.
 
 #### 5.2.4 Filters in the search query: `useSearchParams`
 
@@ -850,7 +855,7 @@ export function useFiltrosEnUrl(): {
 `useSearchParams` returns two things, just like `useState`: the current parameters as a browser `URLSearchParams` object, and a setter function that **triggers a navigation** to the new URL ([React Router, `useSearchParams`](https://reactrouter.com/api/hooks/useSearchParams)). `URLSearchParams` is a standard browser interface with methods for reading and writing search parameters; its `get` returns `null` when a parameter is missing ([MDN, `URLSearchParams`](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams)). Five design decisions in this file deserve explicit attention:
 
 - **Filters are computed, not stored.** There is no `useState` holding the filters that is then “synchronized” with the URL: every render reads them directly from the URL. This is the Lesson 2 rule, “do not store what you can compute”, applied to a new source of truth. If there were a `useState` alongside the URL, you would have two sources of truth that could diverge, and the temptation to keep them aligned using an Effect—precisely what the course's primary principle forbids.
-- **`fallas` is `"1"` or does not exist.** It is read as `parametros.get("fallas") === "1"`, and disabling the filter **deletes** the parameter rather than setting `fallas=0`. The same applies to an empty `q`. This ensures the URL with no active filters remains a clean `/`, rather than `/?fallas=0&q=`.
+- **`fallas` is `"1"` or does not exist.** It is read as `parametros.get("fallas") === "1"`: any other value, including a hand-typed `?fallas=0`, is read as the filter being off. And disabling the filter **deletes** the parameter rather than setting `fallas=0`. The same applies to an empty `q`. This ensures the URL with no active filters remains a clean `/`, rather than `/?fallas=0&q=`.
 - **The updater function takes only what changed.** Calling `cambiarFiltros({ soloFallas: true })` leaves the search query untouched, because `{ ...filtros, ...cambio }` merges the change into the existing state. Hence the parameter type `Partial<Filtros>`.
 - **Copying instead of mutating.** The functional form, `establecerParametros((actuales) => …)`, receives the current parameters; the code creates a copy with `new URLSearchParams(actuales)` and mutates the copy. The documentation cautions that the object returned by the hook is mutable, and that mutating it without invoking the setter function causes values to change across renders without the URL updating. Copying prevents that trap while preserving any other parameters the URL might carry. The same page notes another contrast with `useState`: consecutive synchronous calls do **not** batch like React's functional updater. In `revisor`, each event invokes the function once, so this does not bite.
 - **`replace: true`.** This is the most noticeable UX decision, and has its own dedicated figure.
@@ -1352,7 +1357,7 @@ $ curl -s "http://localhost:4173/servicios/cat%C3%A1logo" | head -12
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Revisor</title>
-    <script type="module" crossorigin src="/assets/index-CLDgPzLo.js"></script>
+    <script type="module" crossorigin src="/assets/index-CyH_ELFs.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-yYL09Z4k.css">
   </head>
   <body>
@@ -1360,7 +1365,7 @@ $ curl -s "http://localhost:4173/servicios/cat%C3%A1logo" | head -12
   </body>
 ```
 
-It is `index.html`, with a 200 status code. And pay close attention to the asset paths: `/assets/index-CLDgPzLo.js`, with a leading slash `/`. That matters more than it might seem. If it were `assets/index-CLDgPzLo.js`, without the slash, the browser would resolve it **relative to the current path**, and from `/servicios/pagos` it would request `/servicios/assets/index-CLDgPzLo.js`, which does not exist. The leading slash ensures JavaScript is always requested from the exact same location, regardless of URL depth.
+It is `index.html`, with a 200 status code. And pay close attention to the asset paths: `/assets/index-CyH_ELFs.js`, with a leading slash `/`. That matters more than it might seem. If it were `assets/index-CyH_ELFs.js`, without the slash, the browser would resolve it **relative to the current path**, and from `/servicios/pagos` it would request `/servicios/assets/index-CyH_ELFs.js`, which does not exist. The leading slash ensures JavaScript is always requested from the root of the domain, regardless of URL depth. That holds as long as the application is published at the root: Vite builds those paths with its `base` option, which defaults to `/` ([Vite, “Shared Options”, `base`](https://vite.dev/config/shared-options#base)). If one day you publish under a subdirectory, such as `/revisor/`, you must set `base` in the configuration, because with `/assets/…` the browser would request the files from the root of the domain and would not find them.
 
 The fallback in `vite preview` is generous, perhaps overly so. Here is how it answered three other URLs:
 
@@ -1387,7 +1392,7 @@ $ curl -s -o /dev/null -w "%{http_code} %{content_type}\n" http://127.0.0.1:4190
 200 text/html
 $ curl -s -o /dev/null -w "%{http_code} %{content_type}\n" http://127.0.0.1:4190/servicios/pagos
 404 text/html;charset=utf-8
-$ curl -s -o /dev/null -w "%{http_code} %{content_type}\n" http://127.0.0.1:4190/assets/index-CLDgPzLo.js
+$ curl -s -o /dev/null -w "%{http_code} %{content_type}\n" http://127.0.0.1:4190/assets/index-CyH_ELFs.js
 200 text/javascript
 ```
 
@@ -1416,7 +1421,7 @@ The Python log documents it in plain text:
 127.0.0.1 - - [21/Oct/2026 02:37:43] "GET / HTTP/1.1" 200 -
 127.0.0.1 - - [21/Oct/2026 02:37:43] code 404, message File not found
 127.0.0.1 - - [21/Oct/2026 02:37:43] "GET /servicios/pagos HTTP/1.1" 404 -
-127.0.0.1 - - [21/Oct/2026 02:37:43] "GET /assets/index-CLDgPzLo.js HTTP/1.1" 200 -
+127.0.0.1 - - [21/Oct/2026 02:37:43] "GET /assets/index-CyH_ELFs.js HTTP/1.1" 200 -
 127.0.0.1 - - [21/Oct/2026 02:37:43] code 404, message File not found
 127.0.0.1 - - [21/Oct/2026 02:37:43] "GET /servicios/pagos HTTP/1.1" 404 -
 ```
@@ -1527,16 +1532,16 @@ src/detalle/PaginaServicio.tsx(12,45): error TS2345: Argument of type 'string | 
   Type 'undefined' is not assignable to type 'string'.
 src/detalle/PaginaServicio.tsx(13,35): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
   Type 'undefined' is not assignable to type 'string'.
-src/detalle/PaginaServicio.tsx(45,13): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+src/detalle/PaginaServicio.tsx(50,13): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
   Type 'undefined' is not assignable to type 'string'.
-src/detalle/PaginaServicio.tsx(46,33): error TS2538: Type 'undefined' cannot be used as an index type.
+src/detalle/PaginaServicio.tsx(51,33): error TS2538: Type 'undefined' cannot be used as an index type.
 ```
 
 Four errors, one for each site that **requires** a `string`: the detail query, the mutation, the `nombre` prop on `EditorNota`, and the index `notas[nombre]`. The other three usages (the tab title, the card heading, and the `key`) do not complain: template string interpolation converts `undefined` into the string `"undefined"` and renders it silently—a bug that TypeScript does not catch. This is the exact warning from 5.2.1 viewed through the compiler: `useParams` cannot guarantee that the parameter exists. There are three sensible solutions: the default value `= ""` used by the checkpoint; an early guard clause rendering an alternative UI if missing; or, in framework mode, route-generated types. What is not sensible is silencing it with `nombre!`: that exclamation mark tells TypeScript “trust me”, defeating the very safeguard the compiler was providing. (This error was triggered in a copy of the checkpoint; the original passes `tsc -b` cleanly.)
 
 ## What gets done wrong
 
-**Copying the URL into a `useState` and synchronizing them with an Effect.** “I read `?q=` on mount, store it in state, and an Effect writes state back to the URL when it changes.” That introduces two sources of truth, an unnecessary extra render per change, and an Effect synchronizing with no external system. The URL already is state: read it directly on every render.
+**Copying the URL into a `useState` and synchronizing them with an Effect.** “I read `?q=` on mount, store it in state, and an Effect writes state back to the URL when it changes.” That introduces two sources of truth, an unnecessary additional render per change, and an Effect synchronizing with no external system. The URL already is state: read it directly on every render.
 
 **Using `<a href>` to navigate within the application.** It works, which is why it misleads: each click triggers a full-page reload, discarding the TanStack Query cache, wiping out notes stored in the layout, and forcing the browser to re-request the page and reboot the entire application from scratch. Within the app, use `Link`; reserve bare `<a>` exclusively for leaving the app.
 
@@ -1654,7 +1659,7 @@ If you placed notes in the URL, consider what would happen when sharing the link
 
 ## How do I know I succeeded
 
-- [ ] `npm ci`, `npm run lint`, and `npm run build` finish cleanly within `~/curso-react/revisor/`, and `npm run build` outputs `dist/assets/index-CLDgPzLo.js` if your code matches the checkpoint.
+- [ ] `npm ci`, `npm run lint`, and `npm run build` finish cleanly within `~/curso-react/revisor/`, and `npm run build` outputs `dist/assets/index-CyH_ELFs.js` if your code matches the checkpoint.
 - [ ] `npm ls react-router` shows `react-router@8.5.0`, and `npm ls react-router-dom` outputs `└── (empty)` and exits with code 1, which is expected here: the package was not found.
 - [ ] With the practice server and `npm run preview` running, opening `http://localhost:4173/?fallas=1` in a new tab displays the checkbox checked and lists only `pagos` and `reportes`; the tab title reads `(2) Revisor`.
 - [ ] `http://localhost:4173/servicios/pagos` displays the `pagos` detail view with the tab title `pagos · Revisor`; `http://localhost:4173/no-existe` displays “Página no encontrada” with the `revisor` header above it.
@@ -1714,4 +1719,4 @@ Answer without looking at the lesson:
 
 ---
 
-**Next:** [Lesson 6 — Shared State: Reducer and Context](06-reducer-contexto.md)
+**Next:** [Lesson 6 — Shared state: reducer and context](06-reducer-contexto.md)

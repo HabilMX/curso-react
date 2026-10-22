@@ -1,0 +1,138 @@
+$ npx vitest run --reporter=default src/app
+
+ RUN  v5.0.5 ~/curso-react/revisor
+
+ ❯ src/app/rutas.test.tsx (3 tests | 1 failed) 1361ms
+   ❯ las rutas (3)
+     ✓ una dirección desconocida muestra la página de no encontrada 280ms
+     ✓ el menú marca la página actual 50ms
+     × una página que se rompe al dibujar muestra el aviso del revisor 1028ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/app/rutas.test.tsx > las rutas > una página que se rompe al dibujar muestra el aviso del revisor
+TestingLibraryElementError: Unable to find role="alert"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<h2>[39m
+      [0mUnexpected Application Error![0m
+    [36m</h2>[39m
+    [36m<h3[39m
+      [33mstyle[39m=[32m"font-style: italic;"[39m
+    [36m>[39m
+      [0mla página se rompió al dibujar[0m
+    [36m</h3>[39m
+    [36m<pre[39m
+      [33mstyle[39m=[32m"padding: 0.5rem; background-color: rgba(200, 200, 200, 0.5);"[39m
+    [36m>[39m
+      [0mError: la página se rompió al dibujar
+    at PaginaRota (~/curso-react/revisor/src/app/rutas.test.tsx:11:9)
+    at Object.react_stack_bottom_frame (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+    at renderWithHooks (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+    at updateFunctionComponent (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+    at beginWork (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+    at runWithFiberInDEV (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+    at performUnitOfWork (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+    at workLoopSync (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+    at renderRootSync (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+    at performWorkOnRoot (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)[0m
+    [36m</pre>[39m
+    [36m<p>[39m
+      [0m💿 Hey developer 👋[0m
+    [36m</p>[39m
+    [36m<p>[39m
+      [0mYou can provide a way better UX than this when your app throws errors by providing your own [0m
+      [36m<code[39m
+        [33mstyle[39m=[32m"padding: 2px 4px; background-color: rgba(200, 200, 200, 0.5);"[39m
+      [36m>[39m
+        [0mErrorBoundary[0m
+      [36m</code>[39m
+      [0m or[0m
+      [0m [0m
+      [36m<code[39m
+        [33mstyle[39m=[32m"padding: 2px 4px; background-color: rgba(200, 200, 200, 0.5);"[39m
+      [36m>[39m
+        [0merrorElement[0m
+      [36m</code>[39m
+      [0m prop on your route.[0m
+    [36m</p>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<h2>[39m
+      [0mUnexpected Application Error![0m
+    [36m</h2>[39m
+    [36m<h3[39m
+      [33mstyle[39m=[32m"font-style: italic;"[39m
+    [36m>[39m
+      [0mla página se rompió al dibujar[0m
+    [36m</h3>[39m
+    [36m<pre[39m
+      [33mstyle[39m=[32m"padding: 0.5rem; background-color: rgba(200, 200, 200, 0.5);"[39m
+    [36m>[39m
+      [0mError: la página se rompió al dibujar
+    at PaginaRota (~/curso-react/revisor/src/app/rutas.test.tsx:11:9)
+    at Object.react_stack_bottom_frame (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:28571:20)
+    at renderWithHooks (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:8030:22)
+    at updateFunctionComponent (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:10569:19)
+    at beginWork (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:12205:18)
+    at runWithFiberInDEV (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:1048:13)
+    at performUnitOfWork (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:19176:22)
+    at workLoopSync (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:19004:41)
+    at renderRootSync (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:18985:11)
+    at performWorkOnRoot (~/curso-react/revisor/node_modules/react-dom/cjs/react-dom-client.development.js:18094:35)[0m
+    [36m</pre>[39m
+    [36m<p>[39m
+      [0m💿 Hey developer 👋[0m
+    [36m</p>[39m
+    [36m<p>[39m
+      [0mYou can provide a way better UX than this when your app throws errors by providing your own [0m
+      [36m<code[39m
+        [33mstyle[39m=[32m"padding: 2px 4px; background-color: rgba(200, 200, 200, 0.5);"[39m
+      [36m>[39m
+        [0mErrorBoundary[0m
+      [36m</code>[39m
+      [0m or[0m
+      [0m [0m
+      [36m<code[39m
+        [33mstyle[39m=[32m"padding: 2px 4px; background-color: rgba(200, 200, 200, 0.5);"[39m
+      [36m>[39m
+        [0merrorElement[0m
+      [36m</code>[39m
+      [0m prop on your route.[0m
+    [36m</p>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ PaginaRota src/app/rutas.test.tsx:11:9
+      9|
+     10| function PaginaRota(): never {
+     11|   throw new Error("la página se rompió al dibujar");
+       |         ^
+     12| }
+     13|
+ ❯ Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28571:20
+ ❯ renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:8030:22
+ ❯ updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10569:19
+ ❯ beginWork node_modules/react-dom/cjs/react-dom-client.development.js:12205:18
+ ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1048:13
+ ❯ performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:19176:22
+ ❯ workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:19004:41
+ ❯ renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:18985:11
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/app/rutas.test.tsx:44:32
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  09:10:09
+   Duration  2.49s (tests 61%, environment 19%, transform 11%, setup 5%, import 4%)
+
+[código de salida: 1]

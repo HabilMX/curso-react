@@ -8,16 +8,18 @@
 
 **Qué aprendes:** medir con el Profiler **antes** de memoizar; estructura primero; React Compiler 1.0; `vite build` y por qué `vite preview` no es un servidor de producción; reescritura a `index.html`; `VITE_` sin secretos; repaso de XSS; Server Components y Server Functions: qué son y por qué este panel no los usa; cuándo conviene migrar a un framework
 
-**De dónde vienes.** Del punto de control de la [Lección 8](08-pruebas-de-componentes.md): un `revisor` con cuatro pantallas (la lista en `/`, el detalle en `/servicios/:nombre`, el alta en `/servicios/nuevo` y la página de «no encontrada»), datos del servidor en TanStack Query, avisos y preferencias en contexto, un formulario accesible y una suite de 26 pruebas en 7 archivos que se ponen rojas cuando alguien revierte un arreglo. Todo eso funciona en `npm run dev`. Lo que no se ha hecho es la pregunta del final: ¿qué tan rápido es, y cómo se entrega a quien lo va a usar?
+**De dónde vienes.** Del punto de control de la [Lección 8](08-pruebas-de-componentes.md): un `revisor` con cuatro pantallas (la lista en `/`, el detalle en `/servicios/:nombre`, el alta en `/servicios/nuevo` y la página de «no encontrada»), datos del servidor en TanStack Query, avisos y preferencias en contexto, un formulario accesible y una suite de 27 pruebas en 7 archivos que se ponen rojas cuando alguien revierte un arreglo. Todo eso funciona en `npm run dev`. Lo que no se ha hecho es la pregunta del final: ¿qué tan rápido es, y cómo se entrega a quien lo va a usar?
 
 **Qué no hace esta lección.** No agrega pantallas ni cambia lo que el panel hace. No usa `useMemo`, `useCallback` ni `memo` en el `revisor`: la medición no los pidió, y la sección 9.1 explica por qué. No migra el panel a un framework ni monta Server Components: la sección 9.3 explica qué son y por qué este panel no los necesita. No configura un servidor web de producción como nginx o Caddy: escribe uno pequeño en Node para que cada decisión quede a la vista, y nombra lo que un servidor de verdad agrega. Y no es un curso de seguridad: repasa las dos defensas que el panel ya tenía contra la inyección de código (React y el linter) y agrega la tercera, la política de seguridad de contenido.
 
-**Sobre las corridas.** Todo se ejecutó el 21 de octubre de 2026 con Node.js 24.22.0 y npm 11.19.1, en macOS, con las versiones exactas del `package.json` de esta lección. El punto de control se instaló desde cero con `npm ci` en una copia fuera del repositorio, idéntica archivo por archivo al punto de control, y ahí `npm run lint`, `npm test` y `npm run build` terminaron con código 0: 34 de 34 pruebas en 11 archivos (leído del resumen de Vitest), `dist/assets/index-DaB3Njqx.js` y `dist/assets/index-CbqUABMA.css`. Las salidas de Vitest se tomaron con `--reporter=default`, que es lo que ves en tu terminal. Los cinco arreglos de 9.4 ya están en el punto de control. Su fase roja se midió en una **copia** del punto de control sin los arreglos, llamada `rojo`, y por eso esa salida dice `~/curso-react/rojo`; la fase verde, en el punto de control. Lo que se ve «en el navegador» se midió con Chrome sin ventana (`--headless`): el DOM de `/servicios/pagos` con `--dump-dom` y, para el sondeo y los reintentos, abriendo la página unos segundos mientras la API de práctica anotaba cada petición. Esas corridas usaron los puertos 3109 (API), 4109 (vista previa y servidor publicado) y 5109 (desarrollo) en lugar de 3100, 4173, 4180 y 5173, porque en la máquina corrían otras cosas a la vez; para apuntar el *proxy* de desarrollo al 3109 se cambió `vite.config.ts` en las copias, no en el original. Las salidas muestran los puertos que de verdad se usaron; tú usarás los del curso. Las figuras están en [`programas/09-rendimiento-publicacion/`](../programas/09-rendimiento-publicacion), junto a `revisor/`, con su propio `package.json`: se compilan con `tsc` y se corren con `node`, como en las lecciones anteriores, y agregan `@babel/core`, `babel-plugin-react-compiler` y `@types/convert-source-map` (este último porque los tipos de `@babel/core` 8.0.7 lo importan y `tsc --strict` sin `skipLibCheck` no compila sin él). No se corrió en una Linux Mint real; nada de lo que se muestra depende del sistema. Las horas de la bitácora de los servidores están en UTC; las de Vitest (`Start at`), en la hora local de la máquina. **Lo que no se midió**, y se dice donde aparece: el Profiler de las herramientas de desarrollo de React, que se lee con los ojos, y el panel publicado detrás de un servidor web de producción. Las rutas largas se muestran a partir de `~/curso-react`.
+**Sobre las corridas.** Todo se ejecutó el 21 de octubre de 2026 con Node.js 24.22.0 y npm 11.19.1, en macOS, con las versiones exactas del `package.json` de esta lección. El punto de control se instaló desde cero con `npm ci` en una copia fuera del repositorio, idéntica archivo por archivo al punto de control, y ahí `npm run lint`, `npm test` y `npm run build` terminaron con código 0: 35 de 35 pruebas en 11 archivos (leído del resumen de Vitest), `dist/assets/index-Cs1CcfeN.js` (el nombre del paquete y las salidas de 9.1 y 9.2 se volvieron a medir el 22 de octubre de 2026, en macOS) y `dist/assets/index-CbqUABMA.css`. Las salidas de Vitest se tomaron con `--reporter=default`, que es lo que ves en tu terminal. Los cinco arreglos de 9.4 ya están en el punto de control. Su fase roja se midió en una **copia** del punto de control sin los arreglos, llamada `rojo`, y por eso esa salida dice `~/curso-react/rojo`; la fase verde, en el punto de control. Lo que se ve «en el navegador» se midió con Chrome sin ventana (`--headless`): el DOM de `/servicios/pagos` con `--dump-dom` y, para el sondeo y los reintentos, abriendo la página unos segundos mientras la API de práctica anotaba cada petición. Esas corridas usaron los puertos 3109 (API), 4109 (vista previa y servidor publicado) y 5109 (desarrollo) en lugar de 3100, 4173, 4180 y 5173, porque en la máquina corrían otras cosas a la vez; para apuntar el *proxy* de desarrollo al 3109 se cambió `vite.config.ts` en las copias, no en el original. Las salidas muestran los puertos que de verdad se usaron; tú usarás los del curso. Las figuras están en [`programas/09-rendimiento-publicacion/`](../programas/09-rendimiento-publicacion), junto a `revisor/`, con su propio `package.json`: se compilan con `tsc` y se corren con `node`, como en las lecciones anteriores, y agregan `@babel/core`, `babel-plugin-react-compiler` y `@types/convert-source-map`, que se instalan en `~/curso-react/figuras/` con `npm install --save-dev --save-exact @babel/core@8.0.7 babel-plugin-react-compiler@1.0.0 @types/convert-source-map@2.0.3` (el último porque los tipos de `@babel/core` 8.0.7 lo importan y `tsc --strict` sin `skipLibCheck` no compila sin él). **Salidas archivadas.** Junto a las figuras, en `programas/09-rendimiento-publicacion/`, están las salidas de esta lección que se pueden repetir con un comando, vueltas a correr al revisarla: `build.salida.txt`, `build-sin-compilador.salida.txt`, `secretos.grep.txt` (las marcas del compilador y la búsqueda de 9.2.4), `preview.curl.txt`, `publicado.curl.txt` y `suite.vitest.txt`. Solo cambian las horas y las fechas de las cabeceras. **No están archivadas**, y se miden en una sola corrida de la lección sin copia en `programas/`: la fase roja de 9.4 (necesita una copia sin los arreglos), las bitácoras y el volcado del DOM que se midieron con Chrome (9.2.3, 9.4.1 y 9.4.3), la construcción con claves de mentira de 9.2.4, y la salida de ESLint de «El error que vas a ver».
+
+El punto de control también se instaló desde cero en un contenedor Linux (Debian 12, imagen oficial `node:24.22.0-bookworm`): `npm run build` dio el mismo nombre de archivo y `npm test` terminó con código 0 y `Tests  35 passed (35)`. Tras el último cambio de `PaginaServicio` (conservar el detalle viejo si una actualización falla) se repitieron en macOS, contra el punto de control nuevo, las dos construcciones de 9.1.6, las búsquedas en `dist/` de 9.1.6 y 9.2.4, las respuestas de `curl` y la bitácora de 9.2.2 y 9.2.3, el volcado del DOM publicado y la construcción con claves de mentira. No se corrió en una Linux Mint real; nada de lo que se muestra depende del sistema. Las horas de la bitácora de los servidores están en UTC; las de Vitest (`Start at`), en la hora local de la máquina. **Lo que no se midió**, y se dice donde aparece: el Profiler de las herramientas de desarrollo de React, que se lee con los ojos, y el panel publicado detrás de un servidor web de producción. Las rutas largas se muestran a partir de `~/curso-react`.
 
 ## Al terminar vas a poder
 
 - Medir con `<Profiler>` cuántas veces se dibuja una parte del árbol y cuánto tarda, y decidir con ese número si hace falta optimizar.
-- Quitar dibujos de más cambiando la **estructura** (bajar el estado, pasar JSX como `children`) antes de pensar en memoizar, y mostrar con la medición que funcionó.
+- Quitar dibujos de más cambiando la **estructura** (bajar el estado, pasar JSX como `children`) antes de pensar en memoizar (guardar el resultado de un cálculo o de un dibujo para reutilizarlo mientras sus entradas no cambien), y mostrar con la medición que funcionó.
 - Encender React Compiler 1.0 en un proyecto de Vite, leer el código que produce y comprobar en `dist/` que actuó.
 - Explicar por qué `vite preview` no es un servidor de producción, y comprobar con `curl` que el servidor de publicación reescribe las rutas del cliente a `index.html`, envía la política de seguridad de contenido y cachea bien cada archivo.
 - Buscar secretos en `dist/` y **leer** el resultado, separando una coincidencia de una fuga.
@@ -215,7 +217,7 @@ Por eso el curso no puso `useMemo` en ninguna lección. No fue un olvido: cada v
 
 #### 9.1.5 React Compiler 1.0: la memoización que no escribes
 
-Hay un camino más, y el punto de control lo toma. React Compiler es una herramienta de construcción que memoiza los componentes y los hooks por su cuenta: lee tu código, entiende las reglas de React, y escribe el equivalente de `memo`, `useMemo` y `useCallback` donde hacen falta ([React, «Introduction to React Compiler»](https://react.dev/learn/react-compiler/introduction)). Su primera versión estable, la 1.0, salió el 7 de octubre de 2025; el anuncio dice que ya se probó en aplicaciones grandes de Meta y que está listo para producción ([React, «React Compiler v1.0»](https://react.dev/blog/2025/10/07/react-compiler-1)). Para código nuevo, la documentación recomienda dejarle la memoización al compilador y usar `useMemo` o `useCallback` solo cuando necesites control preciso, por ejemplo un valor memoizado que es dependencia de un Effect.
+Hay un camino más, y el punto de control lo toma. React Compiler es una herramienta de construcción que memoiza los componentes y los hooks por su cuenta: lee tu código, entiende las reglas de React, y escribe el equivalente de `memo`, `useMemo` y `useCallback` donde hacen falta ([React, «Introduction to React Compiler»](https://react.dev/learn/react-compiler/introduction)). Su primera versión estable, la 1.0, salió el 7 de octubre de 2025; el anuncio dice que ya se probó en aplicaciones grandes de Meta y que está listo para producción ([React, «React Compiler v1.0»](https://react.dev/blog/2025/10/07/react-compiler-1)). Para código nuevo, la documentación recomienda dejarle la memoización al compilador y usar `useMemo` o `useCallback` donde haga falta un control preciso, por ejemplo un valor memoizado que es dependencia de un Effect.
 
 En un proyecto de Vite se enciende como un *preset* de Babel. La documentación de instalación da exactamente esta forma para `@vitejs/plugin-react` 6 o posterior ([React, «Installation»](https://react.dev/learn/react-compiler/installation)), y es el cambio principal de configuración del punto de control (las líneas de `css` dentro de `test` se explican en 9.4.4):
 
@@ -244,7 +246,13 @@ export default defineConfig({
 });
 ```
 
-Con tres dependencias de desarrollo nuevas, fijadas con versión exacta: `@rolldown/plugin-babel` 0.2.4 (el *plugin* que corre Babel dentro de la construcción de Vite), `@babel/core` 8.0.7 y `babel-plugin-react-compiler` 1.0.0. El README de `@vitejs/plugin-react` también menciona un camino nativo, sin Babel, pero lo marca como experimental, y el punto de control no lo usa.
+Con tres dependencias de desarrollo nuevas, fijadas con versión exacta: `@rolldown/plugin-babel` 0.2.4 (el *plugin* que corre Babel dentro de la construcción de Vite), `@babel/core` 8.0.7 y `babel-plugin-react-compiler` 1.0.0. Se instalan desde `~/curso-react/revisor/`:
+
+```bash
+npm install --save-dev --save-exact @rolldown/plugin-babel@0.2.4 @babel/core@8.0.7 babel-plugin-react-compiler@1.0.0
+```
+
+En `package.json` cambian dos cosas más: `"version": "0.9.0"`, como en cada lección, y el script nuevo de 9.2.3, `"publicado": "node servidor/publicar.ts"`. El README de `@vitejs/plugin-react` también menciona un camino nativo, sin Babel, pero lo marca como experimental, y el punto de control no lo usa.
 
 ¿Qué escribe el compilador? La figura 2 se lo pregunta directamente. Le da a Babel, con el *plugin* del compilador, el panel A de la figura 1 como texto, y además un componente que rompe una regla de React: cambia un objeto que recibió como prop.
 
@@ -362,9 +370,9 @@ rendering chunks...
 computing gzip size...
 dist/index.html                   0.39 kB │ gzip:   0.26 kB
 dist/assets/index-CbqUABMA.css    1.27 kB │ gzip:   0.59 kB
-dist/assets/index-DaB3Njqx.js   374.36 kB │ gzip: 117.22 kB
+dist/assets/index-Cs1CcfeN.js   374.65 kB │ gzip: 117.28 kB
 
-✓ built in 1.28s
+✓ built in 282ms
 ```
 
 Y esta, la de una copia idéntica con una sola diferencia: en `vite.config.ts`, `plugins: [react()]`, sin el compilador.
@@ -374,10 +382,10 @@ $ npx vite build
 ...
 dist/index.html                   0.39 kB │ gzip:   0.26 kB
 dist/assets/index-CbqUABMA.css    1.27 kB │ gzip:   0.59 kB
-dist/assets/index-D9CAggQp.js   367.02 kB │ gzip: 114.49 kB
+dist/assets/index-DuGgkiHN.js   367.32 kB │ gzip: 114.56 kB
 ```
 
-La misma prueba, hecha antes de los cinco arreglos de 9.4, dio sin el compilador `index-WLyq37jn.js`: el mismo nombre que producen los puntos de control 7 y 8, porque hasta ahí el código de la aplicación era idéntico al de esas lecciones, byte por byte. Ahora se cuentan las marcas del compilador en cada uno:
+La misma prueba, hecha antes de los cinco arreglos de 9.4, dio sin el compilador `index-WLyq37jn.js`: el mismo nombre que producían entonces los puntos de control 7 y 8, porque hasta ahí el código de la aplicación era idéntico al de esas lecciones, byte por byte. Desde esa medición, los puntos de control 7, 8 y 9 cambiaron una condición de `PaginaServicio` (conservar el detalle viejo si una actualización falla), y los 7 y 8 se llaman ahora `index-C_lOH5GL.js`; la comparación con el 9 anterior a los arreglos no se repitió. Ahora se cuentan las marcas del compilador en cada uno:
 
 ```text
 $ grep -o memo_cache_sentinel dist/assets/*.js | wc -l      # con el compilador
@@ -388,13 +396,13 @@ $ grep -o memo_cache_sentinel dist/assets/*.js | wc -l      # sin el compilador
 
 Sin el compilador hay una, que viene de React DOM: es la constante `Symbol.for("react.memo_cache_sentinel")` con la que React marca, por dentro, una caché todavía vacía (medido: aparece en `react-dom-client.production.js` y no en el `compiler-runtime` de React, que solo pide la caché). Con el compilador hay 18: esa misma más 17 que agregó el compilador, una por cada valor que guarda la primera vez y ya no vuelve a calcular porque no depende de nada, como `t0` y `t2` en la figura 2. No es la cuenta de casillas: en este paquete el compilador pidió 24 cachés (24 llamadas a `c(…)`, la `_c` de la figura ya minificada) con 255 casillas en total, medido sumando sus argumentos. Para saber si actuó basta con que el número suba. Una advertencia de medición: `grep -c` **no** sirve para esto, porque cuenta **líneas** con coincidencias y no coincidencias, y el JavaScript minificado tiene casi todo en pocas líneas. Medido sobre el mismo archivo, `grep -c memo_cache_sentinel` dice `2`: las 18 marcas están en dos líneas. Un número que sale sin error no es un número correcto.
 
-Y una cuenta más, que es la que la documentación no te va a dar: la memoización no es gratis ni en bytes. El paquete creció de 367.02 kB a 374.36 kB (de 114.49 a 117.22 kB comprimido): 7.34 kB más de código que corre en cada dibujo para decidir qué reutilizar. En el `revisor`, donde ningún componente es caro, eso es casi seguro una pérdida pequeña, no una ganancia; el punto de control lo enciende porque el plan del curso pide enseñar el compilador y porque las 34 pruebas pasan igual con él, no porque una medición lo haya pedido. **Esa es una decisión de criterio, y se dice como tal.** En una aplicación con listas largas o interacciones finas, la cuenta se invierte, y el anuncio de la versión 1.0 reporta mejoras de hasta 12 % en cargas y navegaciones en aplicaciones de Meta ([React, «React Compiler v1.0»](https://react.dev/blog/2025/10/07/react-compiler-1)).
+Y una cuenta más, que es la que la documentación no te va a dar: la memoización no es gratis ni en bytes. El paquete creció de 367.32 kB a 374.65 kB (de 114.56 a 117.28 kB comprimido): 7.33 kB más de código que corre en cada dibujo para decidir qué reutilizar. En el `revisor`, donde ningún componente es caro, eso es casi seguro una pérdida pequeña, no una ganancia; el punto de control lo enciende porque el plan del curso pide enseñar el compilador y porque las 35 pruebas pasan igual con él, no porque una medición lo haya pedido. **Esa es una decisión de criterio, y se dice como tal.** En una aplicación con listas largas o interacciones finas, la cuenta se invierte, y el anuncio de la versión 1.0 reporta mejoras de hasta 12 % en cargas y navegaciones en aplicaciones de Meta ([React, «React Compiler v1.0»](https://react.dev/blog/2025/10/07/react-compiler-1)).
 
 ### 9.2 Publicar
 
 #### 9.2.1 Lo que queda en `dist/`
 
-`npm run build` hace dos cosas, en orden: `tsc -b`, que revisa los tipos y no escribe nada, y `vite build`, que empaqueta. Lo que queda en `dist/` son tres archivos: un `index.html` que apunta a un JavaScript y a una hoja de estilos, y esos dos en `dist/assets/`, con un pedazo de su contenido en el nombre (`DaB3Njqx`, `CbqUABMA`). Ese pedazo cambia cada vez que cambia el contenido, y es lo que permite una caché agresiva: el navegador puede guardar `index-DaB3Njqx.js` un año entero, porque si el código cambia, el archivo nuevo se llamará distinto. El que **no** puede guardarse sin preguntar es `index.html`, que es el que dice qué archivos tocan hoy.
+`npm run build` hace dos cosas, en orden: `tsc -b`, que revisa los tipos y no genera JavaScript (solo deja un archivo de estado en `node_modules/.tmp/` para que la siguiente revisión sea más rápida), y `vite build`, que empaqueta. Lo que queda en `dist/` son tres archivos: un `index.html` que apunta a un JavaScript y a una hoja de estilos, y esos dos en `dist/assets/`, con un pedazo de su contenido en el nombre (`Cs1CcfeN`, `CbqUABMA`). Ese pedazo cambia cada vez que cambia el contenido, y es lo que permite una caché agresiva: el navegador puede guardar `index-Cs1CcfeN.js` un año entero, porque si el código cambia, el archivo nuevo se llamará distinto. El que **no** puede guardarse sin preguntar es `index.html`, que es el que dice qué archivos tocan hoy.
 
 `dist/` es todo lo que se publica. No hay servidor de React, ni Node, ni nada que se ejecute del lado del servidor: son archivos estáticos. La documentación de Vite lo dice así: puedes desplegar la carpeta `dist` en la plataforma que prefieras ([Vite, «Deploying a Static Site»](https://vite.dev/guide/static-deploy)). Lo que esa frase no dice es qué tiene que hacer esa plataforma, y ahí empiezan los problemas.
 
@@ -409,14 +417,14 @@ HTTP/1.1 200 OK
 Vary: Origin
 Content-Type: text/html
 Cache-Control: no-cache
-Etag: W/"188-SSYsd1lEG7nYr91W/nNjQMAIxfU"
-Date: Wed, 21 Oct 2026 13:10:57 GMT
+Etag: W/"188-NTjMluUw3sCMmwdKb29psG22o7w"
+Date: Thu, 22 Oct 2026 19:29:20 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 
 $ curl -s -o /dev/null -w "%{http_code} %{content_type}\n" http://localhost:4109/assets/no-existe.js
 200 text/html
-$ curl -sI http://localhost:4109/assets/index-DaB3Njqx.js | grep -i "cache-control\|content-type"
+$ curl -sI http://localhost:4109/assets/index-Cs1CcfeN.js | grep -i "cache-control\|content-type"
 Content-Type: text/javascript
 Cache-Control: no-cache
 ```
@@ -425,11 +433,11 @@ Tres hallazgos, y ninguno es un error de Vite, porque la vista previa no promete
 
 1. **No hay política de seguridad de contenido.** La respuesta no trae `Content-Security-Policy`. Si algún día se cuela HTML ajeno en la página (9.2.5), el navegador no tiene ninguna regla para negarse a ejecutarlo.
 2. **Un archivo que no existe responde `200` con HTML.** Pediste `/assets/no-existe.js` y la vista previa te dio `index.html`. Imagina que publicas una versión nueva mientras alguien tiene abierta la vieja, y su página pide un JavaScript que ya no está: en lugar de un `404` claro, el navegador recibe HTML donde esperaba JavaScript y falla con un error de tipo de contenido que nadie entiende. La reescritura es correcta para las rutas del cliente y equivocada para los archivos.
-3. **El JavaScript con nombre de contenido no se cachea.** `no-cache` en `index-DaB3Njqx.js` obliga al navegador a preguntar cada vez, aunque ese archivo no puede cambiar nunca.
+3. **El JavaScript con nombre de contenido no se cachea.** `no-cache` en `index-Cs1CcfeN.js` obliga al navegador a preguntar cada vez, aunque ese archivo no puede cambiar nunca.
 
 #### 9.2.3 El servidor de publicación del `revisor`
 
-El punto de control trae un servidor propio, `servidor/publicar.ts`, de 145 líneas, que sirve `dist/` y resuelve justo esas tres cosas. No es para que lo uses tal cual en producción: es para que veas cada decisión que un servidor de verdad (nginx, Caddy, el de tu plataforma de alojamiento) tiene que tomar, escrita en un lenguaje que ya lees. Se arranca con un script nuevo, `"publicado": "node servidor/publicar.ts"`, en el puerto 4180, y reenvía `/api/*` a la API de práctica, como el *proxy* de Vite en desarrollo.
+El punto de control trae un servidor propio, `servidor/publicar.ts`, de 146 líneas, que sirve `dist/` y resuelve justo esas tres cosas. No es para que lo uses tal cual en producción: es para que veas cada decisión que un servidor de verdad (nginx, Caddy, el de tu plataforma de alojamiento) tiene que tomar, escrita en un lenguaje que ya lees. Se arranca con un script nuevo, `"publicado": "node servidor/publicar.ts"`, en el puerto 4180, y reenvía `/api/*` a la API de práctica, como el *proxy* de Vite en desarrollo.
 
 ```ts
 // revisor/servidor/publicar.ts
@@ -443,10 +451,11 @@ El punto de control trae un servidor propio, `servidor/publicar.ts`, de 145 lín
 import { readdir, readFile } from "node:fs/promises";
 import { createServer, type ServerResponse } from "node:http";
 import { extname, join, relative, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const PUERTO = Number(process.env.PUERTO ?? "4180");
 const API_URL = process.env.API_URL ?? "http://127.0.0.1:3100";
-const RAIZ = new URL("../dist/", import.meta.url).pathname;
+const RAIZ = fileURLToPath(new URL("../dist/", import.meta.url));
 
 const TIPOS: Readonly<Record<string, string>> = {
   ".html": "text/html; charset=utf-8",
@@ -582,11 +591,12 @@ for (const senal of ["SIGINT", "SIGTERM"] as const) {
 
 Lo que hay que entender, decisión por decisión:
 
-- **Una lista cerrada de archivos.** Al arrancar, `listarArchivos` lee **todo** `dist/` a memoria, en un `Map` cuya llave es la ruta pública (`/assets/index-DaB3Njqx.js`). Después, ninguna petición toca el disco: el servidor busca la dirección en el `Map` y, si no está, no existe. Así, ninguna dirección que escriba alguien (`/../../etc/passwd`, por ejemplo) se convierte en una ruta de archivo. Es la defensa más simple contra el recorrido de directorios, porque el ataque no tiene dónde aplicarse.
+- **La ruta de `dist/` sale de `fileURLToPath`.** `import.meta.url` es una dirección `file:///…`, y la propiedad `pathname` de una `URL` deja los espacios y los acentos codificados (`Mis%20cursos`), que no son una ruta de disco: con tu carpeta en `~/Mis cursos/` el servidor fallaría con `ENOENT` sin decir por qué. `fileURLToPath` ([Node.js, `url`](https://nodejs.org/api/url.html#urlfileurltopathurl)) decodifica. Se midió: con el servidor copiado a una carpeta llamada «con espacios y acentós», `pathname` no encuentra `dist/` y `fileURLToPath` sí.
+- **Una lista cerrada de archivos.** Al arrancar, `listarArchivos` lee **todo** `dist/` a memoria, en un `Map` cuya llave es la ruta pública (`/assets/index-Cs1CcfeN.js`). Después, ninguna petición toca el disco: el servidor busca la dirección en el `Map` y, si no está, no existe. Así, ninguna dirección que escriba alguien (`/../../etc/passwd`, por ejemplo) se convierte en una ruta de archivo. Es la defensa más simple contra el recorrido de directorios, porque el ataque no tiene dónde aplicarse.
 - **La reescritura, con una excepción.** Cualquier dirección que no sea un archivo responde `index.html`, para que React Router decida; **salvo** las que empiezan con `/assets/`, que responden `404`. Ahí sí un archivo faltante es un error y se dice.
 - **La política de seguridad de contenido.** `default-src 'none'` prohíbe todo, y cada directiva siguiente abre solo lo necesario: scripts, estilos, imágenes y conexiones desde el mismo origen (`'self'`), formularios que solo se envían al mismo origen, ninguna etiqueta `<base>` y ningún sitio que pueda meter el panel en un `<iframe>`. No hay `'unsafe-inline'`: un `<script>` escrito dentro del HTML no se ejecuta. La construcción de Vite no pone ningún script en línea en `index.html`, y por eso esta política no rompe el panel.
 - **`nosniff`.** Le dice al navegador que crea el `content-type` que declara el servidor y no intente adivinarlo por el contenido.
-- **Caché por tipo de archivo.** `/assets/*` lleva `public, max-age=31536000, immutable`: un año, y la promesa de que no va a cambiar. `index.html` lleva `no-cache`: el navegador puede guardarlo, pero tiene que preguntar antes de usarlo.
+- **Caché por tipo de archivo.** `/assets/*` lleva `public, max-age=31536000, immutable`: un año, y la promesa de que no va a cambiar. `index.html` lleva `no-cache`: el navegador puede guardarlo, pero tiene que preguntar antes de usarlo. Este servidor no manda `ETag` ni `Last-Modified`, así que esa «pregunta» termina siempre en una descarga completa: son 392 bytes y no importa; un servidor de producción agrega el validador y responde `304` cuando el archivo no cambió.
 
 Con la API de práctica y el servidor de publicación encendidos, seis preguntas:
 
@@ -599,13 +609,13 @@ content-type: text/html; charset=utf-8
 cache-control: no-cache
 content-security-policy: default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'
 x-content-type-options: nosniff
-Date: Wed, 21 Oct 2026 13:10:50 GMT
+Date: Thu, 22 Oct 2026 19:29:34 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 
 $ curl -s -o /dev/null -w "%{http_code} %{content_type}\n" http://127.0.0.1:4109/assets/no-existe.js
 404 text/plain; charset=utf-8
-$ curl -sI http://127.0.0.1:4109/assets/index-DaB3Njqx.js | grep -i cache-control
+$ curl -sI http://127.0.0.1:4109/assets/index-Cs1CcfeN.js | grep -i cache-control
 cache-control: public, max-age=31536000, immutable
 $ curl -s --path-as-is -o /dev/null -w "%{http_code} %{content_type}\n" http://127.0.0.1:4109/../../etc/passwd
 200 text/html; charset=utf-8
@@ -620,26 +630,26 @@ cache-control: no-cache
 La primera es la recarga de la escena, resuelta: `200` con `index.html`, la política y `no-cache`. La segunda es el archivo faltante: `404`, ya no HTML disfrazado. La tercera, la caché larga. La cuarta merece una lectura cuidadosa: `--path-as-is` le pide a `curl` que **no** limpie los `..` y los mande tal cual, como haría alguien que intenta salirse de la carpeta. El servidor respondió `200` con `index.html`, no con el archivo del sistema. La bitácora del servidor dice por qué:
 
 ```text
-13:10:49.359 revisor publicado en http://127.0.0.1:4109 (API en http://127.0.0.1:3109)
-13:10:50.846 HEAD /servicios/pagos 200
-13:10:50.884 GET /assets/no-existe.js 404
-13:10:50.922 HEAD /assets/index-DaB3Njqx.js 200
-13:10:50.942 GET /etc/passwd 200
-13:10:51.276 POST /api/servicios 201
-13:10:51.286 HEAD /favicon.ico 200
-13:10:53.003 GET /servicios/pagos 200
-13:10:53.009 GET /assets/index-DaB3Njqx.js 200
-13:10:53.010 GET /assets/index-CbqUABMA.css 200
-13:10:54.538 GET /api/servicios/pagos 200
-13:10:54.540 GET /favicon.ico 200
+19:29:32.997 revisor publicado en http://127.0.0.1:4109 (API en http://127.0.0.1:3109)
+19:29:34.967 HEAD /servicios/pagos 200
+19:29:34.976 GET /assets/no-existe.js 404
+19:29:34.985 HEAD /assets/index-Cs1CcfeN.js 200
+19:29:34.992 GET /etc/passwd 200
+19:29:35.314 POST /api/servicios 201
+19:29:35.322 HEAD /favicon.ico 200
+19:29:36.676 GET /servicios/pagos 200
+19:29:36.683 GET /assets/index-CbqUABMA.css 200
+19:29:36.684 GET /assets/index-Cs1CcfeN.js 200
+19:29:36.720 GET /favicon.ico 200
+19:29:38.213 GET /api/servicios/pagos 200
 ```
 
 `new URL()` normalizó `/../../etc/passwd` a `/etc/passwd`, que no está en el `Map`, así que es «una ruta del cliente» y responde `index.html`. Dos defensas encimadas: la normalización de la URL y la lista cerrada. Y la quinta pregunta, el `POST` del alta, llegó a la API a través del reenvío con su `201`. La sexta, `/favicon.ico`, la vas a necesitar en el ejercicio 3; no la leas todavía.
 
-Las últimas cinco líneas de la bitácora son Chrome sin ventana abriendo `/servicios/pagos` en el servidor publicado: pide la página, el JavaScript, la hoja de estilos, y ya con React corriendo, el detalle a la API y el ícono de la pestaña. Este es el `#raiz` que dibujó, con el encabezado, la bandeja vacía y el detalle de `pagos`:
+Las últimas cinco líneas de la bitácora son Chrome sin ventana abriendo `/servicios/pagos` en el servidor publicado: pide la página, la hoja de estilos, el JavaScript y el ícono de la pestaña, y ya con React corriendo, el detalle a la API. Este es el `#raiz` que dibujó, con el encabezado, la bandeja vacía y el detalle de `pagos`:
 
 ```text
-<div id="raiz"><header><h1>Revisor</h1><nav aria-label="Principal"><a class="" href="/" data-discover="true">Reporte</a><a class="" href="/servicios/nuevo" data-discover="true">Dar de alta</a></nav><fieldset class="preferencias"><legend>Preferencias</legend><label><input type="checkbox" checked=""> Mostrar duración</label><label><input type="checkbox"> Vista compacta</label></fieldset></header><section class="bandeja" aria-label="Avisos"><div role="status" aria-atomic="false"></div></section><main><section class="tarjeta" aria-label="Servicio pagos"><h2>Servicio pagos</h2><dl><dt>Estado</dt><dd>En falla: HTTP 503</dd><dt>Revisiones</dt><dd>0</dd><dt>Última revisión</dt><dd>2026-10-21T13:10:49.204Z</dd></dl><button type="button">Volver a revisar</button><div class="editor-nota"><label>Nota sobre pagos<textarea rows="3"></textarea></label><button type="button">Guardar nota</button></div><p><a href="/" data-discover="true">Volver al reporte</a></p></section></main></div>
+<div id="raiz"><header><h1>Revisor</h1><nav aria-label="Principal"><a class="" href="/" data-discover="true">Reporte</a><a class="" href="/servicios/nuevo" data-discover="true">Dar de alta</a></nav><fieldset class="preferencias"><legend>Preferencias</legend><label><input type="checkbox" checked=""> Mostrar duración</label><label><input type="checkbox"> Vista compacta</label></fieldset></header><section class="bandeja" aria-label="Avisos"><div role="status" aria-atomic="false"></div></section><main><section class="tarjeta" aria-label="Servicio pagos"><h2>Servicio pagos</h2><dl><dt>Estado</dt><dd>En falla: HTTP 503</dd><dt>Revisiones</dt><dd>0</dd><dt>Última revisión</dt><dd>2026-10-22T19:29:17.619Z</dd></dl><button type="button">Volver a revisar</button><div class="editor-nota"><label>Nota sobre pagos<textarea rows="3"></textarea></label><button type="button">Guardar nota</button></div><p><a href="/" data-discover="true">Volver al reporte</a></p></section></main></div>
 ```
 
 El título de la pestaña, en el `<head>` del mismo volcado, era `pagos · Revisor`: el Effect de `useTituloDocumento` de la Lección 3, funcionando en la versión publicada, con la política de seguridad encendida.
@@ -652,13 +662,15 @@ La Lección 0 lo demostró en desarrollo: lo que empieza con `VITE_` queda escri
 
 ```text
 $ grep -oiE "clave|secret|token|password|apikey" dist/assets/*.js dist/index.html | sort | uniq -c
-   2 dist/assets/index-DaB3Njqx.js:password
+   1 dist/assets/index-Cs1CcfeN.js:clave
+   3 dist/assets/index-Cs1CcfeN.js:password
 $ grep -ioE ".{60}password.{60}" dist/assets/*.js
 datetime:!0,"datetime-local":!0,email:!0,month:!0,number:!0,password:!0,range:!0,search:!0,tel:!0,text:!0,time:!0,url:!0,week:!0
 .type===`search`||e.type===`tel`||e.type===`url`||e.type===`password`)||t===`textarea`||e.contentEditable===`true`)}var Qr=An&&`
+===`http:`||t.protocol===`https:`)return t.username!==``||t.password!==``?{ok:!1,detalle:`quita el usuario y la clave de la dire
 ```
 
-Dos coincidencias, en una sola línea del archivo (`grep -c` diría `1`), y ninguna es una fuga. Las dos son código de React DOM que enumera los tipos de `<input>` (`email`, `number`, `password`, `url`…) para saber cómo tratar cada uno. La lección importante no es el número: **un resultado de búsqueda se lee, no se cuenta**. Cero coincidencias tampoco habría probado nada, porque una clave real casi nunca se llama `clave`.
+Cuatro coincidencias, en dos líneas del archivo (`grep -c` diría `2`), y ninguna es una fuga. Dos son código de React DOM que enumera los tipos de `<input>` (`email`, `number`, `password`, `url`…) para saber cómo tratar cada uno. Las otras dos son del propio `revisor`: el esquema del alta de la Lección 7 lee `url.password` para rechazar una dirección con usuario o clave, y su mensaje dice «quita el usuario y la clave de la dirección». La lección importante no es el número: **un resultado de búsqueda se lee, no se cuenta**. Cero coincidencias tampoco habría probado nada, porque una clave real casi nunca se llama `clave`.
 
 Por eso la búsqueda que sí sirve es la de **los valores**. Para verlo, una copia del punto de control lee dos variables que no debería (una con prefijo y otra sin él), las declara en `vite-env.d.ts` e imprime las dos desde `main.tsx` para que la construcción no las descarte:
 
@@ -683,7 +695,7 @@ Y se construye con valores de mentira:
 ```text
 $ VITE_CLAVE_MONITOREO=mon_prueba_7f3a91 CLAVE_MONITOREO=mon_secreta_c0ffee npm run build
 ...
-dist/assets/index-D1lyPurv.js   374.42 kB │ gzip: 117.26 kB
+dist/assets/index-DfHw2mrm.js   374.71 kB │ gzip: 117.32 kB
 $ grep -o '.\{30\}mon_prueba_7f3a91.\{10\}' dist/assets/*.js
 s?t:ds}var hs=ms(`10000`),gs=`mon_prueba_7f3a91`;async fu
 $ grep -c mon_secreta_c0ffee dist/assets/*.js
@@ -729,7 +741,9 @@ $ node fig09_03.js
   <a href="javascript:throw new Error(&#x27;React has blocked a javascript: URL as a security precaution.&#x27;)">pagos</a>
 ```
 
-**Primera capa: React escapa el texto.** En los casos 1 y 2, el `<img onerror>` llegó como texto: `&lt;img …&gt;`. El navegador lo pinta como letras y no crea ninguna imagen. Esto pasa siempre que el dato va como hijo de JSX o como valor de un atributo de texto (`title`, `aria-label`, `value`), que es como el `revisor` pinta todo. Los atributos que el navegador trata como dirección o como documento (`href`, `src`, `formAction`, `srcDoc` de un `<iframe>`) son otra historia: escapar no los protege, porque una dirección peligrosa no lleva ningún carácter que escapar. React 19 bloquea `javascript:`, como muestra el caso 3, pero lo demás no lo revisa. Una dirección que viene de afuera se valida antes de usarla, por ejemplo exigiendo que empiece con `https://`, como hace el esquema del alta de la Lección 7 con `urlHttp`. La única puerta para insertar HTML es `dangerouslySetInnerHTML`, y la documentación de React lo dice sin rodeos: si el HTML no es de confianza, por ejemplo si se basa en datos de usuarios, te arriesgas a una vulnerabilidad de XSS ([React, componentes comunes](https://react.dev/reference/react-dom/components/common)). En el caso 3, React 19 reemplazó la dirección `javascript:` por una que lanza un error: «React has blocked a javascript: URL as a security precaution». React 16.9 había anunciado que lo haría en una versión mayor futura ([React, «React v16.9.0»](https://legacy.reactjs.org/blog/2019/08/08/react-v16.9.0.html)); la figura muestra que la 19.3.1 ya lo hace.
+Fíjate en que no salió ningún `[aviso de React]` en esta corrida: React 19.3.1 reemplazó la dirección sin imprimir nada en `console.error`. El gancho de arriba queda para que lo veas por ti mismo.
+
+**Primera capa: React escapa el texto.** En los casos 1 y 2, el `<img onerror>` llegó como texto: `&lt;img …&gt;`. El navegador lo pinta como letras y no crea ninguna imagen. Esto pasa siempre que el dato va como hijo de JSX o como valor de un atributo de texto (`title`, `aria-label`, `value`), que es como el `revisor` pinta todo. Los atributos que el navegador trata como dirección o como documento (`href`, `src`, `formAction`, `srcDoc` de un `<iframe>`) son otra historia: escapar no los protege, porque una dirección peligrosa no lleva ningún carácter que escapar. React 19 bloquea `javascript:`, como muestra el caso 3, pero lo demás no lo revisa. Una dirección que viene de afuera se valida antes de usarla, por ejemplo exigiendo que empiece con `https://`, como hace el esquema del alta de la Lección 7 con `urlHttp`. La puerta que React ofrece para insertar HTML es `dangerouslySetInnerHTML` (por fuera de React, con un `ref`, quedan también `innerHTML`, `outerHTML` e `insertAdjacentHTML`; la regla del linter de la Lección 0 cubre las dos primeras, y las otras dos se revisan a ojo), y la documentación de React lo dice sin rodeos: si el HTML no es de confianza, por ejemplo si se basa en datos de usuarios, te arriesgas a una vulnerabilidad de XSS ([React, componentes comunes](https://react.dev/reference/react-dom/components/common)). En el caso 3, React 19 reemplazó la dirección `javascript:` por una que lanza un error: «React has blocked a javascript: URL as a security precaution». React 16.9 había anunciado que lo haría en una versión mayor futura ([React, «React v16.9.0»](https://legacy.reactjs.org/blog/2019/08/08/react-v16.9.0.html)); la figura muestra que la 19.3.1 ya lo hace.
 
 **Segunda capa: el linter.** El `eslint.config.js` del `revisor` trae desde la Lección 0 una regla `no-restricted-syntax` que rechaza `dangerouslySetInnerHTML` y las asignaciones a `innerHTML`. Si alguien la abre, `npm run lint` se pone rojo y la verificación del curso no pasa.
 
@@ -743,7 +757,7 @@ Todo lo que el `revisor` dibuja, lo dibuja el navegador. React 19 tiene otra pos
 
 Dos aclaraciones de la documentación que evitan confusiones comunes. La primera: **no hay directiva para los Server Components**; `"use server"` es para Server Functions, no para marcar un componente. La segunda, que decide mucho: aunque los Server Components de React 19 son estables entre versiones menores, las piezas internas que usan los empaquetadores y los frameworks para implementarlos **no siguen versionado semántico** y pueden romperse entre versiones menores de React 19.x. Por eso la documentación le recomienda a quien construye esa integración fijar una versión exacta de React o usar la versión *Canary*. Lo que sigue ya es criterio de este curso, no de la documentación: los Server Components se usan a través de un framework que mantiene esa integración por ti. Vite tiene un *plugin* oficial para ellos, `@vitejs/plugin-rsc` (versión 0.5.38 el 21 de octubre de 2026, todavía antes de la 1.0), que se describe como agnóstico del framework y entrega las piezas de bajo nivel para construir uno encima; es una base para quien hace frameworks, no una pieza para una aplicación como el `revisor`.
 
-Y una advertencia de seguridad que vale para cualquier diseño con servidor: los argumentos de una Server Function **los controla por completo el cliente**. La documentación pide tratarlos siempre como entrada no confiable, validarlos, y comprobar en cada Server Function que la persona que la llama tiene permiso para lo que pide ([React, `"use server"`](https://react.dev/reference/rsc/use-server)). Una Server Function es, en la práctica, una ruta pública de tu servidor con otro nombre. El antecedente más fuerte es reciente: el 3 de diciembre de 2025, el equipo de React publicó una vulnerabilidad crítica en los Server Components, la CVE-2025-55182, con calificación CVSS de 10.0, que permitía ejecutar código en el servidor sin autenticarse aprovechando un defecto en cómo React decodificaba las peticiones a las Server Functions. Según el aviso, una aplicación podía ser vulnerable aunque no definiera ninguna Server Function, con solo admitir Server Components; y una aplicación cuyo código de React no usa un servidor no estaba afectada ([React, «Critical Security Vulnerability in React Server Components»](https://react.dev/blog/2025/12/03/critical-security-vulnerability-in-react-server-components)). El `revisor` es de las segundas. Es la otra cara de «piezas internas que no siguen versionado semántico»: quien las usa tiene que actualizarlas en cuanto sale el parche.
+Y una advertencia de seguridad que vale para cualquier diseño con servidor: los argumentos de una Server Function **los controla por completo el cliente**. La documentación pide tratarlos siempre como entrada no confiable, validarlos, y comprobar en cada Server Function que la persona que la llama tiene permiso para lo que pide ([React, `"use server"`](https://react.dev/reference/rsc/use-server)). Una Server Function es, en la práctica, una ruta pública de tu servidor con otro nombre. El antecedente más fuerte es reciente: el 3 de diciembre de 2025, el equipo de React publicó una vulnerabilidad crítica en los Server Components, la CVE-2025-55182, con calificación CVSS de 10.0 (CVSS es la escala estándar de gravedad; 10.0 es el máximo), que permitía ejecutar código en el servidor sin autenticarse aprovechando un defecto en cómo React decodificaba las peticiones a las Server Functions. Según el aviso, una aplicación podía ser vulnerable aunque no definiera ninguna Server Function, con solo admitir Server Components; y una aplicación cuyo código de React no usa un servidor no estaba afectada ([React, «Critical Security Vulnerability in React Server Components»](https://react.dev/blog/2025/12/03/critical-security-vulnerability-in-react-server-components)). El `revisor` es de las segundas. Es la otra cara de «piezas internas que no siguen versionado semántico»: quien las usa tiene que actualizarlas en cuanto sale el parche. Entre los paquetes que el aviso lista como afectados está `@vitejs/plugin-rsc`, el mismo *plugin* de arriba.
 
 #### 9.3.2 Por qué este panel no los usa
 
@@ -1005,7 +1019,7 @@ La prueba existente «sin fallas no pinta un 0 suelto en el resumen» sigue verd
 10:11:09.607 GET /api/servicios/nada 404
 ```
 
-Tres peticiones, con 1.2 y 2.2 segundos entre ellas, y la persona viendo «Cargando detalle…» durante más de tres segundos antes de enterarse de que el servicio no existe. Es `retry: 2` de la Lección 4, que se aplica a **todo** error, más la espera que TanStack Query pone entre intentos: empieza en un segundo y se duplica cada vez ([TanStack Query, «Query Retries»](https://tanstack.com/query/v5/docs/framework/react/guides/query-retries)). Reintentar tiene sentido ante un `503` (el servicio puede volver en un segundo) o una red caída. Ante un `404`, la respuesta es la respuesta: el servicio no va a aparecer por insistir. Una precisión antes de generalizar: en el `revisor` la API solo responde `400`, `404` y `409`, y ninguno cambia por insistir, así que la regla del punto de control es «no reintentar ningún 4xx». En una API real hay dos 4xx que sí son pasajeros, el `408` (se agotó el tiempo de la petición) y el `429` (demasiadas peticiones, que suele traer `Retry-After`), y una regla de reintento de verdad los separa.
+Tres peticiones, con 1.2 y 2.2 segundos entre ellas, y la persona viendo «Cargando detalle…» durante más de tres segundos antes de enterarse de que el servicio no existe. Es `retry: 2` de la Lección 4, que se aplica a **todo** error, más la espera que TanStack Query pone entre intentos: empieza en un segundo y se duplica cada vez, hasta un tope de 30 segundos ([TanStack Query, «Query Retries»](https://tanstack.com/query/v5/docs/framework/react/guides/query-retries)). Reintentar tiene sentido ante un `503` (el servicio puede volver en un segundo) o una red caída. Ante un `404`, la respuesta es la respuesta: el servicio no va a aparecer por insistir. Una precisión antes de generalizar: en el `revisor` la API solo responde `400`, `404` y `409`, y ninguno cambia por insistir, así que la regla del punto de control es «no reintentar ningún 4xx». En una API real hay dos 4xx que sí son pasajeros, el `408` (se agotó el tiempo de la petición) y el `429` (demasiadas peticiones, que suele traer `Retry-After`), y una regla de reintento de verdad los separa.
 
 ¿Por qué la Lección 8 no lo vio? Porque `montarEn` crea su propio `QueryClient` con `retry: false`, a propósito, para que un error se vea de inmediato en las pruebas. Eso es correcto para probar las pantallas, y deja sin probar la configuración real. La prueba nueva usa el cliente de verdad, `crearClienteConsultas()`:
 
@@ -1268,34 +1282,41 @@ $ npm test -- --reporter=default
 > revisor@0.9.0 test
 > vitest run --reporter=default
 
-
  RUN  v5.0.5 ~/curso-react/revisor
 
- ✓ src/reporte/ResumenFallas.test.tsx (1 test) 68ms
- ✓ src/reporte/resumen.test.ts (3 tests) 12ms
- ✓ src/configuracion.test.ts (3 tests) 2ms
- ✓ src/compartido/esquema.test.ts (2 tests) 4ms
- ✓ src/app/rutas.test.tsx (3 tests) 95ms
- ✓ src/detalle/PaginaServicio.test.tsx (2 tests) 128ms
- ✓ src/reporte/panel.test.ts (2 tests) 2ms
- ✓ src/reporte/PaginaReporte.test.tsx (7 tests) 176ms
- ✓ src/avisos/avisos.test.ts (4 tests) 2ms
- ✓ src/alta/FormularioAlta.test.tsx (5 tests) 394ms
- ✓ src/consultas/cliente.test.ts (2 tests) 3013ms
+ ✓ src/avisos/avisos.test.ts (4 tests) 8ms
+ ✓ src/reporte/ResumenFallas.test.tsx (1 test) 153ms
+ ✓ src/reporte/resumen.test.ts (3 tests) 67ms
+ ✓ src/reporte/panel.test.ts (2 tests) 5ms
+ ✓ src/app/rutas.test.tsx (3 tests) 486ms
+   ✓ las rutas (3)
+     ✓ una dirección desconocida muestra la página de no encontrada 414ms
+ ✓ src/detalle/PaginaServicio.test.tsx (3 tests) 778ms
+   ✓ la página de un servicio (3)
+     ✓ muestra el detalle del servicio de la dirección 428ms
+ ✓ src/reporte/PaginaReporte.test.tsx (7 tests) 791ms
+   ✓ la página del reporte (7)
+     ✓ error: muestra el motivo y un botón para reintentar 331ms
+ ✓ src/compartido/esquema.test.ts (2 tests) 6ms
+ ✓ src/configuracion.test.ts (3 tests) 4ms
+ ✓ src/alta/FormularioAlta.test.tsx (5 tests) 1259ms
+   ✓ el formulario de alta (5)
+     ✓ sin datos marca los tres campos y lo anuncia 554ms
+ ✓ src/consultas/cliente.test.ts (2 tests) 3020ms
    ✓ el cliente de consultas (2)
-     ✓ reintenta dos veces un 503: puede ser pasajero 3004ms
+     ✓ reintenta dos veces un 503: puede ser pasajero 3005ms
 
  Test Files  11 passed (11)
-      Tests  34 passed (34)
-   Start at  07:23:24
-   Duration  5.06s (environment 64%, tests 19%, setup 7%, transform 6%, import 4%)
+      Tests  35 passed (35)
+   Start at  16:13:56
+   Duration  6.23s (environment 53%, tests 18%, transform 13%, import 8%, setup 7%)
 
-Environment  jsdom was created 11 times · 13.00s total, 64% of tracked time
+Environment  jsdom was created 11 times · 19.53s total, 53% of tracked time
              create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
              learn more: https://vitest.dev/guide/improving-performance#test-environments
 ```
 
-34 de 34 en 11 archivos: las 26 de la Lección 8 más las 8 nuevas. Las dos líneas de `Isolate` del final son una sugerencia de Vitest sobre su propia velocidad, no un aviso de las pruebas; pueden salirte o no. En el punto de control, `npm run lint` terminó sin avisos y `npm run build` dejó `index-DaB3Njqx.js` (374.36 kB) y `index-CbqUABMA.css`, de 1.27 kB: 223 bytes menos que la hoja de antes de los arreglos (1.50 kB). El compilador siguió actuando: 18 marcas.
+35 de 35 en 11 archivos: las 27 de la Lección 8 más las 8 nuevas. El bloque `Environment` de tres líneas del final es una sugerencia de Vitest sobre su propia velocidad (crear jsdom una vez por proceso en lugar de once), no un aviso de las pruebas; puede salirte o no. En el punto de control, `npm run lint` terminó sin avisos y `npm run build` dejó `index-Cs1CcfeN.js` (374.65 kB) y `index-CbqUABMA.css`, de 1.27 kB: unos 230 bytes menos que la hoja de antes de los arreglos (1.50 kB; Vite redondea a centésimas, y si quieres el número exacto, `wc -c` sobre los dos archivos). El compilador siguió actuando: 18 marcas.
 
 ## El error que vas a ver
 
@@ -1314,12 +1335,12 @@ function ListaLenta() {
 Y `npx eslint` respondió:
 
 ```text
-~/curso-react/figuras-09/fig09_01.tsx
+~/curso-react/figuras/fig09_01.tsx
   19:17  error  Error: Cannot call impure function during render
 
 `performance.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
 
-~/curso-react/figuras-09/fig09_01.tsx:19:17
+~/curso-react/figuras/fig09_01.tsx:19:17
   17 | // Una lista que tarda 20 ms en dibujarse: el costo es a propósito, para que se vea.
   18 | function ListaLenta() {
 > 19 |   const hasta = performance.now() + 20;
@@ -1368,7 +1389,7 @@ Es la regla `react-hooks/purity`, una de las que `eslint-plugin-react-hooks` 7 t
 
 ### Ejercicio 1 — El Profiler con tus ojos
 
-Instala la extensión React Developer Tools en tu navegador. Con la API de práctica y `npm run dev` encendidos, abre `http://localhost:5173/`, abre la pestaña **Profiler**, y en su configuración activa la opción de registrar por qué se dibujó cada componente. **Antes de grabar, predice:** si escribes `pag` en «Buscar por nombre», ¿qué componentes se van a dibujar con cada letra?, ¿se dibuja `EditorNota`?, ¿se dibuja `BandejaAvisos`? Graba, escribe las tres letras, detén la grabación y comprueba tu predicción en cada *commit*. Después, mira la pestaña **Components**: ¿qué componentes llevan la insignia «Memo ✨»?
+Instala la extensión React Developer Tools en tu navegador. Con la API de práctica y `npm run dev` encendidos, abre `http://localhost:5173/`, abre la pestaña **Profiler**, y en su configuración activa la opción de registrar por qué se dibujó cada componente. **Antes de grabar, predice:** si escribes `pag` en «Buscar por nombre», ¿qué componentes se van a dibujar con cada letra?, ¿se dibuja `EditorNota`?, ¿se dibuja `BandejaAvisos`? Graba, escribe las tres letras, detén la grabación y comprueba tu predicción en cada *commit*. Después, mira la pestaña **Components**: ¿qué componentes llevan la insignia «Memo ✨»? Por último, repite la grabación en una copia con `plugins: [react()]`, sin el compilador, y anota si algún componente aparece de más.
 
 ### Ejercicio 2 — La otra dirección
 
@@ -1386,7 +1407,7 @@ Un equipo te describe su aplicación: una tienda en línea con 4,000 productos, 
 
 ### Solución 1
 
-Lo que deberías ver, deducido del código: con cada letra se dibujan al menos `PaginaReporte` (porque cambió la dirección: el texto de búsqueda vive en `?q=`, Lección 5, y lo lee con `useSearchParams`, así que la razón que muestre el Profiler será un cambio de hook), `FiltroFallas`, `ContenidoReporte`, `ListaEstados` y las `FilaEstado` que quedan en la lista. `EditorNota` no aparece: en la lista no se dibuja, solo en la página de detalle. `BandejaAvisos` tampoco: vive en la disposición, y su contexto no cambió. Si el compilador está encendido, varios componentes de la pestaña **Components** llevan «Memo ✨», y en el Profiler es probable que algunos hijos cuyas props no cambiaron aparezcan sin dibujarse en un *commit*. Si alguna predicción falló, anota cuál y por qué: es exactamente lo que el Profiler enseña. Esta medición no se corrió para la lección; tu resultado es el que vale.
+Lo que deberías ver, deducido del código: con cada letra se dibujan al menos `PaginaReporte` (porque cambió la dirección: el texto de búsqueda vive en `?q=`, Lección 5, y lo lee con `useSearchParams`, así que la razón que muestre el Profiler será un cambio de hook, o «el padre se dibujó», según la versión de las herramientas), `FiltroFallas`, `ContenidoReporte`, `ListaEstados` y las `FilaEstado` que quedan en la lista. `EditorNota` no aparece: en la lista no se dibuja, solo en la página de detalle. `BandejaAvisos` tampoco, ni `PanelPreferencias`: viven en `Disposicion`, y `Disposicion` **no** se vuelve a dibujar con cada letra, porque quien lee `?q=` es `PaginaReporte` y el cambio ocurre ahí, no en la disposición que la rodea. No es memoización ni un contexto que no cambió: es la estructura de 9.1.4. Se midió con un contador en cada componente y dos letras escritas: `PaginaReporte` pasó de 1 a 3 dibujos y `Disposicion`, `BandejaAvisos` y `PanelPreferencias` se quedaron en 1, **con el compilador y sin él**. Si en tu Profiler alguno de los tres aparece, algo en tu copia subió el estado a la disposición, y esa es la pista. Si el compilador está encendido, varios componentes de la pestaña **Components** llevan «Memo ✨», y en el Profiler es probable que algunos hijos cuyas props no cambiaron aparezcan sin dibujarse en un *commit*. Si alguna predicción falló, anota cuál y por qué: es exactamente lo que el Profiler enseña. Esta medición no se corrió para la lección; tu resultado es el que vale.
 
 ### Solución 2
 
@@ -1402,11 +1423,11 @@ La tabla cambia casi entera. Páginas públicas que deben aparecer en buscadores
 
 ## Cómo sé que lo logré
 
-- [ ] `npm ci`, `npm run lint`, `npm test` y `npm run build` terminan con código 0 dentro de `~/curso-react/revisor/`; el resumen de `npm test -- --reporter=default` dice `Tests  34 passed (34)` en `11 passed (11)` archivos, y `npm run build` deja `dist/assets/index-DaB3Njqx.js` y `dist/assets/index-CbqUABMA.css` si tu código es idéntico al del punto de control.
+- [ ] `npm ci`, `npm run lint`, `npm test` y `npm run build` terminan con código 0 dentro de `~/curso-react/revisor/`; el resumen de `npm test -- --reporter=default` dice `Tests  35 passed (35)` en `11 passed (11)` archivos, y `npm run build` deja `dist/assets/index-Cs1CcfeN.js` y `dist/assets/index-CbqUABMA.css` si tu código es idéntico al del punto de control.
 - [ ] `grep -o memo_cache_sentinel dist/assets/*.js | wc -l` da `18`, y en una copia sin el compilador da `1`.
 - [ ] Las figuras 1, 2 y 3 dan en tu máquina la misma salida que en la lección.
 - [ ] Con `npm run servidor` y `npm run publicado`, `curl -sI http://127.0.0.1:4180/servicios/pagos` responde `200` con `content-security-policy` y `cache-control: no-cache`; `/assets/no-existe.js` responde `404`; y al abrir `http://127.0.0.1:4180/servicios/pagos` en tu navegador y **recargar**, se ve el detalle de `pagos`.
-- [ ] `grep -oiE "clave|secret|token|password|apikey" dist/assets/*.js` encuentra solo las coincidencias de React DOM, y sabes explicar por qué no son una fuga.
+- [ ] `grep -oiE "clave|secret|token|password|apikey" dist/assets/*.js` encuentra solo las coincidencias de React DOM y las del esquema del alta, y sabes explicar por qué no son una fuga.
 - [ ] En una copia tuya **sin** los cinco arreglos de 9.4 (con las pruebas nuevas y la línea `css` de `vite.config.ts`), los cuatro archivos de prueba nuevos se ven rojos, con 5 pruebas fallidas de 8; en el punto de control, verdes.
 - [ ] **A mano, con las herramientas de desarrollo:** hiciste el ejercicio 1 y anotaste en tu [bitácora](bitacora.md) qué componentes se dibujaron con cada letra y cuáles llevan «Memo ✨».
 - [ ] Puedes explicar, sin mirar, por qué el `revisor` no usa Server Components.
@@ -1462,4 +1483,4 @@ Responde sin mirar la lección:
 
 ---
 
-**Fin del curso.** Si llegaste hasta aquí con tu `revisor`, vuelve a [«Cómo sabes que terminaste»](../README.md#cómo-sabes-que-terminaste) en el README y comprueba las cinco condiciones. La quinta habla de «la vista previa», pero se comprueba con `npm run publicado` (puerto 4180), el servidor con reescritura de 9.2.3, no con `vite preview`. Y abre tu [bitácora](bitacora.md): lo que anotaste en estas diez lecciones es lo que vale la pena repasar.
+**Fin del curso.** Si llegaste hasta aquí con tu `revisor`, vuelve a [«Cómo sabes que terminaste»](README.md#cómo-sabes-que-terminaste) en el README y comprueba las cinco condiciones. Y abre tu [bitácora](bitacora.md): lo que anotaste en estas diez lecciones es lo que vale la pena repasar.

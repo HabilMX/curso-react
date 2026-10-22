@@ -1,0 +1,38 @@
+$ npx vitest run --reporter=verbose src/avisos src/compartido src/reporte/resumen.test.ts src/reporte/PaginaReporte.test.tsx src/app src/detalle/PaginaServicio.test.tsx src/alta
+
+ RUN  v5.0.5 ~/curso-react/revisor
+
+ ✓ src/avisos/avisos.test.ts > reducirAvisos > agrega al principio con un identificador nuevo 1ms
+ ✓ src/avisos/avisos.test.ts > reducirAvisos > descarta uno por su identificador y no toca los demás 0ms
+ ✓ src/avisos/avisos.test.ts > reducirAvisos > conserva solo los 5 más recientes 0ms
+ ✓ src/avisos/avisos.test.ts > reducirAvisos > descartar todos vacía la bandeja y conserva el contador 0ms
+ ✓ src/reporte/resumen.test.ts > resumen > cuenta solo los servicios en falla 7ms
+ ✓ src/reporte/resumen.test.ts > resumen > usa singular y plural 5ms
+ ✓ src/reporte/resumen.test.ts > resumen > filtra por falla y por nombre, sin importar mayúsculas 1ms
+ ✓ src/compartido/esquema.test.ts > validarCampos con el esquema del alta > convierte el texto del formulario en un NuevoServicio 2ms
+ ✓ src/compartido/esquema.test.ts > validarCampos con el esquema del alta > informa todos los campos inválidos a la vez 0ms
+ ✓ src/app/rutas.test.tsx > las rutas > una dirección desconocida muestra la página de no encontrada 201ms
+ ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > cargando: anuncia la carga mientras la API no responde 207ms
+ ✓ src/app/rutas.test.tsx > las rutas > el menú marca la página actual 179ms
+ ✓ src/app/rutas.test.tsx > las rutas > una página que se rompe al dibujar muestra el aviso del revisor 20ms
+ ✓ src/alta/FormularioAlta.test.tsx > el formulario de alta > sin datos marca los tres campos y lo anuncia 481ms
+ ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > error: muestra el motivo y un botón para reintentar 260ms
+ ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > vacío: lo dice en lugar de dejar la lista en blanco 44ms
+ ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > con datos: un enlace por servicio y el resumen de fallas 44ms
+ ✓ src/detalle/PaginaServicio.test.tsx > la página de un servicio > muestra el detalle del servicio de la dirección 367ms
+ ✓ src/detalle/PaginaServicio.test.tsx > la página de un servicio > volver a revisar deja un aviso en la bandeja 85ms
+ ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > sin fallas no pinta un 0 suelto en el resumen 37ms
+ ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > el filtro «solo fallas» viaja en la dirección 164ms
+ ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > una dirección con el filtro ya puesto abre filtrada 27ms
+ ✓ src/detalle/PaginaServicio.test.tsx > la página de un servicio > si la actualización del detalle falla, conserva el detalle y la nota que se escribía 281ms
+ ✓ src/alta/FormularioAlta.test.tsx > el formulario de alta > con datos válidos envía el alta y confirma 343ms
+ ✓ src/alta/FormularioAlta.test.tsx > el formulario de alta > declara los obligatorios y la bandeja anuncia solo el aviso nuevo 22ms
+ ✓ src/alta/FormularioAlta.test.tsx > el formulario de alta > el foco no se pierde al enviar y un segundo envío se ignora 453ms
+ ✓ src/alta/FormularioAlta.test.tsx > el formulario de alta > un nombre repetido se marca en su campo con el mensaje de la API 114ms
+
+ Test Files  7 passed (7)
+      Tests  27 passed (27)
+   Start at  16:09:53
+   Duration  4.78s (environment 67%, tests 14%, setup 10%, transform 5%, import 4%)
+
+[código de salida: 0]

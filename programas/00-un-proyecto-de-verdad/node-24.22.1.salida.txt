@@ -1,0 +1,21 @@
+# Repetición del punto de control con Node.js 24.22.1 (la versión LTS que salió el 20-oct-2026,
+# un día antes de las corridas de la lección), el 21-oct-2026, en macOS (arm64), con el binario
+# oficial node-v24.22.1-darwin-arm64.tar.gz (sha256 89c682593d76cd44233fa53b1563264e7de9cbb189cad169135c5b4fadfbc0a7,
+# igual al de SHASUMS256.txt de nodejs.org/dist/v24.22.1/). Copia limpia, sin node_modules/ ni dist/.
+$ node -v
+v24.22.1
+$ npm -v
+11.19.1
+$ npm ci          # código de salida 0
+$ npm run lint    # sin avisos
+> eslint . --max-warnings 0
+$ npm run build
+✓ 20 modules transformed.
+dist/index.html                   0.39 kB │ gzip:  0.26 kB
+dist/assets/index-tGGc24Rg.css    0.24 kB │ gzip:  0.18 kB
+dist/assets/index-BWNt33lQ.js   221.66 kB │ gzip: 69.47 kB
+✓ built in 620ms
+
+# Figuras, en una carpeta con package.json, package-lock.json, eslint.config.js y las dos figuras (npm ci):
+$ node fig00_01.js     # idéntico a fig00_01.salida.txt
+$ npx eslint fig00_02.tsx   # los mismos tres problemas de fig00_02.error-esperado.txt

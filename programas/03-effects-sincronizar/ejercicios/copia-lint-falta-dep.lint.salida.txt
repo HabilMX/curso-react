@@ -1,0 +1,14 @@
+# Corrido el 21-oct-2026 con Node.js 24.22.0 (macOS) sobre la copia descrita en copia-lint-falta-dep.diff.txt. Rutas desde ~/curso-react.
+$ npx tsc -b   # código de salida 0
+$ npm run lint
+
+> revisor@0.3.0 lint
+> eslint . --max-warnings 0
+
+
+~/curso-react/revisor/src/reporte/useReporte.ts
+  43:6  warning  React Hook useEffect has a missing dependency: 'alRecibir'. Either include it or remove the dependency array. If 'alRecibir' changes too often, find the parent component that defines it and wrap that definition in useCallback  react-hooks/exhaustive-deps
+
+✖ 1 problem (0 errors, 1 warning)
+
+ESLint found too many warnings (maximum: 0).

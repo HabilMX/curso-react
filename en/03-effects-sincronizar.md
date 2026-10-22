@@ -1,4 +1,4 @@
-# Lesson 3 — Effects: Synchronizing, Not “On Mount”
+# Lesson 3 — Effects: synchronizing, not “when it loads”
 
 *It is 9:52 AM and the morning shift is checking the dashboard before the 10:00 AM meeting. In the new `revisor`, you can now pick a service and see its details. The operator clicks on `pagos`, instantly regrets it, and selects `inventario`. The header “inventario” appears and, below it, “Disponible: HTTP 200 en 118 ms”. She breathes. A second later, without anyone touching anything, that same box changes to “En falla: HTTP 503”. She phones the inventory team, who spend fifteen minutes checking their servers and find nothing. Inventory never failed. What was displayed was the slower response from `pagos`, which arrived late and overwrote `inventario`. Nobody had written an error in the conventional sense: every line of code did what it said. What was missing was a line that said what to do when the question no longer matters. This lesson writes that line and explains why it is necessary.*
 
@@ -10,9 +10,9 @@
 
 **Where you are coming from.** From [Lesson 2](02-estado-instantanea-forma.md). Your `revisor` already has the “Solo fallas” checkbox, service names as buttons with `aria-pressed`, a note per service, and a details box, `DetalleSeleccion`, which is **calculated** from the list: it asks the server nothing, merely displaying again what the report already contained. Since [Lesson 0](00-un-proyecto-de-verdad.md), the dashboard has featured an Effect, the one in `useReporte`, which requests `GET /api/estados` every 10 seconds and which `StrictMode` mounts twice in development. That lesson showed you the “cancelada por el cliente” + “200” pair in the server log and promised a thorough explanation here. You work in `~/curso-react/revisor/`, which at the start is identical to the Lesson 2 checkpoint.
 
-**What this lesson does not do.** It does not add browser routes: the details still appear within the same page, below the list, and the `/servicios/pagos` URL arrives in [Lesson 5](05-rutas-url-como-estado.md). It does not replace manual data fetching with a library: here you write the Effect that requests the details by hand, along with its cleanup, to understand what problem it solves; according to the course syllabus, in [Lesson 4](04-estado-del-servidor.md) that same job will move to TanStack Query. Nor does it have automated tests: those arrive in [Lesson 8](08-pruebas-de-componentes.md). And it does not use `useMemo`, `useCallback`, or `memo`: the course never introduces them without measurements that call for them, and in 3.6 you will see that the issue typically “patched” with `useCallback` has a more direct solution here.
+**What this lesson does not do.** It does not add browser routes: the details still appear within the same page, below the list, and the `/servicios/pagos` URL arrives in [Lesson 5](05-rutas-url-como-estado.md). It does not replace manual data fetching with a library: here you write the Effect that requests the details by hand, along with its cleanup, to understand what problem it solves; in [Lesson 4](04-estado-del-servidor.md), as the course README announces, that same job moves to TanStack Query. Nor does it have automated tests: those arrive in [Lesson 8](08-pruebas-de-componentes.md). And it does not use `useMemo`, `useCallback`, or `memo`: the course never introduces them without measurements that call for them, and in 3.6 you will see that the issue typically “patched” with `useCallback` has a more direct solution here.
 
-**About the runs.** Everything was run on October 21, 2026 with Node.js 24.22.0 and npm 11.19.1, on macOS, with the exact versions from the checkpoint's `package.json`. In this lesson, it was not reinstalled inside a Linux container: runs across the course yielded the exact same filenames in `dist/` on macOS and in a `node:24.22.0` container for all checkpoints, and building the checkpoint for this lesson produced the same name here (`index-CTkBRgQQ.js`). Nothing shown depends on the operating system. What is seen “in the browser” was measured with headless Chrome (`--headless`), driven via its debugging protocol: a script opened the page, waited, dispatched real mouse clicks (the exact events your hand produces), and read the text in the details box. Experiments that deliberately break the code were conducted on a **copy** of the checkpoint, and because other processes were running on the machine using the usual ports, that copy used port 3103 for the practice server, 5103 for Vite, and 9303 for Chrome's debugging protocol. On your machine they are 3100 and 5173, and nothing else changes. An initial batch of browser runs was discarded and repeated entirely because another process on the machine was using the same debugging port, making it impossible to guarantee that the clicks came solely from the script; the outputs shown are all from the second batch, repeating line for line the exact behavior of the first. Server log timestamps are in UTC; the timestamp in “Actualizado a las …” is the browser's local time, which was in the Mexico City time zone (UTC−6), explaining why the two clocks do not match. Long paths printed by ESLint are shown starting from `~/curso-react`. The programs are in [`programas/03-effects-sincronizar/`](../programas/03-effects-sincronizar): `revisor/` is the checkpoint and the figures sit alongside it.
+**About the runs.** Everything was run on October 21, 2026 with Node.js 24.22.0 and npm 11.19.1, on macOS, with the exact versions from the checkpoint's `package.json`. Runs across the course yielded the exact same filenames in `dist/` on macOS and in a `node:24.22.0` container, and building the checkpoint for this lesson produced that same name (`index-CTkBRgQQ.js`) on macOS and, repeated from a clean copy with `npm ci` in the official `node:24.22.0-bookworm` container, there as well (`npm run lint` without warnings). It was not run on a real Linux Mint. Nothing shown depends on the operating system. What is seen “in the browser” was measured with headless Chrome (`--headless`), driven via its debugging protocol: a script opened the page, waited, dispatched real mouse clicks (the exact events your hand produces), and read the text in the details box. Experiments that deliberately break the code were conducted on a **copy** of the checkpoint, and because other processes were running on the machine using the usual ports, that copy used port 3103 for the practice server, 5103 for Vite, and 9303 for Chrome's debugging protocol. On your machine they are 3100 and 5173, and nothing else changes. When applying this lesson's external review, the browser measurements were repeated with the `medir.mjs` script (next to the figures) and the exact copies of each experiment; the outcomes were the same as those shown here, with different timestamps, and their outputs are in [`programas/03-effects-sincronizar/ejercicios/`](../programas/03-effects-sincronizar/ejercicios). An initial batch of browser runs was discarded and repeated entirely because another process on the machine was using the same debugging port, making it impossible to guarantee that the clicks came solely from the script; the outputs shown are all from the second batch, repeating line for line the exact behavior of the first. Server log timestamps are in UTC; the timestamp in “Actualizado a las …” is the browser's local time, which was in the Mexico City time zone (UTC−6), explaining why the two clocks do not match. Long paths printed by ESLint are shown starting from `~/curso-react`. The programs are in [`programas/03-effects-sincronizar/`](../programas/03-effects-sincronizar): `revisor/` is the checkpoint and the figures sit alongside it.
 
 ## By the end you will be able to
 
@@ -38,7 +38,7 @@ Ask that box three questions and you will see why a tool is needed.
 
 All three questions share the same shape: there is something outside React (the server, the document, a timer) and the screen must agree with that something. That is what Effects exist for. The React documentation defines them like this: Effects let you run code after rendering to **synchronize** your component with some system outside React ([React, “Synchronizing with Effects”](https://react.dev/learn/synchronizing-with-effects)). Look at the verb. It does not say “run code when the component appears”. It says synchronize. This course repeats a rule of thumb in every lesson, and this is the lesson where it is born: **an Effect is for synchronizing with something outside React; not for calculating, not for reacting to a click, and not for “on mount”.**
 
-The lesson has seven parts: what an Effect is, using the tab title as an example (3.1); the detail requested from the server and its cleanup (3.2); the response race condition, reproduced and fixed (3.3); `StrictMode` as a free test (3.4); dependencies that describe the code (3.5); `useEffectEvent` (3.6); and cases where an Effect is not needed (3.7). This is what changes in your project:
+The three questions fit into three new concepts. The first is **the Effect as synchronization, with its cleanup**, and it takes four sections because it is seen from four sides: what it is, using the tab title as an example (3.1); the detail requested from the server and its cleanup (3.2); the response race condition, which is what happens when the cleanup is missing (3.3); and `StrictMode`, which is the free test that the cleanup exists (3.4). The second is **the dependency list that describes the code** (3.5). The third is **`useEffectEvent`**, for reading the latest value without restarting the synchronization (3.6). Section 3.7 adds no concept: it marks the edge of the first one, the cases where an Effect is not needed. This is what changes in your project:
 
 ```text
 revisor/
@@ -157,7 +157,7 @@ export function Panel({
 
 Notice `fallas`. It is not state: it is a constant calculated on every render with `contarFallas`, the pure function from Lesson 1. The Effect calculates nothing; it only **copies** a value that React already knows to the document. That division of labor is what you will see in all good Effects: React calculates, the Effect synchronizes. In 3.7 you will see what happens when someone reverses this. (`actualizadoEn` and the third argument to `useReporte` are explained in 3.6.)
 
-This is what headless Chrome read in `document.title`, one and a half seconds after opening the dashboard with the practice server running:
+(The outputs of this lesson's browser measurements are in `ejercicios/medir-*.salida.txt`; the changes made in each copy, in `ejercicios/copia-*.diff.txt`.) This is what headless Chrome read in `document.title`, one and a half seconds after opening the dashboard with the practice server running:
 
 ```text
 08:28:18.814 document.title = "(2) Revisor"
@@ -165,9 +165,9 @@ This is what headless Chrome read in `document.title`, one and a half seconds af
 
 `document.title` is exactly what its name says: the property that reads or sets the document's title—the one appearing on the tab—and also updates the content of the `<title>` element ([MDN, “Document: title property”](https://developer.mozilla.org/en-US/docs/Web/API/Document/title)). React does not touch it on its own, because `<title>` lives in the `<head>` and the dashboard renders inside `<div id="raiz">`. It is, in the exact sense of the definition, a system outside React.
 
-React 19 also introduces a `<title>` component that you can render from any component and that React always hoists to `<head>` ([React, “<title>”](https://react.dev/reference/react-dom/components/title)). With it, the title would cease to be an external system and no Effect would be needed. It is not used here for a specific reason: `index.html` already brings its `<title>Revisor</title>`, and that same documentation warns against rendering more than one `<title>` at a time, because with two, browser and search engine behavior is undefined. The Effect updates the title that already exists and restores it when finished. If one day the title lived purely in React (without the one in `index.html`), the native `<title>` would be the option without an Effect; its only requirement is that the child be a single string, for instance ``{`(${fallas}) Revisor`}``.
+React 19 also introduces a `<title>` component that you can render from any component and that React always hoists to `<head>` ([React, “<title>”](https://react.dev/reference/react-dom/components/title)). With it, the title would cease to be an external system and no Effect would be needed. It is not used here, for two reasons. The first: `index.html` already brings its `<title>Revisor</title>`, and that same documentation warns against rendering more than one `<title>` at a time, because with two, browser and search engine behavior is undefined; the course did not measure how React's `<title>` gets along with the one already in `index.html`, and prefers not to build the lesson on something it did not measure. The second: the document title is the smallest example of a system outside React, and it lets you see setup and cleanup with nothing else around. The Effect updates the title that already exists and restores it when finished. If one day the title lived purely in React (without the one in `index.html`), the native `<title>` would be the option without an Effect; its only requirement is that the child be a single string, for instance ``{`(${fallas}) Revisor`}``.
 
-Why does the cleanup restore the previous title instead of leaving it as is? Because the Effect must be undoable. If tomorrow the dashboard only renders on one of several screens (the course syllabus plans this for Lesson 5), navigating away should not leave the title saying `(2) Revisor` on a screen that displays no failures. A cleanup that mirrors setup makes the hook work regardless of where it is used.
+Why does the cleanup restore the previous title instead of leaving it as is? Because the Effect must be undoable. If tomorrow the dashboard only renders on one of several screens (that is how it arrives in Lesson 5), navigating away should not leave the title saying `(2) Revisor` on a screen that displays no failures. A cleanup that mirrors setup makes the hook work regardless of where it is used.
 
 ### 3.2 The detail requested from the server
 
@@ -187,7 +187,7 @@ $ curl -s -w "\n%{http_code} en %{time_total} s\n" http://127.0.0.1:3100/api/ser
 404 en 0.203791 s
 ```
 
-(The run was performed on port 3103, as explained in “About the runs”.) `revisiones` counts how many times the full report has been requested since the server started, and `ultimaRevision` is the timestamp of the last time. Since nobody had yet requested `GET /api/estados`, they come out as `0` and with the startup timestamp.
+(The commands are shown with port 3100, which is yours; the run was performed on 3103, as explained in “About the runs”.) `revisiones` counts how many times the full report has been requested since the server started, and `ultimaRevision` is the timestamp of the last time. Since nobody had yet requested `GET /api/estados`, they come out as `0` and with the startup timestamp.
 
 `contrato.ts` adds the type and its guard, just like `esReportePublico` in Lesson 0: what arrives over the network is `unknown` until proven otherwise. The complete file looks like this:
 
@@ -277,7 +277,7 @@ export async function cargarDetalle(nombre: string, senal: AbortSignal): Promise
 
 Two details. The first is `encodeURIComponent(nombre)`. One of the services is named `catálogo`, with an accent mark, and in a URL characters outside the English alphabet travel encoded; the server log shows it as `GET /api/servicios/cat%C3%A1logo`, and the server decodes it back. If one day a service were named `a/b`, without encoding, the slash would alter the route. The second detail is the `senal` parameter, an `AbortSignal`. The function does not decide when to cancel; it merely accepts that someone, from the outside, may do so. That “someone” is the Effect's cleanup.
 
-What happens when someone aborts? MDN describes `AbortController.abort()` like this: it interrupts an asynchronous operation before it completes, including `fetch` requests, reading their body, and streams; if no reason is provided, the reason is a `DOMException` named `AbortError` ([MDN, “AbortController: abort() method”](https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort)). In short: the promise returned by `fetch` (or by `respuesta.json()`, if the body was already being read) is **rejected**. And the browser severs the connection, which is what the practice server records as `cancelada por el cliente`.
+What happens when someone aborts? MDN describes `AbortController.abort()` like this: it interrupts an asynchronous operation before it completes, including `fetch` requests, reading their body, and streams; if no reason is provided, the reason is a `DOMException` named `AbortError` ([MDN, “AbortController: abort() method”](https://developer.mozilla.org/en-US/docs/Web/API/AbortController/abort)). In short: the promise returned by `fetch` (or by `respuesta.json()`, if the body was already being read) is **rejected**. And the browser cancels the request on its side; on the practice server this shows up as `cancelada por el cliente`. Whether a server finds out, and in time, is up to it: a real server may have finished the work before noticing that nobody will read the response.
 
 #### 3.2.3 The Effect that requests the detail
 
@@ -323,7 +323,7 @@ It starts: it creates an `AbortController` **belonging to this cycle**, requests
 
 The shape of the state follows the rule from Lesson 2: a single `CargaDetalle` union with three cases, not three flags (`cargando`, `error`, `datos`) that could contradict one another. It is the same shape as `Carga` in `useReporte`.
 
-Look at the line `if (control.signal.aborted) return;`. When the cleanup aborts, the promise is rejected with `AbortError`. Without that line, in development you would see it on every service you choose: `StrictMode`'s extra cycle (3.4) aborts the first request, and its rejection reaches the very box you are looking at, because `StrictMode` cleans up and re-runs setup for the Effect **of the same component**, which preserves its state. This was measured in a copy without that line, with headless Chrome, selecting `pagos` and, once loaded, `inventario`:
+Look at the line `if (control.signal.aborted) return;`. When the cleanup aborts, the promise is rejected with `AbortError`. Without that line, in development you would see it on every service you choose: `StrictMode`'s additional cycle (3.4) aborts the first request, and its rejection reaches the very box you are looking at, because `StrictMode` cleans up and re-runs setup for the Effect **of the same component**, which preserves its state. This was measured in a copy without that line, with headless Chrome, selecting `pagos` and, once loaded, `inventario`:
 
 ```text
 08:39:27.086 clic en pagos
@@ -368,7 +368,7 @@ Guardar nota
 Cerrar detalle
 ```
 
-A bogus error on screen for 1.7 seconds with `pagos` and 0.5 with `inventario`, until the correct response replaces it. The text “signal is aborted without reason” is Chrome's; other browsers print something else. In production, without the extra cycle, you would not see it with this checkpoint, because the `key` unmounts the old panel and its rejection has nowhere to write; but without the `key` you would also see it on every service switch. An abort **is not an error**: it is how this cycle says “I no longer care”. That is why it is recognized and ignored. Notice what is being checked: not the error type, but whether **my** controller aborted. If the server crashes and at the same time the user switches services, the correct question is “is this cycle still current?”, not “what kind of error is it?”.
+A bogus error on screen for 1.7 seconds with `pagos` and 0.5 with `inventario`, until the correct response replaces it. The text “signal is aborted without reason” is Chrome's; other browsers print something else. In production, without the additional cycle, you would not see it with this checkpoint, because the `key` unmounts the old panel and its rejection has nowhere to write; but without the `key` you would also see it on every service switch. An abort **is not an error**: it is how this cycle says “I no longer care”. That is why it is recognized and ignored. Notice what is being checked: not the error type, but whether **my** controller aborted. If the server crashes and at the same time the user switches services, the correct question is “is this cycle still current?”, not “what kind of error is it?”.
 
 And notice what it **does not** do: it does not call `establecerCarga({ tipo: "cargando" })` at the beginning. When you switch services, the box must return to “Cargando detalle…”, but that is not done by the Effect. It is done by the `key`, and the reasoning occupies all of section 3.3.4. For now, keep the clue: the initial state is `{ tipo: "cargando" }`, and the only time it is used is when the component is born.
 
@@ -561,7 +561,7 @@ Object.assign(globalThis, {
   IS_REACT_ACT_ENVIRONMENT: true,
 });
 
-// pagos takes 300 ms and the others 20 ms, as on the practice server (there, 1500 and 200).
+// pagos tarda 300 ms y los demás 20 ms, como en el servidor de práctica (allá, 1500 y 200).
 const DEMORA_MS: Readonly<Record<string, number>> = { pagos: 300 };
 
 function cargarDetalle(nombre: string, senal: AbortSignal): Promise<string> {
@@ -650,6 +650,7 @@ The React documentation offers two ways to clean up an Effect that fetches data:
 useEffect(() => {
   let ignorar = false;
 
+  // The signal is a placeholder: this variant aborts nothing, it only ignores the result.
   cargarDetalle(nombre, new AbortController().signal).then((detalle) => {
     if (!ignorar) {
       establecerCarga({ tipo: "listo", detalle });
@@ -662,9 +663,9 @@ useEffect(() => {
 }, [nombre]);
 ```
 
-The flag prevents the stale response from writing to state, and the same page notes that an explicit boolean flag is the most reliable way to fix this class of bug. It also provides the rationale: after `fetch`, further asynchronous steps may be chained ([React, “Synchronizing with Effects”](https://react.dev/learn/synchronizing-with-effects)). Aborting only halts whatever listens to the signal; the flag stops any write, regardless of where it comes from. The `revisor` uses the other form, `AbortController`, for three concrete reasons. First: the `revisor` had already been using it since lesson 9 of TypeScript, in `useReporte`, and keeping both hooks aligned is valuable. Second: aborting does not just ignore the result; it **cuts the network connection**, and the server stops wasting work on a response nobody will read; with the flag, the old request travels in its entirety. Third: you can observe it, because the server logs `cancelada por el cliente`. Both approaches satisfy the golden rule of the documentation: that a request that no longer matters must not continue affecting the application. Aborting additionally respects the server. And here aborting suffices for a specific reason: in `cargarDetalle`, all asynchronous operations listen to the signal (`fetch` and `respuesta.json()`), followed only by synchronous code. If you ever add another `await` that does not receive the signal, the documentation's argument becomes yours: check `control.signal.aborted` before writing success as well, or combine both approaches.
+The flag prevents the stale response from writing to state, and the same page notes that an explicit boolean flag is the most reliable way to fix this class of bug. It also provides the rationale: after `fetch`, further asynchronous steps may be chained ([React, “Synchronizing with Effects”](https://react.dev/learn/synchronizing-with-effects)). Aborting only halts whatever listens to the signal; the flag stops any write, regardless of where it comes from. The `revisor` uses the other form, `AbortController`, for three concrete reasons. First: the `revisor` had already been using it since lesson 9 of TypeScript, in `useReporte`, and keeping both hooks aligned is valuable. Second: aborting does not just ignore the result; it **cancels the request on the client side**, and a server that notices the closure (the practice one logs it) can stop wasting work on a response nobody will read; with the flag, the old request travels in its entirety. Third: you can observe it, because the server logs `cancelada por el cliente`. Both approaches satisfy the golden rule of the documentation: that a request that no longer matters must not continue affecting the application. Aborting, in addition, gives the server the chance to find out. And here aborting suffices for a specific reason: in `cargarDetalle`, all asynchronous operations listen to the signal (`fetch` and `respuesta.json()`), followed only by synchronous code. If you ever add another `await` that does not receive the signal, the documentation's argument becomes yours: check `control.signal.aborted` before writing success as well, or combine both approaches.
 
-The price of aborting is the line `if (control.signal.aborted) return;`: because the promise is rejected, one must distinguish an intentional abort from a real failure. With the flag there is no rejection to distinguish. That is a small price, which is why both approaches are valid. What is never valid is doing neither.
+The price of aborting is the line `if (control.signal.aborted) return;`: because the promise is rejected, one must distinguish an intentional abort from a real failure. With the flag there is no rejection to distinguish. That is a small price, which is why both approaches are valid. What is wrong is using neither.
 
 #### 3.3.3 Reproducing it in the `revisor`
 
@@ -707,7 +708,7 @@ Guardar nota
 Cerrar detalle
 ```
 
-If you predicted “En falla: HTTP 503”, you missed the mark just like the first draft of these course notes. The box reports the correct state at both points in time: at 500 ms and at two and a half seconds. Is the race condition gone? Look at the log:
+If you predicted “En falla: HTTP 503”, it is the intuitive answer, which is why it is worth measuring: the box reports the correct state at both points in time: at 500 ms and at two and a half seconds. Is the race condition gone? Look at the log:
 
 ```text
 08:28:23.850 GET /api/estados cancelada por el cliente
@@ -814,16 +815,16 @@ The last row is the checkpoint. Why use the `key` instead of calling `establecer
 
 The `key` suffers from no such problem because it does not correct state after the fact: it ensures state **is born** clean. The React documentation suggests it for this exact scenario in the section “Resetting all state when a prop changes”: when the `key` changes, React re-creates the component and resets its state along with that of all its children ([React, “You Might Not Need an Effect”](https://react.dev/learn/you-might-not-need-an-effect)). And its page on preserving state explains the same concept from the other angle: specifying a `key` tells React to use the `key` itself as part of the component's position rather than its position in the parent ([React, “Preserving and Resetting State”](https://react.dev/learn/preserving-and-resetting-state)). To React, `<PanelDetalle key="pagos">` and `<PanelDetalle key="inventario">` are two distinct components that share nothing. Lesson 2 used this tool for the note draft; here it is used for the entire panel: loading state, editor draft, and the Effect itself.
 
-The `key` introduces a side effect you should understand: the box is mounted anew, and with `StrictMode` that means `useDetalle`'s Effect runs its extra cycle on every service switch. You saw it in the log: each service you select typically leaves a `cancelada` + `200` pair. That is the development cost of the free test, and in production it does not exist. (It says “typically”: as clarified in Lesson 0, the `cancelada` line only appears if the connection managed to reach the server before the abort.)
+The `key` introduces a side effect you should understand: the box is mounted anew, and with `StrictMode` that means `useDetalle`'s Effect runs its additional cycle on every service switch. You saw it in the log: each service you select typically leaves a `cancelada` + `200` pair. That is the development cost of the free test, and in production it does not exist. (It says “typically”: as clarified in Lesson 0, the `cancelada` line only appears if the connection managed to reach the server before the abort.)
 
-And why keep cleanup if the `key` already safeguards the screen? Because the `key` protects **this** screen, mounted **this way**. Cleanup protects the hook wherever it may be consumed. If details became a standalone page with its own URL, as envisioned in the plan for Lesson 5, the same component could receive a different `nombre` without unmounting when navigating from `/servicios/pagos` to `/servicios/inventario`. A hook that only works if its consumer remembers to provide a `key` is a hook with a hidden booby trap. Furthermore, with the `key` alone, the response for `pagos` travelled completely: 1.5 seconds of server and network effort thrown away. The rule in the React documentation admits no exceptions: “your cleanup function should make sure that the request that no longer matters does not continue affecting your application” ([React, “Synchronizing with Effects”](https://react.dev/learn/synchronizing-with-effects)). The `key` fixes what is seen; cleanup fixes what happens.
+And why keep cleanup if the `key` already safeguards the screen? Because the `key` protects **this** screen, mounted **this way**. Cleanup protects the hook wherever it may be consumed. If details became a standalone page with its own URL, as arrives in Lesson 5, the same component could receive a different `nombre` without unmounting when navigating from `/servicios/pagos` to `/servicios/inventario`. A hook that only works if its consumer remembers to provide a `key` is a hook with a hidden booby trap. Furthermore, with the `key` alone, the response for `pagos` travelled completely: 1.5 seconds of server and network effort thrown away. The React documentation asks for this without exceptions: “your cleanup function should make sure that the request that no longer matters does not continue affecting your application” ([React, “Synchronizing with Effects”](https://react.dev/learn/synchronizing-with-effects)). The `key` fixes what is seen; cleanup fixes what happens.
 
 
 ### 3.4 `StrictMode`: the free test
 
 #### 3.4.1 What it does with Effects
 
-Lesson 0 taught you to read the “cancelada por el cliente” + “200” pair. Now you can understand what it is testing. The `useEffect` reference puts it in these words: with `StrictMode` enabled, React executes one extra cycle of setup and cleanup, **only in development**, before the first real setup; it is a stress test that verifies that cleanup mirrors setup and halts or undoes whatever setup is doing ([React, “useEffect”](https://react.dev/reference/react/useEffect)). And it provides a rule to know if you passed the test: **the user should not be able to tell the difference between the Effect running once (as in production) and the setup → cleanup → setup sequence (as in development).**
+Lesson 0 taught you to read the “cancelada por el cliente” + “200” pair. Now you can understand what it is testing. The `useEffect` reference puts it in these words: with `StrictMode` enabled, React executes one additional cycle of setup and cleanup, **only in development**, before the first real setup; it is a stress test that verifies that cleanup mirrors setup and halts or undoes whatever setup is doing ([React, “useEffect”](https://react.dev/reference/react/useEffect)). And it provides a rule to know if you passed the test: **the user should not be able to tell the difference between the Effect running once (as in production) and the setup → cleanup → setup sequence (as in development).**
 
 Apply the rule to the details box. In development, upon choosing `pagos`:
 
@@ -837,22 +838,22 @@ That is why the documentation urges changing the question: the right question is
 
 #### 3.4.2 Reading the log with what you now know
 
-Return to the checkpoint log without modifications, in 3.2.3. Every line now tells a complete story (with the precision from Lesson 0: a `cancelada` line from the extra cycle only appears if the connection reached the server before the abort; if it is missing on your machine, it does not mean `StrictMode` is off):
+Return to the checkpoint log without modifications, in 3.2.3. Every line now tells a complete story (with the precision from Lesson 0: a `cancelada` line from the additional cycle only appears if the connection reached the server before the abort; if it is missing on your machine, it does not mean `StrictMode` is off):
 
-- `GET /api/estados cancelada por el cliente` and `GET /api/estados 200`, upon opening: the polling's extra cycle. `useReporte`'s cleanup aborts and also clears the interval; if it did not clear it, there would be two intervals querying every ten seconds.
-- `GET /api/servicios/pagos cancelada por el cliente`, upon the first click: the extra cycle for `pagos`'s details.
+- `GET /api/estados cancelada por el cliente` and `GET /api/estados 200`, upon opening: the polling's additional cycle. `useReporte`'s cleanup aborts and also clears the interval; if it did not clear it, there would be two intervals querying every ten seconds.
+- `GET /api/servicios/pagos cancelada por el cliente`, upon the first click: the additional cycle for `pagos`'s details.
 - `GET /api/servicios/pagos cancelada por el cliente`, 310 ms later: this is not `StrictMode`. It is the real cleanup running because you selected another service and the `key` unmounted the panel.
-- The `inventario` pair: the extra cycle for the new panel, and then the request that populates the screen.
+- The `inventario` pair: the additional cycle for the new panel, and then the request that populates the screen.
 
 Notice something the log does not show: the `200` from the second `pagos` cycle is missing. It never arrived because cleanup cut it off halfway. That absence is the race condition resolved.
 
-There is one more detail in the logs of 3.3.3 worth explaining so it does not confuse you if encountered. In the experiment with `key` and without cleanup, the two requests for `inventario` (the extra cycle one and the real one, identical) did not hit the server together, but rather 200 ms apart, and the second identical request for `pagos` was still pending when the script closed the tab, which is why it appears as `cancelada por el cliente` at 28.122. What was observed is that Chrome did not send the second request to the same URL until the first completed. This matches Chromium's HTTP cache lock behavior, which permits only one write request at a time per URL to avoid downloading identical resources twice ([Chromium, change 8aacaf3](https://chromium.googlesource.com/chromium/src.git/+/8aacaf38e85c45876c72ea77e36ef17e5ab69c26)); Chrome does not document this as official behavior and it was not investigated further because it is outside the course scope, and it alters none of the lesson's conclusions: what matters is which response reaches the screen, and that was measured in the box, not in the log.
+There is one more detail in the logs of 3.3.3 worth explaining so it does not confuse you if encountered. In the experiment with `key` and without cleanup, the two requests for `inventario` (the additional cycle one and the real one, identical) did not hit the server together, but rather 200 ms apart, and the second identical request for `pagos` was still pending when the script closed the tab, which is why it appears as `cancelada por el cliente` at 28.122. What was observed is that Chrome did not send the second request to the same URL until the first completed. A hypothesis, not a verified fact: Chromium has a lock in its HTTP cache, with a single writer per URL and several readers ([Chromium, change 8aacaf3](https://chromium.googlesource.com/chromium/src.git/+/8aacaf38e85c45876c72ea77e36ef17e5ab69c26)), and that is compatible with what was observed, but it was not verified that it is the cause of the 200 ms delay; Chrome does not document this as official behavior and it was not investigated further because it is outside the course scope, and it alters none of the lesson's conclusions: what matters is which response reaches the screen, and that was measured in the box, not in the log.
 
 #### 3.4.3 The temptation to remove it
 
 The initial reaction to duplicate requests is removing `StrictMode`. The documentation allows it and discourages it in the same breath: you can turn it off, but the React team recommends keeping it on ([React, “Synchronizing with Effects”](https://react.dev/learn/synchronizing-with-effects)). Now you have measured the reason. In the experiment without cleanup, `StrictMode` revealed two `200`s where there should have been a `cancelada` and a `200`, **before** anyone ever selected two services in succession. Removing it would have hidden that very signal.
 
-The extra cycle does not exist in built code either. Lesson 0 measured this with `npm run preview`: a single request when opening the page.
+The additional cycle does not exist in built code either. Lesson 0 measured this with `npm run preview`: a single request when opening the page.
 
 ### 3.5 Dependencies describe the code
 
@@ -879,7 +880,7 @@ $ npm run lint
 ESLint found too many warnings (maximum: 0).
 ```
 
-The warning tells the truth: the Effect **uses** `alRecibir` and the list does not name it. If you left it like that (or silenced it with a comment), the Effect would be stuck with the `alRecibir` from the initial render forever. Here you would not notice, because all versions of the function do the same thing, but the day the function reads something from `Panel`'s state, it would read the value from the initial render. The React documentation has a name for that, **stale values**, and a promise: if you never silence the linter, you will never see stale value bugs ([React, “Lifecycle of Reactive Effects”](https://react.dev/learn/lifecycle-of-reactive-effects)).
+The warning tells the truth: the Effect **uses** `alRecibir` and the list does not name it. If you left it like that (or silenced it with a comment), the Effect would be stuck with the `alRecibir` from the initial render forever. Here you would not notice, because all versions of the function do the same thing, but the day the function reads something from `Panel`'s state, it would read the value from the initial render. The React documentation has a name for that, **stale values**, and a bounded promise: as long as the dependencies tell the truth and you do not silence the linter, stale values in an Effect disappear as a source of bugs ([React, “Lifecycle of Reactive Effects”](https://react.dev/learn/lifecycle-of-reactive-effects)).
 
 That same page is categorical about the underlying idea: **you cannot “choose” your dependencies.** They must include every reactive value the Effect reads, and the linter enforces it. Reactive values are props, state, and everything declared inside the component, because they are calculated during rendering and can change from one render to the next. The page on removing dependencies says it the other way around, with a sentence that serves as the course rule: the list **describes** your code; to change the list, change the code ([React, “Removing Effect Dependencies”](https://react.dev/learn/removing-effect-dependencies)).
 
@@ -927,7 +928,7 @@ Trace the chain with what you know from 3.1:
 4. React compares dependencies using `Object.is`. For functions, that compares referential identity: the new function **is not** the old one. The list changed.
 5. React runs cleanup (aborts and stops the interval) and restarts the Effect, which immediately requests a report. Go back to step 1.
 
-The React documentation describes this exact mechanism with an `options` object: each freshly created object and function is considered distinct from all others, regardless of whether their contents match, which is why an Effect depending on them resynchronizes more often than necessary ([React, “Removing Effect Dependencies”](https://react.dev/learn/removing-effect-dependencies)). And notice what that means for the question “how many times does the interval restart?”: **on every render of `Panel`**. In this `Panel`, on every incoming report, which turns the restart into an infinite loop. Without the loop (if `alRecibir` did not update state), every click on the “Solo fallas” checkbox or on a service would also re-render `Panel` and restart the interval: the ten-second polling would start counting from zero every time someone clicks.
+The React documentation describes this exact mechanism with an `options` object: each freshly created object and function is considered distinct from all others, regardless of whether their contents match, which is why an Effect depending on them resynchronizes more often than necessary ([React, “Removing Effect Dependencies”](https://react.dev/learn/removing-effect-dependencies)). And notice what that means for the question “how many times does the interval restart?”: **on every render of `Panel`**. In this `Panel`, every incoming report changes state, that triggers a new render, and that is what turns the restart into an infinite loop. Without the loop (if `alRecibir` did not update state), every click on the “Solo fallas” checkbox or on a service would also re-render `Panel` and restart the interval: the ten-second polling would start counting from zero every time someone clicks.
 
 This is the most critical takeaway of the section: **a green linter does not mean your code is right. It means your list is not lying.** The list was lying when `alRecibir` was missing, and the linter warned you. Adding it stopped the lie, and then the truth was laid bare: as written, this Effect **does** depend on a function that changes on every render. The linter did its job. What is broken is the design, and it is fixed by changing the code.
 
@@ -1008,6 +1009,8 @@ export function useReporte(
 
 Compared to Lesson 2, four lines change: the `import` adds `useEffectEvent`, the hook accepts the `alRecibir` parameter, wraps it in `avisarRecibido`, and the Effect calls `avisarRecibido(reporte)` (in the attempt from 3.5 it called `alRecibir` directly). The dependency list **does not change**: it remains `[cargar, cadaMs, intento]`, and the linter accepts it because the function the Effect now uses is an Effect Event, and those do not go in the list. The value of `alRecibir` that runs is always the one from the latest render, even if the Effect started several renders earlier.
 
+An honest limitation of the polling, which this lesson does not solve: `setInterval` fires a request every `cadaMs` without waiting for the previous one. If the server took longer than the interval, two requests would be in flight and the slower one could finish last; the signal they share aborts both only when the Effect is cleaned up, not between one tick and the next. For the practice panel this does not happen (the server responds in 300 ms and the interval is ten seconds), and Lesson 4 moves the polling to TanStack Query (`refetchInterval`).
+
 In `Panel` (3.1.2) nothing you wrote changes: it continues passing a fresh arrow function on every render, `() => establecerActualizadoEn(new Date())`. It no longer matters. That is the advantage over `useCallback`: the hook protects itself and the consumer does not need to know anything.
 
 #### 3.6.2 Counting restarts
@@ -1064,7 +1067,7 @@ async function dibujarTresVeces(titulo: string, Sondeo: ComponentType<PropsSonde
 
   for (const dibujo of [1, 2, 3]) {
     console.log(` dibujo ${dibujo}`);
-    // As in Panel: a new function on every render.
+    // Como en Panel: una función nueva en cada dibujo.
     await act(async () => raiz.render(<Sondeo alRecibir={() => console.log("  recibido")} />));
   }
 
@@ -1099,7 +1102,7 @@ con useEffectEvent:
   detiene el intervalo
 ```
 
-With the function in dependencies, the interval starts **three** times across three renders: one per render, even though nothing that matters changed. With `useEffectEvent`, it starts **once** and stops once, upon unmounting. (The figure does not use `StrictMode`, so the count can be read without the extra cycle; “recibido” does not appear because the figure exits long before the ten-second interval expires.)
+With the function in dependencies, the interval starts **three** times across three renders: one per render, even though nothing that matters changed. With `useEffectEvent`, it starts **once** and stops once, upon unmounting. (The figure does not use `StrictMode`, so the count can be read without the additional cycle; “recibido” does not appear because the figure exits long before the ten-second interval expires.)
 
 And in the `revisor`, with real clicks. This script opened the unmodified checkpoint and, over twenty-one seconds, clicked the “Solo fallas” checkbox four times (checking and unchecking it twice) and selected two services. Every one of those clicks re-renders `Panel`:
 
@@ -1129,7 +1132,7 @@ The server log during those twenty-one seconds:
 08:29:13.443 GET /api/estados 200
 ```
 
-The report arrived at 53.440, 03.443, and 13.443: every ten seconds within three thousandths of a second, as if nobody had touched anything. Six clicks, zero polling restarts. And the “Actualizado a las …” line advanced from 2:28:53 to 2:29:03 and to 2:29:13, tracking each report (remember it is the browser's local time). The two detail pairs are those from 3.4: the `key` mounting a fresh panel per service.
+The report arrived at 53.440, 03.443, and 13.443: every ten seconds within three thousandths of a second, as if nobody had touched anything. Six clicks, zero polling restarts in this run. And the “Actualizado a las …” line advanced from 2:28:53 to 2:29:03 and to 2:29:13, tracking each report (remember it is the browser's local time). The two detail pairs are those from 3.4: the `key` mounting a fresh panel per service.
 
 #### 3.6.3 What `useEffectEvent` is not
 
@@ -1231,7 +1234,7 @@ Calling setState synchronously within an effect body causes cascading renders th
 
 **The first computes.** `fallas` can be obtained from `estados` at render time. Storing it in state and copying it via an Effect produces a render with the old count, an Effect that corrects it, and another render with the correct count: a wasted render, and an instant where the screen displays falsehoods. The documentation states it as a rule: when something can be calculated from existing props or state, don’t put it into state; compute it during rendering instead ([React, “You Might Not Need an Effect”](https://react.dev/learn/you-might-not-need-an-effect)). It is the third shape rule from Lesson 2, “do not store what can be computed”, viewed from the Effects perspective. And it is what the `revisor` already does in `Panel`: `const fallas = … contarFallas(…)`, a constant, and the Effect merely copies it to the document.
 
-**The second reacts to a click.** The retry is not caused by the button rendering, but by the user pressing it. The documentation uses almost the exact same example, buying a product: you don't want to buy it twice, and for that very reason it must not live in an Effect, because buying is not caused by rendering but by a specific interaction, and should run only when the user presses the button ([React, “Synchronizing with Effects”](https://react.dev/learn/synchronizing-with-effects)). Think also of `StrictMode`: if the request lived in an Effect without a flag, the development extra cycle would fire the retry twice. The fix is moving it to the click handler, where the flag ceases to exist. Exercise 4 asks you to do this.
+**The second reacts to a click.** The retry is not caused by the button rendering, but by the user pressing it. The documentation uses almost the exact same example, buying a product: you don't want to buy it twice, and for that very reason it must not live in an Effect, because buying is not caused by rendering but by a specific interaction, and should run only when the user presses the button ([React, “Synchronizing with Effects”](https://react.dev/learn/synchronizing-with-effects)). Think also of `StrictMode`: if the request lived in an Effect without a flag, the development additional cycle would fire the retry twice. The fix is moving it to the click handler, where the flag ceases to exist. Exercise 4 asks you to do this.
 
 #### 3.7.2 The pocket reference table
 
@@ -1241,11 +1244,11 @@ The page “You Might Not Need an Effect” enumerates twelve situations where p
 |---|---|---|
 | updating state based on other state | compute during rendering | `fallas` in `Panel`, `visibles` and `existe` in `ContenidoReporte` |
 | resetting all state when a prop changes | a `key` | `<PanelDetalle key={seleccionado}>` |
-| sending a `POST` request on click | the event handler | not yet in the `revisor`; the plan envisions it for retrying and adding |
+| sending a `POST` request on click | the event handler | not yet in the `revisor`; retrying arrives in Lesson 4 and adding a service in Lesson 7 |
 | notifying the parent that something changed | call the parent's function in the same event | `alSeleccionar`, `alCambiar`, `alGuardarNota` |
 | fetching data | yes, an Effect, with cleanup (or a library) | `useDetalle` and `useReporte` |
 
-Notice the last row. Fetching data **is** synchronizing, which is why the `revisor` does it in an Effect. But the `useEffect` reference is frank about its shortcomings: fetching data manually in Effects does not run on the server, tends to produce waterfalls (parent fetches, renders, then each child fetches its own), does not cache anything, and demands substantial boilerplate to avoid bugs like race conditions; and it recommends using a client-side caching library, TanStack Query among them ([React, “useEffect”](https://react.dev/reference/react/useEffect)). You already wrote that boilerplate twice: `useReporte` and `useDetalle` look very similar. According to the course roadmap, Lesson 4 takes off from there.
+Notice the last row. Fetching data **is** synchronizing, which is why the `revisor` does it in an Effect. But the `useEffect` reference is frank about its shortcomings: fetching data manually in Effects does not run on the server, tends to produce waterfalls (parent fetches, renders, then each child fetches its own), does not cache anything, and demands substantial boilerplate to avoid bugs like race conditions; and it recommends using a client-side caching library, TanStack Query among them ([React, “useEffect”](https://react.dev/reference/react/useEffect)). You already wrote that boilerplate twice: `useReporte` and `useDetalle` look very similar. Lesson 4 takes off from there.
 
 #### 3.7.3 What was already done right
 
@@ -1294,25 +1297,25 @@ The fix is not silencing the rule or moving the call where the linter cannot see
 
 ## What gets done wrong
 
-**Thinking in terms of “on mount”.** Writing `useEffect(() => { … }, [])` with the mindset of “this runs once, when it loads” leads to Effects without cleanup, and `StrictMode` exposes them with its extra cycle. Think in start and stop synchronization cycles.
+**Thinking in terms of “on mount”.** Writing `useEffect(() => { … }, [])` with the mindset of “this runs once, when it loads” leads to Effects without cleanup, and `StrictMode` exposes them with its additional cycle. Think in start and stop synchronization cycles.
 
 **Fetching data without cleanup.** The stale response arrives late and overwrites the correct one. Having a `key` mask it on one screen does not fix it in the hook, and the request travels in full only to be discarded.
 
-**Treating aborts as errors.** Without `if (control.signal.aborted) return;`, cleanup aborts are rendered as failures: in development, via `StrictMode`'s extra cycle, on every service you select (measured in 3.2.3); without a `key`, also on every service switch. An abort is cleanup working as intended.
+**Treating aborts as errors.** Without `if (control.signal.aborted) return;`, cleanup aborts are rendered as failures: in development, via `StrictMode`'s additional cycle, on every service you select (measured in 3.2.3); without a `key`, also on every service switch. An abort is cleanup working as intended.
 
 **Resetting state with `setState` inside an Effect.** It causes a wasted render and the linter rejects it. To reset all state of a component when what it displays changes, use a `key`.
 
-**Silencing `exhaustive-deps`.** An `// eslint-disable-next-line react-hooks/exhaustive-deps` comment leaves the list lying and guarantees stale values down the road. If the warning bothers you, the code has a design flaw.
+**Silencing `exhaustive-deps`.** An `// eslint-disable-next-line react-hooks/exhaustive-deps` comment leaves the list lying and opens the door to stale values down the road. If the warning bothers you, the code has a design flaw.
 
-**Believing a green linter means “correct”.** Adding `alRecibir` to the list left the linter clean while the panel polled every 300 ms. The linter guarantees that the list tells the truth, not that the truth suits you.
+**Believing a green linter means “correct”.** Adding `alRecibir` to the list left the linter clean while the panel polled every 300 ms. The linter checks that the list names what the Effect reads, not that what it reads suits you.
 
 **Using `useEffectEvent` to hide dependencies.** If a value should restart synchronization, such as `cadaMs`, it belongs in the list. `useEffectEvent` is for what happens during synchronization, not for what defines it.
 
-**Computing inside an Effect.** Copying to state something that can be computed during rendering causes an extra render and a split second of false UI. Compute it as a constant.
+**Computing inside an Effect.** Copying to state something that can be computed during rendering causes an additional render and a split second of false UI. Compute it as a constant.
 
 **Triggering a request from a click via an Effect.** The click is an event; the request belongs in its handler. In an Effect, `StrictMode` fires it twice in development, and any dependency change repeats it.
 
-**Removing `StrictMode` because it duplicates requests.** The extra cycle is the proof that cleanup exists, and in production it does not happen.
+**Removing `StrictMode` because it duplicates requests.** The additional cycle is the proof that cleanup exists, and in production it does not happen.
 
 ## Exercises
 
@@ -1336,7 +1339,7 @@ Fix `fig03_02.tsx` so that `npx eslint fig03_02.tsx` reports nothing, **without*
 
 ### Solution 1
 
-Upon selecting `catálogo`, the `key` mounts a new `PanelDetalle` and `StrictMode` runs the extra cycle: a line `GET /api/servicios/cat%C3%A1logo cancelada por el cliente` and, roughly 200 ms later, `GET /api/servicios/cat%C3%A1logo 200`. Two seconds later, selecting `inventario` produces the same: `cancelada` and `200`. Four lines, two cancelled, in the order cancelada, 200, cancelada, 200. That is how it was measured with the checkbox, `catálogo`, and `inventario` in the run from 3.6.2: `08:28:58.612 … cat%C3%A1logo cancelada por el cliente`, `08:28:58.814 … cat%C3%A1logo 200`, `08:29:00.611 … inventario cancelada por el cliente`, and `08:29:00.813 … inventario 200`. Notice that the accented name travels encoded (3.2.2). If you selected `inventario` just 100 ms later, the real request for `catálogo` would not yet have finished (it takes 200 ms), so it would also come out `cancelada`: you would see three `cancelada` lines and a single `200`, the one for `inventario`. That is the race condition resolved, the same one 3.2.3 measured with `pagos`. This latter case was not measured; it is the prediction derived from the rule, and verifying it is your task. And remember the precision from Lesson 0: the `cancelada` line from the extra cycle only appears if the connection managed to reach the server before the abort. If any are missing on your machine, it does not mean `StrictMode` is off.
+Upon selecting `catálogo`, the `key` mounts a new `PanelDetalle` and `StrictMode` runs the additional cycle: a line `GET /api/servicios/cat%C3%A1logo cancelada por el cliente` and, roughly 200 ms later, `GET /api/servicios/cat%C3%A1logo 200`. Two seconds later, selecting `inventario` produces the same: `cancelada` and `200`. Four lines, two cancelled, in the order cancelada, 200, cancelada, 200. That is how it was measured with the checkbox, `catálogo`, and `inventario` in the run from 3.6.2: `08:28:58.612 … cat%C3%A1logo cancelada por el cliente`, `08:28:58.814 … cat%C3%A1logo 200`, `08:29:00.611 … inventario cancelada por el cliente`, and `08:29:00.813 … inventario 200`. Notice that the accented name travels encoded (3.2.2). If you selected `inventario` just 100 ms later, the real request for `catálogo` would not yet have finished (it takes 200 ms), so it would also come out `cancelada`: you would see three `cancelada` lines and a single `200`, the one for `inventario`. That is the race condition resolved, the same one 3.2.3 measured with `pagos`. This latter case was not measured; it is the prediction derived from the rule, and verifying it is your task. And remember the precision from Lesson 0: the `cancelada` line from the additional cycle only appears if the connection managed to reach the server before the abort. If any are missing on your machine, it does not mean `StrictMode` is off.
 
 ### Solution 2
 
@@ -1351,6 +1354,7 @@ One correct form:
 useEffect(() => {
   let ignorar = false;
 
+  // The signal is a placeholder: this variant aborts nothing, it only ignores the result.
   cargarDetalle(nombre, new AbortController().signal).then(
     (detalle) => {
       if (!ignorar) {
@@ -1436,7 +1440,7 @@ Answer without looking at the lesson:
 - [React, “Separating Events from Effects”](https://react.dev/learn/separating-events-from-effects): reactive vs. non-reactive logic, Effect Events, and their limitations. Consulted on October 21, 2026.
 - [React, “Removing Effect Dependencies”](https://react.dev/learn/removing-effect-dependencies): functions and objects as dependencies, the list that describes code, and strategies for removing dependencies. Consulted on October 21, 2026.
 - [React, “You Might Not Need an Effect”](https://react.dev/learn/you-might-not-need-an-effect): computing during rendering, resetting state with `key`, requests triggered by events, and race conditions during data fetching. Consulted on October 21, 2026.
-- [React, “useEffect”](https://react.dev/reference/react/useEffect): signature, dependency comparison with `Object.is`, `StrictMode`'s extra cycle, and the limitations of manual data fetching. Consulted on October 21, 2026.
+- [React, “useEffect”](https://react.dev/reference/react/useEffect): signature, dependency comparison with `Object.is`, `StrictMode`'s additional cycle, and the limitations of manual data fetching. Consulted on October 21, 2026.
 - [React, “useEffectEvent”](https://react.dev/reference/react/useEffectEvent): what it does, its limitations, and warnings against using it to hide dependencies. Consulted on October 21, 2026.
 - [React, “React 19.2”](https://react.dev/blog/2025/10/01/react-19-2): the `useEffectEvent` announcement on October 1, 2025, and the need for a recent linter version. Consulted on October 21, 2026.
 - [React, “Preserving and Resetting State”](https://react.dev/learn/preserving-and-resetting-state): `key` as part of position and state destruction upon component removal. Consulted on October 21, 2026.
@@ -1461,4 +1465,4 @@ Answer without looking at the lesson:
 
 ---
 
-**Next:** [Lesson 4 — Server State with TanStack Query](04-estado-del-servidor.md)
+**Next:** [Lesson 4 — Server state with TanStack Query](04-estado-del-servidor.md)

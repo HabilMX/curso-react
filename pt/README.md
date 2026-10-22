@@ -27,7 +27,7 @@ O **`revisor`**: a tela que mostra o estado de uma lista de serviços (nome, est
 | 4 | [Estado do servidor com TanStack Query](04-estado-del-servidor.md) | o relatório com cache e botão “tentar novamente” | `useQuery`, `queryKey`, `signal`; `status` e `fetchStatus`; `refetchInterval`; `useMutation`; o estado vazio; Error Boundary |
 | 5 | [Rotas e a URL como estado](05-rutas-url-como-estado.md) | lista, detalhe, 404 e filtros na URL | `createBrowserRouter`, `<Outlet />`, `useSearchParams`, `NavLink`; recarregar uma rota do cliente |
 | 6 | [Estado compartilhado: reducer e contexto](06-reducer-contexto.md) | bandeja de avisos e preferências | `useReducer` e reducer puro; contexto com duas partes; hook que exige provedor; que estado vive onde |
-| 7 | [Formulários, ações e acessibilidade](07-formularios-accesibilidad.md) | o cadastro de um serviço | `<form action>`, `useActionState`, `useFormStatus`, `useOptimistic`; validação; `aria-invalid`; regiões ARIA live; teclado |
+| 7 | [Formulários, actions e acessibilidade](07-formularios-accesibilidad.md) | o cadastro de um serviço | `<form action>`, `useActionState`, `useFormStatus`, `useOptimistic`; validação; `aria-invalid`; regiões ARIA live; teclado |
 | 8 | [Testes de componentes](08-pruebas-de-componentes.md) | a suíte do painel | Vitest e Testing Library; consultas por papel; `findBy`; `user-event`; o teste que fica vermelho ao reverter |
 | 9 | [Desempenho, publicação e quando usar um framework](09-rendimiento-publicacion.md) | o `revisor` medido e publicado | Profiler; React Compiler 1.0; `vite build`; regra de reescrita (rewrite) para `index.html`; Server Components e quando migrar |
 

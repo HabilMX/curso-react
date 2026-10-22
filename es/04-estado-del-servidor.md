@@ -14,7 +14,7 @@
 
 **Qué no hace esta lección.** No agrega pantallas ni direcciones: la lista y el detalle siguen en la misma página, y la selección sigue siendo un estado de `Panel`; las rutas llegan en la [Lección 5](05-rutas-url-como-estado.md). No usa Suspense para cargar datos: explica qué haría y por qué este panel no lo necesita. No escribe pruebas automáticas: las de los cuatro estados llegan en la [Lección 8](08-pruebas-de-componentes.md). No da de alta servicios: el servidor de práctica ya sabe hacerlo desde esta lección, pero el formulario es de la [Lección 7](07-formularios-accesibilidad.md). Y no explica el servidor de práctica, que crece aquí a su versión final: solo dice qué rutas nuevas tiene.
 
-**Sobre las corridas.** Todo se ejecutó el 21 de octubre de 2026 con Node.js 24.22.0 y npm 11.19.1, en macOS, con las versiones exactas del `package.json` de esta lección. El punto de control se reinstaló con `npm ci` y pasó `npm run lint` y `npm run build`, con el mismo nombre de archivo en `dist/` que las corridas del curso obtuvieron también en un contenedor Linux (`index-BzO-N0-M.js`); por eso lo que ves aquí es lo que verás en tu Linux Mint, salvo un aviso de `npm ci` sobre `fsevents` que solo aparece en macOS y se explica donde sale. Lo que se ve «en el navegador» se midió con Chrome sin ventana (`--headless`), manejado por su protocolo de depuración: un programa pequeño abría la página, pulsaba los botones como lo harías tú y anotaba, con milisegundos desde que abrió la página, cada petición que salía a `/api/` y cada cambio en la pantalla. Es el mismo registro que ves en la pestaña «Red» de las herramientas de desarrollo, contado por escrito. Las horas de la bitácora del servidor de práctica están en UTC; la hora que pinta el panel («Actualizado a las 2:11:47 a.m.») es la local de la máquina, que estaba en el horario del centro de México. Las rutas largas se muestran a partir de `~/curso-react`. Para comparar tamaños se construyó también el punto de control de la Lección 3, con el mismo resultado que las corridas del curso registran para él (`index-CTkBRgQQ.js`). Los programas están en [`programas/04-estado-del-servidor/`](../programas/04-estado-del-servidor): `revisor/` es el punto de control y las tres figuras están junto a él, con su propio `package.json`, que es el de las figuras de la Lección 0 más `@tanstack/react-query`. Las tres se volvieron a correr desde cero en una carpeta nueva, partiendo del `package.json` de la Lección 0 y agregando solo Query, como se indica en 4.1, y dieron salidas idénticas a las que se muestran. Cada lección del curso se escribió con sus propios puertos para no chocar con otras corridas en la misma máquina; tú usa los de siempre: 3100 para el servidor de práctica, 5173 para `npm run dev` y 4173 para `npm run preview`.
+**Sobre las corridas.** Todo se ejecutó el 21 de octubre de 2026 con Node.js 24.22.0 y npm 11.19.1, en macOS, con las versiones exactas del `package.json` de esta lección. El punto de control se reinstaló con `npm ci` y pasó `npm run lint` y `npm run build`, con el mismo nombre de archivo en `dist/` que las corridas del curso obtuvieron también en un contenedor Linux (`index-CHheidKQ.js`); por eso lo que ves aquí es lo que verás en tu Linux Mint, salvo un aviso de `npm ci` sobre `fsevents` que solo aparece en macOS y se explica donde sale. Tras el último cambio del punto de control (el botón de fila que alterna y la guarda de `%` en el servidor de práctica) se volvió a instalar desde cero con `npm ci` en un contenedor Linux (imagen oficial `node:24.22.0-bookworm`) y dio el mismo nombre en macOS y en Linux. Lo que se ve «en el navegador» se midió con Chrome sin ventana (`--headless`), manejado por su protocolo de depuración: un programa pequeño abría la página, pulsaba los botones como lo harías tú y anotaba, con milisegundos desde que abrió la página, cada petición que salía a `/api/` y cada cambio en la pantalla. Es el mismo registro que ves en la pestaña «Red» de las herramientas de desarrollo, contado por escrito. Las capturas del navegador de 4.5, 4.6.1 y 4.9 se tomaron con una versión de `PanelDetalle` que, si fallaba la actualización del detalle, mostraba solo el error y escondía los datos; la que ves en 4.6 corrige eso, y se comprobó que sigue entregando lo mismo cuando las peticiones salen bien, que es todo lo que esas capturas registran. Las horas de la bitácora del servidor de práctica están en UTC; la hora que pinta el panel («Actualizado a las 2:11:47 a.m.») es la local de la máquina, que estaba en el horario del centro de México. Las rutas largas se muestran a partir de `~/curso-react`. Para comparar tamaños se construyó también el punto de control de la Lección 3, con el mismo resultado que las corridas del curso registran para él (`index-CTkBRgQQ.js`). Los programas están en [`programas/04-estado-del-servidor/`](../programas/04-estado-del-servidor): `revisor/` es el punto de control y las tres figuras están junto a él, con su propio `package.json`, que es el de las figuras de la Lección 0 más `@tanstack/react-query`. Las tres se volvieron a correr desde cero en una carpeta nueva, partiendo del `package.json` de la Lección 0 y agregando solo Query, como se indica en 4.1, y dieron salidas idénticas a las que se muestran. Cada lección del curso se escribió con sus propios puertos para no chocar con otras corridas en la misma máquina; tú usa los de siempre: 3100 para el servidor de práctica, 5173 para `npm run dev` y 4173 para `npm run preview`.
 
 ## Al terminar vas a poder
 
@@ -39,9 +39,9 @@ Mira lo que el `revisor` hace hoy, al final de la Lección 3, con los ojos de qu
 
 Esa página no se queda en la queja: recomienda, si no usas un framework, «usar o construir una caché del lado del cliente», y nombra tres soluciones abiertas; la primera es **TanStack Query**. Y agrega algo que conviene leer despacio: si construyes la tuya, usarás Effects por debajo, pero tendrás que agregar la lógica para no repetir peticiones, guardar respuestas y evitar cascadas. Eso es lo que hace la librería. Por debajo sigue habiendo un `fetch` con un `signal`; lo que cambia es **quién es dueño del dato**. Hasta hoy, el dueño del reporte era el componente que lo pedía. A partir de esta lección, el dueño es una caché que vive fuera de los componentes, y los componentes solo se **suscriben** a lo que necesitan.
 
-Ese cambio tiene un nombre que da título a la lección: **estado del servidor**. El estado que la Lección 2 te enseñó a manejar —la casilla «Solo fallas», el servicio elegido, el borrador de una nota— es tuyo: nace en la pantalla, solo la pantalla lo cambia y siempre está al día. El reporte es otra cosa. Es una **copia** de algo que vive en otra computadora, que otras personas pueden cambiar sin avisarte, que tarda en llegar, que puede fallar al pedirlo y que empieza a envejecer en el instante en que llega. Tratarlo con `useState` es tratar una fotografía como si fuera una ventana.
+Ese cambio tiene un nombre que da título a la lección: **estado del servidor**. El estado que la Lección 2 te enseñó a manejar —la casilla «Solo fallas», el servicio elegido, el borrador de una nota— es tuyo: nace en la pantalla, solo la pantalla lo cambia y no envejece por su cuenta. El reporte es otra cosa. Es una **copia** de algo que vive en otra computadora, que otras personas pueden cambiar sin avisarte, que tarda en llegar, que puede fallar al pedirlo y que empieza a envejecer en el instante en que llega. Tratarlo con `useState` es tratar una fotografía como si fuera una ventana.
 
-La lección tiene nueve partes: el problema medido (4.1); la instalación y el cliente (4.2); claves, funciones de consulta y sondeo (4.3); `status` frente a `fetchStatus` (4.4); los cuatro estados más uno (4.5); mutaciones e invalidación (4.6); lo que Suspense no hace (4.7); el límite de error (4.8); y el recorrido completo (4.9). Al final vas a construir esto, y vas a saber por qué el JavaScript creció unos 36 kilobytes:
+Son tres conceptos nuevos. El primero es **la consulta: un dato del servidor con una clave y una caché**, y ocupa tres secciones: el problema medido (4.1), la instalación y el cliente (4.2), y las claves, las funciones de consulta y el sondeo (4.3). El segundo es **los estados de una consulta y cómo los dibuja la pantalla**: `status` frente a `fetchStatus` (4.4) y los cuatro estados más uno (4.5); lo completan, después del tercero, lo que Suspense no hace con esos estados (4.7) y el límite de error, que atrapa el estado de error cuando se escapa del componente (4.8). El tercero es **la mutación y la invalidación**: cambiar un dato en el servidor y avisarle a la caché (4.6). La sección 4.9 no agrega un concepto: es el recorrido completo, donde los tres se ven juntos. Al final vas a construir esto, y vas a saber por qué el JavaScript creció unos 37 kilobytes:
 
 ```text
 $ npm run build
@@ -56,7 +56,7 @@ rendering chunks...
 computing gzip size...
 dist/index.html                   0.39 kB │ gzip:  0.26 kB
 dist/assets/index-Bjb9BrLB.css    0.75 kB │ gzip:  0.40 kB
-dist/assets/index-BzO-N0-M.js   262.38 kB │ gzip: 81.53 kB
+dist/assets/index-CHheidKQ.js   262.59 kB │ gzip: 81.55 kB
 
 ✓ built in 263ms
 ```
@@ -300,7 +300,7 @@ createRoot(raiz).render(
 
 Que `crearClienteConsultas()` se llame a nivel de módulo, y no dentro de un componente, no es un detalle de estilo. Si lo crearas dentro de un componente, cada dibujo de ese componente crearía una caché nueva y vacía, y perderías todo lo que la figura 1 acaba de mostrar. En `main.tsx` se ejecuta una vez, cuando el navegador carga el módulo. (El `LimiteDeError` que envuelve todo se explica en 4.8.)
 
-Y aquí está el tamaño que aparecía al final del «porqué». Se construyó también el punto de control de la Lección 3 para compararlo: su JavaScript medía 225.86 kB (70.67 kB comprimido) y salía de 33 módulos; el de esta lección mide 262.38 kB (81.53 kB comprimido) y sale de 83. Entre una lección y otra, el código propio del `revisor` casi no crece —hasta se borran dos hooks—, así que esos 36 kB y 50 módulos de más son, en su mayoría, la librería. Vale preguntarse si lo vale. Para un panel que solo pidiera una cosa una vez, probablemente no; para uno que tiene caché, sondeo, reintentos, deduplicación, invalidación y datos viejos mientras actualiza, lo que pesa es lo que te ahorras escribir y mantener tú.
+Y aquí está el tamaño que aparecía al final del «porqué». Se construyó también el punto de control de la Lección 3 para compararlo: su JavaScript medía 225.86 kB (70.67 kB comprimido) y salía de 33 módulos; el de esta lección mide 262.59 kB (81.55 kB comprimido) y sale de 83. Entre una lección y otra, el código propio del `revisor` casi no crece —hasta se borran dos hooks—, así que esos 37 kB y 50 módulos de más son, en su mayoría, la librería. Vale preguntarse si lo vale. Para un panel que solo pidiera una cosa una vez, probablemente no; para uno que tiene caché, sondeo, reintentos, deduplicación, invalidación y datos viejos mientras actualiza, lo que pesa es lo que te ahorras escribir y mantener tú.
 
 ### 4.3 Claves, funciones de consulta y sondeo
 
@@ -394,7 +394,7 @@ export function consultaDetalle(nombre: string) {
 }
 ```
 
-Su `cargarDetalle` no cambia respecto a la Lección 3. Con esto, `useReporte.ts` y `useDetalle.ts` desaparecen del proyecto, y con `useReporte` se va también el `useEffectEvent` que la Lección 3 le puso para que el sondeo no se reiniciara. No era un mal uso: era la forma correcta de resolver ese problema con un Effect escrito a mano. Simplemente, ya no hay Effect escrito a mano.
+Su `cargarDetalle` no cambia respecto a la Lección 3. Con esto, `src/reporte/useReporte.ts` y `src/detalle/useDetalle.ts` desaparecen del proyecto, y con `useReporte` se va también el `useEffectEvent` que la Lección 3 le puso para que el sondeo no se reiniciara. No era un mal uso: era la forma correcta de resolver ese problema con un Effect escrito a mano. Simplemente, ya no hay Effect escrito a mano.
 
 ¿Y `useTituloDocumento`, el otro Effect de la Lección 3? Ese se queda. Sincroniza `document.title` con lo que React sabe, que es exactamente para lo que existe un Effect. No todo Effect se va: se va el que traía datos.
 
@@ -566,13 +566,13 @@ Tres cosas cambiaron respecto a la Lección 3:
 
 - **La consulta reemplaza al hook.** `useQuery(consultaReporte(cadaMs))` devuelve el objeto completo, y `Panel` se lo pasa tal cual a `ContenidoReporte`. Ya no hay propiedad `cargar`: el componente no recibe la función que trae datos, porque la función vive en la consulta.
 - **«Actualizado a las» sale de `dataUpdatedAt`.** En la Lección 3 era un estado propio, `actualizadoEn`, que se escribía en un `alRecibir` envuelto en `useEffectEvent`. Ahora Query ya guarda el momento en que llegó el último dato bueno, como un número de milisegundos ([TanStack Query, «useQuery»](https://tanstack.com/query/latest/docs/framework/react/reference/useQuery)), y vale `0` mientras no haya llegado ninguno. Es un estado que se dejó de guardar porque ya se podía leer: la regla de la Lección 2 de «no guardes lo que puedes calcular», aplicada a la caché.
-- **El botón «Actualizar» llama a `refetch`** y se deshabilita mientras `isFetching` es `true`. Y el pie agrega «· actualizando…» exactamente en el cuarto caso de la figura: hay datos y se están pidiendo. Esa es la diferencia entre `status` y `fetchStatus`, pintada en un renglón.
+- **El botón «Actualizar» llama a `refetch`** y se deshabilita mientras `isFetching` es `true`. El `void` de `onClick={() => void consulta.refetch()}` es el operador de JavaScript que evalúa una expresión y descarta su resultado ([MDN, «void»](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/void)): `refetch` devuelve una promesa, y escribir `void` deja a la vista que aquí no se espera ni se usa, en lugar de dejarla suelta por descuido. Y el pie agrega «· actualizando…» exactamente en el cuarto caso de la figura: hay datos y se están pidiendo. Esa es la diferencia entre `status` y `fetchStatus`, pintada en un renglón.
 
 ### 4.5 Los cuatro estados, más uno
 
 Un dato que viene de un servidor tiene, como mínimo, **cuatro estados** que la pantalla tiene que dibujar: cargando, error, vacío y con datos. Los tres primeros son los que se olvidan. El de error, porque en la máquina de quien programa la API siempre responde. Y el **vacío**, porque en la máquina de quien programa siempre hay datos de prueba: una lista vacía se dibuja como una lista sin renglones, que en pantalla no se distingue de una pantalla rota. Por eso el plan del curso lo llama «el cuarto estado» y lo marca en negritas.
 
-El quinto, que solo existe gracias a la caché, es **con datos y con error**: la última actualización falló, pero hay un reporte anterior que mostrar. Es el renglón 5 de la figura 2. `ContenidoReporte` dibuja los cinco, en este orden:
+El quinto, que solo existe gracias a la caché, es **con datos y con error**: la última actualización falló, pero hay un reporte anterior que mostrar. Es el renglón 5 de la figura 2. `ContenidoReporte` dibuja los cinco, en este orden (el detalle de 4.6 hace lo mismo, a su escala):
 
 ```tsx
 // revisor/src/reporte/ContenidoReporte.tsx
@@ -728,11 +728,13 @@ La parte interesante está en la bitácora, y en el registro de red que anotó e
 
 Tres `503` después de la cancelada: el intento original y los **dos reintentos** de `retry: 2`. Mira los huecos entre una respuesta y la siguiente petición: unos 1,000 ms y luego unos 2,000 ms. Es la espera por omisión de Query, que empieza en un segundo y se duplica en cada intento, sin pasar de 30 segundos ([TanStack Query, «Query Retries»](https://tanstack.com/query/latest/docs/framework/react/guides/query-retries)). Mientras tanto, la pantalla siguió en «Cargando…»: los reintentos son silenciosos, y la alerta solo aparece cuando se agotan. Con el `retry: 3` de omisión, la persona habría esperado unos ocho segundos para enterarse de que la API está caída; con `2`, unos cuatro. (Un detalle de lectura: en el registro del navegador, entre la primera petición y su `503` hay solo 33 ms, cuando el servidor tarda 300. No es que el servidor haya contestado antes; la bitácora del servidor sí muestra los 300 ms. Es que, mientras la página se abría, el navegador entregó juntos los primeros avisos al programa que los anotaba, y el programa les puso la hora en que los recibió. Desde la segunda petición los avisos llegan uno por uno y los 300 ms reaparecen: de 1373 a 1685 y de 3682 a 3986.)
 
+Fíjate también en que en esa pantalla hay dos botones, «Reintentar» y «Actualizar», y los dos llaman a `consulta.refetch()`. No es un descuido de maquetación: pertenecen a dueños distintos. «Reintentar» es de `ContenidoReporte` y existe solo en el estado de error sin datos, donde es la única salida que la persona tiene a la vista. «Actualizar» es de `Panel` y está siempre, porque refrescar un reporte que sí se ve es una acción de la tarjeta, no del error. Que coincidan en este único estado es el precio de que cada componente sepa solo de lo suyo; si en tu producto te molesta, la salida es esconder «Actualizar» cuando no hay datos, y es una decisión de diseño, no de Query.
+
 Y una observación que no está en ningún renglón: «Actualizado a las…» no aparece, porque `dataUpdatedAt` sigue en `0`. Nunca llegó un dato bueno. Si el servidor se hubiera caído **después** de una carga buena, verías el quinto estado, la lista con el aviso ámbar encima.
 
 ### 4.6 Mutaciones e invalidación
 
-Hasta aquí todo es lectura. Pero el detalle de un servicio tiene ahora un botón que **cambia** algo en el servidor: «Volver a revisar» le pide al servidor de práctica que revise el servicio otra vez. El servidor tiene una ruta nueva para eso, `POST /api/servicios/:nombre/reintento`, que siempre encuentra el servicio recuperado: responde `200` con `{"nombre":"pagos","tipo":"disponible","codigoHttp":200,"duracionMs":95}` y, lo que importa, **cambia lo que tiene guardado**, de modo que el siguiente `GET /api/estados` ya trae a `pagos` en verde. (También responde `404` si el servicio no existe, y desde esta lección tiene la ruta `POST /api/servicios` para dar de alta servicios; esa la usa la Lección 7.)
+Hasta aquí todo es lectura. Pero el detalle de un servicio tiene ahora un botón que **cambia** algo en el servidor: «Volver a revisar» le pide al servidor de práctica que revise el servicio otra vez. El servidor tiene una ruta nueva para eso, `POST /api/servicios/:nombre/reintento`, que, si el servicio existe, lo encuentra recuperado: responde `200` con `{"nombre":"pagos","tipo":"disponible","codigoHttp":200,"duracionMs":95}` y, lo que importa, **cambia lo que tiene guardado**, de modo que el siguiente `GET /api/estados` ya trae a `pagos` en verde. (Si el servicio no existe, responde `404`; si el nombre de la dirección no se puede decodificar, como en `/api/servicios/%`, responde `400` con `{"detalle":"nombre de servicio inválido"}`; y desde esta lección tiene la ruta `POST /api/servicios` para dar de alta servicios; esa la usa la Lección 7.)
 
 Una operación que cambia datos en el servidor se llama **mutación**, y en Query tiene su propio hook, `useMutation`. La frontera de red es como las otras dos: pide, revisa el código, valida la forma.
 
@@ -823,10 +825,15 @@ export function PanelDetalle({
     <aside className="detalle" aria-label={`Detalle de ${nombre}`}>
       <h3>{nombre}</h3>
       {consulta.isPending && <p role="status">Cargando detalle…</p>}
-      {consulta.isError && (
+      {consulta.isError && consulta.data === undefined && (
         <p role="alert">No se pudo cargar el detalle: {consulta.error.message}</p>
       )}
-      {consulta.isSuccess && (
+      {consulta.isError && consulta.data !== undefined && (
+        <p role="alert" className="viejo">
+          Mostrando el último detalle que llegó: la actualización falló ({consulta.error.message}).
+        </p>
+      )}
+      {consulta.data !== undefined && (
         <dl>
           <dt>Estado</dt>
           <dd>
@@ -855,7 +862,9 @@ export function PanelDetalle({
 }
 ```
 
-El botón se deshabilita y cambia su texto a «Revisando…» mientras `reintento.isPending` es verdadero, para que nadie mande el mismo `POST` cinco veces por impaciencia. Si la mutación falla, `reintento.isError` muestra la alerta debajo del botón. Y nota que la consulta del detalle sigue usando `isPending` e `isSuccess`, no `isFetching`: mientras se vuelve a pedir el detalle después de la invalidación, la persona sigue viendo el dato anterior y no un «Cargando detalle…» que lo borre.
+El botón se deshabilita y cambia su texto a «Revisando…» mientras `reintento.isPending` es verdadero, para que nadie mande el mismo `POST` cinco veces por impaciencia. Si la mutación falla, `reintento.isError` muestra la alerta debajo del botón. Y nota que la consulta del detalle usa `isPending` y la presencia de `data`, no `isFetching`: mientras se vuelve a pedir el detalle después de la invalidación, la persona sigue viendo el dato anterior y no un «Cargando detalle…» que lo borre.
+
+El detalle también dibuja el quinto estado de 4.5. Si la actualización falla pero ya había un detalle, `status` es `error` y `data` sigue ahí; por eso el bloque de datos depende de `consulta.data !== undefined` y no de `consulta.isSuccess`, que en ese caso valdría `false` y haría desaparecer justo lo que la persona necesita para decidir. Con un detalle que nunca llegó, en cambio, solo se ve la alerta de error, como en `ContenidoReporte`.
 
 #### 4.6.1 Lo que pasa al pulsar «Volver a revisar», medido
 
@@ -971,7 +980,7 @@ Se lee en tres partes:
 
 - **`getDerivedStateFromError`** es estática: no tiene acceso a `this`, solo recibe el error y devuelve el estado nuevo. React la llama durante el dibujo, así que tiene que ser pura, como cualquier dibujo (Lección 1).
 - **`componentDidCatch`** se llama después, cuando React ya terminó, y por eso puede hacer cosas con efectos: aquí, escribir en la consola el error y la pila de componentes. En un sistema publicado, este sería el lugar para enviarlo a un servicio de registro de errores.
-- **`render`** dibuja la alerta si hubo error, o a los hijos si no. El botón recarga la página entera: un error de dibujo casi siempre es un defecto del código, y no hay nada mejor que ofrecer que empezar otra vez. Fíjate en que la alerta pinta `error.message` tal cual. Como va como texto hijo de JSX, no abre un hueco de XSS, pero sí enseña a cualquiera el mensaje crudo de una excepción, que puede revelar detalles internos: nombres de campos, rutas, partes de una consulta. En este panel de práctica ayuda a depurar; en una aplicación abierta al público conviene mostrar un texto genérico y dejar el detalle solo para el registro de `componentDidCatch`.
+- **`render`** dibuja la alerta si hubo error, o a los hijos si no. El botón recarga la página entera: un error de dibujo casi siempre es un defecto del código, y en el nivel más alto del panel, empezar otra vez es la salida más directa para recuperar un árbol sano. (Un límite más pequeño, alrededor de una sola sección, podría ofrecer volver a dibujar solo esa parte sin perder lo que la persona tiene en el resto; el curso usa uno solo, arriba.) Una precisión sobre el tipo: `getDerivedStateFromError(error: Error)` supone que lo lanzado es un `Error`, pero en JavaScript se puede lanzar cualquier valor ([MDN, «throw»](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/throw)). Si un hijo lanzara un texto suelto, `error.message` valdría `undefined` y la alerta saldría sin mensaje. Con eso, el límite del curso se mantiene corto; la Lección 5 vuelve sobre el tipo `unknown` de lo lanzado. Fíjate en que la alerta pinta `error.message` tal cual. Como va como texto hijo de JSX, no abre un hueco de XSS, pero sí enseña a cualquiera el mensaje crudo de una excepción, que puede revelar detalles internos: nombres de campos, rutas, partes de una consulta. En este panel de práctica ayuda a depurar; en una aplicación abierta al público conviene mostrar un texto genérico y dejar el detalle solo para el registro de `componentDidCatch`.
 
 Lo que un límite de error **no** atrapa importa tanto como lo que atrapa. Según la misma página: los errores en manejadores de eventos (un `onClick` que lanza), el código asíncrono (un `setTimeout`, una promesa suelta), el dibujo en el servidor y los errores del propio límite. La página agrega una excepción que vas a encontrar en la [Lección 7](07-formularios-accesibilidad.md): lo que se lanza dentro de una transición, como una acción de formulario, sí llega al límite. Eso explica el reparto de este panel: un `fetch` que falla no es un error de dibujo, es un dato que llegó mal, y lo maneja Query como estado; el límite de error queda para lo que nadie previó.
 
@@ -985,7 +994,7 @@ Con dos terminales, como en la Lección 0. En la primera, el servidor de prácti
 08:11:23.119 servidor de práctica en http://127.0.0.1:3100 (escenario: normal)
 ```
 
-En la segunda, `npm run dev`, y abre `http://localhost:5173/`. Debes ver la lista de cuatro servicios, el resumen «4 servicios revisados · 2 servicios con falla», «Actualizado a las…» y, cada diez segundos, un «· actualizando…» de un instante en el pie. Elige `pagos`, espera su detalle y pulsa «Volver a revisar»: la fila se pone verde, luego el detalle, y el botón regresa a su texto. Es el registro de 4.6.1.
+En la segunda, `npm run dev`, y abre `http://localhost:5173/`. Debes ver la lista de cuatro servicios, el resumen «4 servicios revisados · 2 servicios con falla», «Actualizado a las…» y, cada diez segundos, un «· actualizando…» de un instante en el pie. Elige `pagos`, espera su detalle y pulsa «Volver a revisar»: la fila se pone verde, luego el detalle, y el botón regresa a su texto. Es el registro de 4.6.1. Y una comprobación más, de la fila misma: el botón `pagos` es un botón de alternancia (`aria-pressed`, Lección 2), así que pulsarlo **otra vez** cierra el detalle. Se midió en Chrome sin ventana, manejado por su protocolo de depuración: `aria-pressed` valía `false` al abrir, `true` tras el primer clic (con el detalle a la vista), `false` tras el segundo (sin detalle) y `true` tras el tercero. Con el código anterior, que siempre mandaba el nombre, el segundo clic dejaba `true` y el detalle abierto.
 
 Después, construye y mira la versión que se publicaría, con el servidor todavía encendido: `npm run build` y `npm run preview`, en `http://localhost:4173/`. Esto registró la bitácora cuando Chrome abrió esa versión:
 
@@ -1013,7 +1022,7 @@ Actualizado a las 2:13:10 a.m.
 Actualizar
 ```
 
-Apaga todo con Ctrl+C. Para terminar, la verificación del punto de control, la que corre cualquier revisión automática: `npm ci`, `npm run lint` y `npm run build`, los tres con código de salida 0. El linter no avisó nada, y la construcción dio el mismo nombre de archivo que las corridas del curso obtuvieron en macOS y en Linux, `index-BzO-N0-M.js`.
+Apaga todo con Ctrl+C. Para terminar, la verificación del punto de control, la que corre cualquier revisión automática: `npm ci`, `npm run lint` y `npm run build`, los tres con código de salida 0. El linter no avisó nada, y la construcción dio el mismo nombre de archivo que las corridas del curso obtuvieron en macOS y en Linux, `index-CHheidKQ.js`.
 
 ## El error que vas a ver
 
@@ -1093,7 +1102,7 @@ src/reporte/ContenidoReporte.tsx(35,11): error TS2339: Property 'estados' does n
 src/reporte/ContenidoReporte.tsx(42,32): error TS7006: Parameter 'estado' implicitly has an 'any' type.
 ```
 
-Sin ese `if`, `consulta.data` puede ser `undefined` —es justo el caso `pending`— y TypeScript se niega a desarmarlo. El segundo error es consecuencia del primero: como no sabe qué es `estados`, tampoco sabe qué es cada `estado`. Lo valioso aquí es que el aviso llega **antes** de ejecutar: en el navegador, ese olvido sería un `TypeError` durante el primer dibujo, justo el tipo de error que acaba en el límite de 4.8. El arreglo no es `consulta.data!.estados` ni `consulta.data?.estados ?? []`: el primero miente, y el segundo convierte «todavía no sé» en «no hay servicios», que es el cuarto estado y significa otra cosa. El arreglo es dibujar el caso `pending`.
+Sin ese `if`, `consulta.data` puede ser `undefined` —es justo el caso `pending`— y TypeScript se niega a desarmarlo. (Los dos avisos dependen de `"strict": true` en el `tsconfig`, el que fijó la Lección 0: sin él, `undefined` se colaría sin queja.) El segundo error es consecuencia del primero: como no sabe qué es `estados`, tampoco sabe qué es cada `estado`. Lo valioso aquí es que el aviso llega **antes** de ejecutar: en el navegador, ese olvido sería un `TypeError` durante el primer dibujo, justo el tipo de error que acaba en el límite de 4.8. El arreglo no es `consulta.data!.estados` ni `consulta.data?.estados ?? []`: el primero miente, y el segundo convierte «todavía no sé» en «no hay servicios», que es el cuarto estado y significa otra cosa. El arreglo es dibujar el caso `pending`.
 
 ## Lo que se hace mal
 
@@ -1169,9 +1178,10 @@ Bajo el encabezado «catálogo» aparece el detalle **de `pagos`**: «En falla: 
 ## Cómo sé que lo logré
 
 - [ ] `npm ls @tanstack/react-query`, dentro de `~/curso-react/revisor/`, imprime `@tanstack/react-query@5.104.5`, y en `src/` ya no existen `useReporte.ts` ni `useDetalle.ts`.
-- [ ] `npm run lint` termina sin escribir ningún problema, y `npm run build` termina con `✓ built` y deja en `dist/assets/` un archivo llamado `index-BzO-N0-M.js`: si tu código es idéntico al del punto de control, el nombre coincide.
+- [ ] `npm run lint` termina sin escribir ningún problema, y `npm run build` termina con `✓ built` y deja en `dist/assets/` un archivo llamado `index-CHheidKQ.js`: si tu código es idéntico al del punto de control, el nombre coincide.
 - [ ] `node fig04_01.js` imprime `1 llamada(s)` al abrir y `0 llamada(s)` al volver en la mitad de Query, y sabes explicar de dónde sale cada número.
 - [ ] Con `ESCENARIO=vacio`, el panel dice «No hay servicios configurados todavía.»; con `ESCENARIO=caido`, muestra la alerta con «Reintentar» y la bitácora registra tres `503` (más, si alcanza a llegar, una `cancelada por el cliente` antes).
+- [ ] En el navegador, el botón de la fila de `pagos` alterna: un clic muestra el detalle (`aria-pressed="true"`) y un segundo clic lo oculta (`aria-pressed="false"`).
 - [ ] Con el escenario normal, al pulsar «Volver a revisar» en `pagos` la bitácora registra un `POST /api/servicios/pagos/reintento 200` seguido de un `GET /api/estados 200` y un `GET /api/servicios/pagos 200`, y la fila de `pagos` se pone verde sin pulsar «Actualizar».
 - [ ] Puedes nombrar las cinco combinaciones de `status` y `fetchStatus` de la figura 2 y decir cuál pinta «· actualizando…» en el pie.
 - [ ] Con `npm run preview`, abrir la página produce una sola petición `GET /api/estados` en la bitácora.

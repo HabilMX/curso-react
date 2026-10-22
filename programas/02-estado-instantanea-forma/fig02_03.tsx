@@ -10,8 +10,9 @@ Object.assign(globalThis, {
   IS_REACT_ACT_ENVIRONMENT: true,
 });
 
-// react-dom decide al cargarse qué eventos de teclado sabe escuchar, así que se
-// importa después de que exista `window` (los import de arriba se cargan antes).
+// react-dom comprueba al cargarse si existe `window.document` y si el documento
+// admite el evento `input`, así que se importa después de que exista `window`
+// (los import de arriba se cargan antes).
 const { createRoot } = await import("react-dom/client");
 
 function Editor({ nombre }: { readonly nombre: string }) {

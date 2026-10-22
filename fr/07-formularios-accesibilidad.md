@@ -12,14 +12,14 @@
 
 **Ce que cette leçon ne fait pas.** Elle n'utilise aucune bibliothèque de formulaires ni de validation : tout provient de React et du schéma que tu connais déjà, volontairement, pour que tu voies ce que résout chaque pièce. Elle n'utilise ni Server Functions ni Server Components : `<form action>` reçoit ici une fonction qui s'exécute dans le navigateur (la raison pour laquelle le panneau n'utilise pas de Server Components est discutée dans la [Leçon 9](09-rendimiento-publicacion.md)). Elle n'ajoute pas de tests automatisés : le comportement du formulaire est montré avec des figures qui s'exécutent dans un DOM de test et avec le point de contrôle ouvert dans un navigateur. Et ce n'est pas un cours d'accessibilité : elle enseigne ce dont ce formulaire a besoin, en s'appuyant sur les sources qui le définissent, et nomme ce qui ne peut pas être vérifié sans une personne et un lecteur d'écran.
 
-**À propos des exécutions.** Tout a été exécuté le 21 octobre 2026 avec Node.js 24.22.0 et npm 11.19.1, sous macOS, avec les versions exactes du `package.json` de cette leçon. Les points de contrôle de cette leçon et des deux suivantes ont été installés de zéro avec `npm ci`, et `npm run lint` ainsi que `npm run build` se sont terminés sans erreur ; celui de cette leçon a produit `dist/assets/index-WLyq37jn.js`. L'exécution n'a pas été répétée dans un conteneur Linux. L'erreur du compilateur de « L'erreur que tu vas voir » a été provoquée dans une copie du point de contrôle, pas dans l'original. Les figures ont été exécutées avec leur propre `package.json` dans [`programas/07-formularios-accesibilidad/`](../programas/07-formularios-accesibilidad), aux côtés de `revisor/` ; elles sont compilées avec `tsc` et exécutées avec `node`, comme dans les leçons précédentes, et ajoutent une seule nouvelle dépendance, `dom-accessibility-api` 0.7.1, qui calcule le nom et la description accessibles d'un élément selon la spécification du W3C. Ce que l'on voit « dans le navigateur » a été mesuré avec Chrome en mode headless : le HTML de `/servicios/nuevo` avec `--headless --dump-dom` face à `vite preview`, et l'arbre d'accessibilité, le focus et les zones dynamiques en pilotant Chrome par son protocole de débogage (*Chrome DevTools Protocol*) avec un script Node, face à `npm run dev` et à l'API d'entraînement. Ces exécutions ont utilisé les ports 4107, 5107 et 3107 au lieu de 4173, 5173 et 3100, car d'autres processus tournaient en même temps sur la machine ; pour faire pointer le *proxy* sur l'API du port 3107, `vite.config.ts` a été modifié dans une **copie** du point de contrôle, pas dans l'original. Pour toi, rien ne change. Les mesures « avant » ont été faites avec le formulaire tel qu'il était avant les corrections de cette leçon (le succès annoncé deux fois, sans `required`, sans `aria-atomic` sur la boîte d'avis, sans `startTransition` et avec `disabled={pending}` sur le bouton), dans cette même copie ; celles « après », avec le point de contrôle. Rien n'a tourné sur un vrai Linux Mint ; rien de ce qui est montré ne dépend du système. **Ce qui n'a pas été mesuré**, et c'est signalé là où cela apparaît : la façon dont le formulaire sonne dans un vrai lecteur d'écran (NVDA, Orca ou VoiceOver) et le parcours au clavier dans une vraie fenêtre. Ces deux vérifications figurent dans « Comment savoir que j'ai réussi », avec la marche à suivre pour les faire manuellement. Les chemins longs sont affichés à partir de `~/curso-react`.
+**À propos des exécutions.** Tout a été exécuté le 21 octobre 2026 avec Node.js 24.22.0 et npm 11.19.1, sous macOS, avec les versions exactes du `package.json` de cette leçon. Les points de contrôle de cette leçon et des deux suivantes ont été installés de zéro avec `npm ci`, et `npm run lint` ainsi que `npm run build` se sont terminés sans erreur ; celui de cette leçon a produit `dist/assets/index-C_lOH5GL.js`. Le point de contrôle a aussi été installé de zéro avec `npm ci` dans un conteneur Linux (Debian 12, image officielle `node:24.22.0-bookworm`), et là `npm run lint` et `npm run build` se sont bien terminés. Le nom de fichier ci-dessus a été mesuré de nouveau le 22 octobre 2026, seulement sur macOS. L'erreur du compilateur de « L'erreur que tu vas voir » a été provoquée dans une copie du point de contrôle, pas dans l'original. Les figures ont été exécutées avec leur propre `package.json` dans [`programas/07-formularios-accesibilidad/`](../programas/07-formularios-accesibilidad), aux côtés de `revisor/` ; elles sont compilées avec `tsc` et exécutées avec `node`, comme dans les leçons précédentes, et ajoutent une seule nouvelle dépendance, `dom-accessibility-api` 0.7.1, qui calcule le nom et la description accessibles d'un élément selon la spécification du W3C. Ce que l'on voit « dans le navigateur » a été mesuré avec Chrome en mode headless : le HTML de `/servicios/nuevo` avec `--headless --dump-dom` face à `vite preview`, et l'arbre d'accessibilité, le focus et les zones dynamiques en pilotant Chrome par son protocole de débogage (*Chrome DevTools Protocol*) avec un script Node, face à `npm run dev` et à l'API d'entraînement. Ces exécutions ont utilisé les ports 4107, 5107 et 3107 au lieu de 4173, 5173 et 3100, car d'autres processus tournaient en même temps sur la machine ; pour faire pointer le *proxy* sur l'API du port 3107, `vite.config.ts` a été modifié dans une **copie** du point de contrôle, pas dans l'original. Pour toi, rien ne change. Les mesures « avant » ont été faites avec le formulaire tel qu'il était avant les corrections de cette leçon (le succès annoncé deux fois, sans `required`, sans `aria-atomic` sur la boîte d'avis, sans `startTransition` et avec `disabled={pending}` sur le bouton), dans cette même copie ; celles « après », avec le point de contrôle. Rien n'a tourné sur un vrai Linux Mint ; rien de ce qui est montré ne dépend du système. **Ce qui n'a pas été mesuré**, et c'est signalé là où cela apparaît : la façon dont le formulaire sonne dans un vrai lecteur d'écran (NVDA, Orca ou VoiceOver) et le parcours au clavier dans une vraie fenêtre. Ces deux vérifications figurent dans « Comment savoir que j'ai réussi », avec la marche à suivre pour les faire manuellement. Les chemins longs sont affichés à partir de `~/curso-react`. Le serveur d'entraînement (le même fichier depuis la leçon 4) répond `400` avec `{"detalle":"nombre de servicio inválido"}` à une adresse comportant un `%` mal formé, comme `/api/servicios/%`, et à sa route `/reintento` ; auparavant, il répondait `500`. On l'a mesuré avec `curl` contre une copie, avant et après, et le processus est resté en vie dans les deux cas.
 
 ## À la fin, tu seras capable de
 
 - Expliquer la différence entre un champ contrôlé et un champ non contrôlé, provoquer l'avertissement de React d'un `value` sans `onChange` et décider lequel des deux convient à un formulaire envoyé d'un bloc.
 - Connecter un `<form action>` à `useActionState`, lire dans l'état ce qu'a renvoyé la dernière action et afficher « Dando de alta… » avec `useFormStatus` depuis un composant enfant du formulaire.
 - Démontrer avec une figure que React vide les champs non contrôlés après une action, et conserver la saisie lorsqu'il y a eu des erreurs.
-- Valider les trois champs avec un schéma qui rassemble **toutes** les erreurs, et vérifier avec le compilateur que le schéma et le type `NuevoServicio` ne peuvent pas diverger.
+- Valider les trois champs avec un schéma qui rassemble **toutes** les erreurs, et vérifier avec le compilateur que le schéma et le type `NuevoServicio` ne peuvent pas se séparer sans que `tsc` le signale.
 - Marquer un champ invalide avec `aria-invalid` et `aria-describedby`, et mesurer avec une figure le nom et la description accessibles que reçoit un lecteur d'écran.
 - Choisir entre `role="status"` et `role="alert"` pour un avis, et expliquer avec la spécification pourquoi la zone dynamique doit exister **avant** l'arrivée du message.
 - Lire dans l'arbre d'accessibilité de Chrome si un champ est obligatoire ou invalide et si une zone dynamique est lue en entier, avant et après une modification.
@@ -55,7 +55,7 @@ Un `<input>` du navigateur possède sa propre valeur. Si tu saisis du texte deda
 - **Non contrôlé.** Tu écris `<input defaultValue="correo" />`. React pose la valeur **initiale** puis s'efface : ce que la personne saisit vit dans l'élément du DOM, et tu le lis quand tu en as besoin (à l'envoi, par exemple). La documentation le dit avec précision : même si tu passes une valeur initiale, ton JSX « ne fait que spécifier la valeur initiale ; il ne contrôle pas ce que la valeur doit être maintenant ».
 - **Contrôlé.** Tu écris `<input value={nombre} onChange={…} />`. React force le champ à afficher **toujours** la valeur que tu lui passes. Chaque frappe déclenche `onChange`, tu mets à jour l'état, React refait le rendu et le champ affiche la nouvelle valeur. Si tu ne mets pas l'état à jour, le champ ne change pas.
 
-La première figure place les deux côte à côte, plus un troisième qui mélange mal les deux idées : un `value` sans `onChange`. Dans les trois cas, la figure « saisit » `correo2` comme le ferait une personne (elle modifie la valeur et déclenche l'événement `input`) et lit ce qui reste. Le champ contrôlé a une petite subtilité pour qu'on voie bien qui commande : son `onChange` enregistre le texte en majuscules.
+La première figure place les deux côte à côte, plus un troisième qui mélange mal les deux idées : un `value` sans `onChange`. Dans les trois cas, la figure « saisit » `correo2` comme le ferait une personne (elle modifie la valeur et déclenche l'événement `input`) et lit ce qui reste. Le champ contrôlé comporte en plus un `<output>` qui affiche la même valeur en majuscules, pour que l'on voie la différence entre ce que l'état **conserve** et ce que l'écran **calcule** à partir de lui.
 
 ```tsx
 // fig07_01.tsx
@@ -94,8 +94,8 @@ function Controlado() {
   const [nombre, establecerNombre] = useState("correo");
   return (
     <>
-      <input aria-label="controlado" value={nombre} onChange={(e) => establecerNombre(e.target.value.toUpperCase())} />
-      <output>{nombre}</output>
+      <input aria-label="controlado" value={nombre} onChange={(e) => establecerNombre(e.target.value)} />
+      <output>{nombre.toUpperCase()}</output>
     </>
   );
 }
@@ -117,7 +117,9 @@ async function probar(titulo: string, arbol: React.ReactNode, texto: string): Pr
   }
 
   await act(async () => escribir(campo, texto));
-  console.log(`  escribí «${texto}» → el campo dice «${campo.value}»`);
+  const salida = contenedor.querySelector("output");
+  const derivado = salida === null ? "" : `; el <output> dice «${salida.textContent}»`;
+  console.log(`  escribí «${texto}» → el campo dice «${campo.value}»${derivado}`);
   await act(async () => raiz.unmount());
   contenedor.remove();
 }
@@ -133,7 +135,7 @@ $ node fig07_01.js
 1. no controlado (defaultValue):
   escribí «correo2» → el campo dice «correo2»
 2. controlado (value + onChange):
-  escribí «correo2» → el campo dice «CORREO2»
+  escribí «correo2» → el campo dice «correo2»; el <output> dice «CORREO2»
 3. value sin onChange:
   [aviso de React] You provided a `value` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultValue`. Otherwise, set either `onChange` or `readOnly`.
   escribí «correo2» → el campo dice «correo»
@@ -142,7 +144,7 @@ $ node fig07_01.js
 Lis les trois cas de bas en haut, c'est ainsi qu'on les comprend le mieux :
 
 - **Le troisième** a reçu `correo2` et est revenu à `correo`. React l'a rétabli, car `value="correo"` dit que le champ vaut `correo` **toujours**, et personne ne modifie cette valeur. Auparavant, React a émis dans la console un avertissement qui mérite d'être lu en entier : tu as fourni un `value` sans `onChange`, cela rend le champ en lecture seule ; s'il doit pouvoir changer, utilise `defaultValue` ; sinon, ajoute `onChange` ou `readOnly`. C'est l'avertissement de cette section, et sa correction dépend de ce que tu voulais.
-- **Le deuxième** a reçu `correo2` et affiche `CORREO2`. La valeur du champ est celle que **ton** état a décidée, pas celle qui a été saisie. C'est cela, « contrôlé » : tu peux transformer, refuser ou limiter chaque frappe.
+- **Le deuxième** a reçu `correo2`, le champ affiche `correo2` et le `<output>` affiche `CORREO2`. Le champ dit ce que dit **ton** état : le `onChange` a enregistré `e.target.value` tel quel et React a refait le rendu avec cette valeur. C'est cela, « contrôlé » : l'écran connaît chaque frappe au moment où elle se produit, et peut en calculer ce qu'il veut — une version en majuscules, un décompte de lettres, l'activation ou non du bouton. Les majuscules se **calculent** au rendu, dans le `<output>` ; elles ne sont pas enregistrées, selon la même règle que dans la [Leçon 2](02-estado-instantanea-forma.md) : on n'enregistre pas ce qui peut se calculer. Et il y a une raison plus forte de ne pas les enregistrer. La tentation est d'écrire `establecerNombre(e.target.value.toUpperCase())` pour que le champ lui-même « se corrige » pendant la saisie, et la documentation de `<input>` emploie exactement cette ligne comme exemple d'**erreur** : un champ contrôlé doit mettre à jour son état avec `e.target.value`, de manière synchrone, et avec rien d'autre ; sinon, le curseur peut sauter au début à chaque frappe ([React, `<input>`, « My input caret jumps to the beginning on every keystroke »](https://react.dev/reference/react-dom/components/input#my-input-caret-jumps-to-the-beginning-on-every-keystroke)). Cette figure ne le provoque pas, car elle « saisit » le mot d'un seul coup et non touche par touche avec le curseur au milieu du mot ; c'est précisément pourquoi la règle s'apprend dans la documentation et non dans une exécution qui se passe bien. Si une donnée doit rester en majuscules, on la normalise à l'envoi, pas à chaque frappe.
 - **Le premier** a reçu `correo2` et affiche `correo2`. React n'est pas intervenu.
 
 Il existe un quatrième cas que la figure ne provoque pas, mais que la documentation mentionne : un champ ne peut pas passer de non contrôlé à contrôlé au cours de sa vie. Si un `value` commence à `undefined` (par exemple parce que l'état n'a pas encore de donnée) puis reçoit un texte, React avertit qu'un composant « fait passer un champ non contrôlé à contrôlé ». La correction consiste à ce que `value` soit un texte dès le premier rendu, même `""`.
@@ -535,7 +537,7 @@ La fonction `enviar` suit l'ordre d'une frontière, le même que celui que suit 
 
 #### 7.2.8 Valider avec le schéma : toutes les erreurs à la fois
 
-Le schéma arrive du cours de TypeScript presque à l'identique. Un `Esquema<T>` est un objet doté d'une méthode `leer` qui reçoit `unknown` et renvoie un résultat : soit une valeur de type `T`, soit le détail de l'erreur. `Inferir` extrait le type `T` d'un schéma, pour ne pas l'écrire deux fois. Aux schémas de là-bas s'ajoutent deux schémas dont ce formulaire a besoin : `urlHttp`, qui n'accepte que les adresses `http:` ou `https:` et les normalise avec `URL`, et `enteroPositivoDeTexto`, qui lit un nombre écrit sous forme de texte, car **tout ce qui sort d'un `FormData` est du texte**.
+Le schéma arrive du cours de TypeScript presque à l'identique. Un `Esquema<T>` est un objet doté d'une méthode `leer` qui reçoit `unknown` et renvoie un résultat : soit une valeur de type `T`, soit le détail de l'erreur. `Inferir` extrait le type `T` d'un schéma, pour ne pas l'écrire deux fois. Aux schémas de là-bas s'ajoutent deux schémas dont ce formulaire a besoin : `urlHttp`, qui n'accepte que les adresses `http:` ou `https:` et les normalise avec `URL`, et `enteroPositivoDeTexto`, qui lit un nombre écrit sous forme de texte, car **tout ce qui sort d'un `FormData` est du texte**. De plus, `urlHttp` refuse une adresse qui porte un utilisateur ou un mot de passe, comme `https://usuario:clave@correo.example/` : ces données sont un secret. Son message, « quita el usuario y la clave de la dirección » (retire l'utilisateur et le mot de passe de l'adresse), dit quoi corriger **sans répéter l'adresse**, car le message s'affiche à côté du champ et une erreur n'est pas la place d'un secret. Le serveur d'entraînement refuse la même chose, avec le même message, dans son `400`.
 
 ```ts
 // revisor/src/compartido/esquema.ts
@@ -569,6 +571,12 @@ export const urlHttp: Esquema<string> = {
       const url = new URL(valor.trim());
 
       if (url.protocol === "http:" || url.protocol === "https:") {
+        // Usuario y clave en la dirección son un secreto: se rechazan, y el mensaje
+        // no repite la dirección, porque terminaría pintado junto al campo.
+        if (url.username !== "" || url.password !== "") {
+          return { ok: false, detalle: "quita el usuario y la clave de la dirección" };
+        }
+
         return { ok: true, valor: url.href };
       }
     } catch {
@@ -643,6 +651,9 @@ const urlHttp: Esquema<string> = {
     try {
       const url = new URL(String(v).trim());
       if (url.protocol === "http:" || url.protocol === "https:") {
+        if (url.username !== "" || url.password !== "") {
+          return { ok: false, detalle: "quita el usuario y la clave de la dirección" };
+        }
         return { ok: true, valor: url.href };
       }
     } catch {
@@ -726,7 +737,7 @@ export type ValoresAlta = ValoresDe<typeof camposAlta>;
 export type ErroresAlta = ErroresDe<typeof camposAlta>;
 export type TextosAlta = Readonly<Record<keyof typeof camposAlta, string>>;
 
-// Si el contrato y el esquema dejan de coincidir, esta línea deja de compilar.
+// Si el tipo que la API espera y el esquema dejan de coincidir, esta línea deja de compilar.
 export const comprobarContrato: (valores: ValoresAlta) => NuevoServicio = (valores) => valores;
 ```
 
@@ -951,6 +962,8 @@ sin relaciones:
 ```
 
 Ce que lit un lecteur d'écran en arrivant sur le champ, ce sont pour l'essentiel ces deux lignes, plus le rôle et l'état : « Nombre, champ de texte, invalide, escribe un valor. Un nombre corto y único, por ejemplo: correo ». La version sans relations a un **nom vide et une description vide** : visuellement elle dit la même chose, mais pour qui ne voit pas l'écran c'est un champ de texte sans nom. C'est la scène du début, mesurée. (La figure calcule ce que **la spécification** dit que le navigateur doit exposer ; la façon dont chaque lecteur d'écran le prononce ne peut pas se mesurer par une exécution, et se vérifie manuellement.)
+
+Une amélioration que le point de contrôle n'inclut pas, parce qu'elle ne change ni le nom ni la description accessibles : le champ du délai d'expiration est de type `text` et demande un nombre entier, et sur un téléphone le clavier qui apparaît est celui des lettres. L'attribut `inputmode="numeric"` demande au navigateur le clavier numérique ([MDN, `inputmode`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/inputmode)) ; en JSX, il s'écrit `inputMode`. L'ajouter exigerait une prop de plus dans `Campo`, et c'est un bon exercice supplémentaire si tu comptes utiliser le formulaire depuis un téléphone.
 
 Trois décisions du composant s'appuient sur une source :
 
@@ -1242,9 +1255,9 @@ rendering chunks...
 computing gzip size...
 dist/index.html                   0.39 kB │ gzip:   0.26 kB
 dist/assets/index-BBxlOd8Z.css    1.50 kB │ gzip:   0.66 kB
-dist/assets/index-WLyq37jn.js   366.82 kB │ gzip: 114.40 kB
+dist/assets/index-C_lOH5GL.js   367.12 kB │ gzip: 114.47 kB
 
-✓ built in 312ms
+✓ built in 239ms
 ```
 
 #### 7.4.2 La vérification, point par point
@@ -1336,7 +1349,7 @@ src/alta/estadoFormulario.ts(21,56): error TS2353: Object literal may only speci
 código de salida: 1
 ```
 
-Tu as renommé une clé et le compilateur a trouvé six endroits, dans quatre fichiers, où cela casse quelque chose, et il s'est terminé avec le code 1. C'est ce code qui compte : c'est pourquoi `npm run build`, qui est `tsc -b && vite build`, n'atteint jamais `vite build`. Ces erreurs se lisent en deux groupes. Les deux `TS2741` disent la même chose depuis deux endroits : `ValoresAlta` n'a plus `timeoutMs`, donc il ne peut pas être utilisé comme `NuevoServicio`. L'une se trouve dans `esquemaAlta.ts(21,…)`, c'est-à-dire `comprobarContrato`, et l'autre dans `FormularioAlta.tsx(40,…)`, l'appel à `darDeAlta(validacion.valor)`. Les quatre autres sont des endroits qui écrivent encore `timeoutMs` en dur (les deux attributs du `Campo` du délai d'expiration dans `FormularioAlta`, `textosDe` et `erroresDe`) et qui ne correspondent plus aux types dérivés du schéma. Sans ces types dérivés, le formulaire enverrait à l'API un corps avec `tiempoMs` et l'API renverrait `400` pour un champ `timeoutMs` que le formulaire ne sait plus afficher. Avec eux, l'erreur apparaît avant toute exécution. `comprobarContrato` est la ligne qui garantit cet avertissement même si un jour plus personne n'appelle `darDeAlta` avec les valeurs du schéma.
+Tu as renommé une clé et le compilateur a trouvé six endroits, dans quatre fichiers, où cela casse quelque chose, et il s'est terminé avec le code 1. C'est ce code qui compte : c'est pourquoi `npm run build`, qui est `tsc -b && vite build`, n'atteint jamais `vite build`. Ces erreurs se lisent en deux groupes. Les deux `TS2741` disent la même chose depuis deux endroits : `ValoresAlta` n'a plus `timeoutMs`, donc il ne peut pas être utilisé comme `NuevoServicio`. L'une se trouve dans `esquemaAlta.ts(21,…)`, c'est-à-dire `comprobarContrato`, et l'autre dans `FormularioAlta.tsx(40,…)`, l'appel à `darDeAlta(validacion.valor)`. Les quatre autres sont des endroits qui écrivent encore `timeoutMs` en dur (les deux attributs du `Campo` du délai d'expiration dans `FormularioAlta`, `textosDe` et `erroresDe`) et qui ne correspondent plus aux types dérivés du schéma. Sans ces types dérivés, le formulaire enverrait à l'API un corps avec `tiempoMs` et l'API renverrait `400` pour un champ `timeoutMs` que le formulaire ne sait plus afficher. Avec eux, l'erreur apparaît avant toute exécution. `comprobarContrato` est la ligne qui maintient cet avertissement même si un jour plus personne n'appelle `darDeAlta` avec les valeurs du schéma. Attention à ce qu'elle ne couvre pas : elle compare des types TypeScript à la compilation, donc elle ne détecte pas que l'API réelle change de forme par la suite ; pour cela, il y a la garde à l'exécution de la frontière réseau (7.2.9).
 
 **L'erreur silencieuse : `useFormStatus` dans le mauvais composant.** Si tu déplaces `useFormStatus` dans `FormularioAlta` pour « t'économiser un composant », `pending` vaut toujours `false` : le bouton n'affiche jamais « Dando de alta… », n'est jamais marqué comme indisponible et n'ignore jamais le second envoi, si bien qu'un double clic envoie deux fois. Il n'y a d'avertissement ni dans la console ni dans le linter. La figure 3 l'a mesuré (`mismo=false` dans les deux exécutions) et la documentation le signale comme mise en garde. La correction est celle du point de contrôle : le hook va dans un composant rendu **à l'intérieur** du `<form>`.
 
@@ -1419,7 +1432,7 @@ Une façon de faire consiste à ce que l'état `con-errores` contienne un compte
 </div>
 ```
 
-Avec une `key` différente à chaque envoi, React ne réutilise pas le `<p>` : il retire l'ancien et en place un nouveau, et la zone `alert` change même si le texte est identique. En adaptant la figure 5 (donner au `<p>` une `key={envio}`), le second envoi doit compter des changements, et non `0`. Remarque que le premier argument d'`enviar`, que le point de contrôle ignore sous le nom `_previo`, est justement celui qui fournit le compteur : c'est l'état précédent que te remet `useActionState`. Si tu l'utilises, retire le tiret bas de son nom, car ce n'est plus un argument ignoré.
+Avec une `key` différente à chaque envoi, React ne réutilise pas le `<p>` : il retire l'ancien et en place un nouveau, et la zone `alert` change même si le texte est identique. Ce que cela démontre est un changement dans le DOM, ce que mesure la figure 5 ; si un lecteur d'écran précis prononce de nouveau un texte identique à un texte qu'il vient de dire dépend du lecteur et du navigateur, et cela n'a pas été mesuré ici : vérifie-le manuellement avec celui que tu utilises, comme dans la case du lecteur d'écran de « Comment savoir que j'ai réussi ». En adaptant la figure 5 (donner au `<p>` une `key={envio}`), le second envoi doit compter des changements, et non `0`. Remarque que le premier argument d'`enviar`, que le point de contrôle ignore sous le nom `_previo`, est justement celui qui fournit le compteur : c'est l'état précédent que te remet `useActionState`. Si tu l'utilises, retire le tiret bas de son nom, car ce n'est plus un argument ignoré.
 
 ### Solution 4
 
@@ -1427,7 +1440,7 @@ Le panneau montre la même chose que les lectures de `Accessibility.getFullAXTre
 
 ## Comment savoir que j'ai réussi
 
-- [ ] `npm ci`, `npm run lint` et `npm run build` s'exécutent sans erreur dans `~/curso-react/revisor/`, et `npm run build` produit `dist/assets/index-WLyq37jn.js` si ton code est identique à celui du point de contrôle.
+- [ ] `npm ci`, `npm run lint` et `npm run build` s'exécutent sans erreur dans `~/curso-react/revisor/`, et `npm run build` produit `dist/assets/index-C_lOH5GL.js` si ton code est identique à celui du point de contrôle.
 - [ ] Avec `npm run dev`, ouvrir `http://localhost:5173/servicios/nuevo` affiche le lien « Dar de alta » marqué comme courant dans la navigation et le formulaire à trois champs ; dans les outils de développement, chaque champ a `aria-invalid="false"` et `aria-describedby` pointant vers son aide.
 - [ ] Envoyer le formulaire vide marque les trois champs, écrit « Revisa los campos marcados. » et, dans l'onglet réseau, **aucune** requête vers `/api/servicios` n'apparaît.
 - [ ] Avec le serveur d'entraînement démarré, enregistrer `correo` avec `https://correo.example` et `1500` affiche « Se dio de alta correo » dans la boîte d'avis (et nulle part ailleurs), ajoute la ligne dans « Altas de esta sesión », vide les champs, et la liste de `/` inclut déjà `correo`.
@@ -1458,7 +1471,7 @@ Réponds sans regarder la leçon :
 - [React, `useActionState`](https://react.dev/reference/react/useActionState) : la signature, les deux arguments de l'action, le type de l'état, le périmètre d'erreur si l'action lève une erreur et la raison pour laquelle elle n'est pas appelée deux fois sous `StrictMode`. Consulté le 21 octobre 2026.
 - [React, `useFormStatus`](https://react.dev/reference/react-dom/hooks/useFormStatus) : `pending`, `data`, `method` et `action`, et pourquoi il ne renseigne que sur le `<form>` parent. Consulté le 21 octobre 2026.
 - [React, `useOptimistic`](https://react.dev/reference/react/useOptimistic) : l'état optimiste qui n'existe que pendant que l'action est en cours et l'avertissement s'il est modifié hors d'une action. Consulté le 21 octobre 2026.
-- [React, `<input>`](https://react.dev/reference/react-dom/components/input) : champs contrôlés et non contrôlés, `defaultValue`, l'avertissement de `value` sans `onChange` et le passage de non contrôlé à contrôlé. Consulté le 21 octobre 2026.
+- [React, `<input>`](https://react.dev/reference/react-dom/components/input) : champs contrôlés et non contrôlés, `defaultValue`, l'avertissement de `value` sans `onChange`, le passage de non contrôlé à contrôlé et la raison pour laquelle l'état est mis à jour avec `e.target.value` et non avec une transformation de cette valeur. Consulté le 21 octobre 2026.
 - [W3C, « Accessible Rich Internet Applications (WAI-ARIA) 1.2 »](https://www.w3.org/TR/wai-aria-1.2/) : les rôles `status` et `alert` avec leurs valeurs implicites, et les attributs `aria-invalid`, `aria-describedby` et `aria-required`. Consulté le 21 octobre 2026.
 - [W3C, « Using ARIA »](https://www.w3.org/TR/using-aria/) : la première et la deuxième règle d'utilisation d'ARIA. Consulté le 21 octobre 2026.
 - [W3C, « ARIA Authoring Practices Guide: Read Me First »](https://www.w3.org/WAI/ARIA/apg/practices/read-me-first/) : « pas d'ARIA vaut mieux qu'un mauvais ARIA » et pourquoi les rôles n'ajoutent pas de comportement clavier. Consulté le 21 octobre 2026.

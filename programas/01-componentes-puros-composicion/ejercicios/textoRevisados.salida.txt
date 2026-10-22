@@ -1,0 +1,5 @@
+# Corrido el 21-oct-2026 con Node.js 24.22.0 (macOS) en ~/curso-react/figuras/, con el package.json de esta carpeta.
+$ node textoRevisados.ts
+0 → 0 servicios revisados
+1 → 1 servicio revisado
+4 → 4 servicios revisados

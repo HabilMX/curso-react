@@ -1,4 +1,4 @@
-# Lesson 2 — State: Snapshot, Immutability, and Shape
+# Lesson 2 — State: snapshot, immutability, and shape
 
 *It is 6:05 PM and the night shift starts at 6:30 PM. Before leaving, you want to leave your teammate a note in the `revisor`: “pagos: provider says it will be back at 20:00, do not escalate”. You select `pagos`, type the note, save it… and the row does not change. You mentally retrace what you did: the code adds the note to the notes object and saves it back into state. The note is right there, in memory; the console confirms it. But the screen has no clue. Ten seconds later the next poll arrives, the panel re-renders, and suddenly the “con nota” badge appears, as if someone had placed it out of step. And upon selecting `reportes`, the text box still says “pagos: provider says it will be back…”. If your teammate saves without reading, the note for `pagos` ends up pasted onto `reportes`. Twenty-five minutes left. Both bugs stem from the same mistake: thinking of React state as a variable that changes. It is not: it is a snapshot that gets replaced, and React stores it in a precise spot in the tree. This lesson explains that phrase and turns it into code.*
 
@@ -12,7 +12,7 @@
 
 **What this lesson does not do.** It does not fetch new data from the API: a service's details are assembled from what already arrived in the report, and asking the API for the details of a single service is the topic of [Lesson 3](03-effects-sincronizar.md), with its race conditions. Notes live in memory: if you reload the page, they are lost, and that is fine for now. The filter and selection do not travel in the page URL either; sharing a filter by copying the link belongs to [Lesson 5](05-rutas-url-como-estado.md). There is no context or reducer, which belong to [Lesson 6](06-reducer-contexto.md), nor forms with `action`, which belong to [Lesson 7](07-formularios-accesibilidad.md). And there is no new Effect: the entire lesson is solved with `useState`, computations during rendering, and a `key`.
 
-**About the runs.** Everything was run on October 21, 2026 with Node.js 24.22.0 and npm 11.19.1, on macOS, with the exact versions from this lesson's `package.json` (React 19.3.1, Vite 8.3.5, TypeScript 7.0.2 for `tsc`, ESLint 10.13.0, and `eslint-plugin-react-hooks` 7.1.1). Since the course assumes Linux Mint, this checkpoint was reinstalled from scratch inside a `node:24.22.0-bookworm` container and produced the same filename in `dist/` seen here, `index-FUlywxKd.js`; it was not run on a real Linux Mint, but nothing shown depends on the operating system. On macOS, `npm ci` also prints an `install-scripts` warning: it refers to `fsevents`, an optional package that only installs on macOS and does not appear on your Mint; there is no need to approve it. The figures are run in `~/curso-react/figuras/`, the same folder as previous lessons; its `package.json` does not change. They are compiled with `tsc` and executed with `node` over a test DOM (jsdom), as in Lesson 0. What is seen “in the browser” was measured with headless Chrome (`--headless`), driven by a script that clicks buttons and reads the page through the Chrome DevTools Protocol: it is a real browser executing the JavaScript in `dist/`, not a simulation. The script sits next to the figures in `medir.mjs`, and its first comment explains how to run it; if you prefer, perform the same steps manually in your browser and you should see the same thing. Long paths printed by ESLint and `tsc` are shown relative to `~/curso-react`, and in one ESLint output the spaces used by the formatter to align the rule column were trimmed. The errors in “The error you will see” were triggered in a copy of the checkpoint, never in the original, which afterward passed `npm ci`, `npm run lint`, and `npm run build` once again. The programs are in [`programas/02-estado-instantanea-forma/`](../programas/02-estado-instantanea-forma): `revisor/` is the checkpoint and the figures sit right next to it.
+**About the runs.** Everything was run on October 21, 2026 with Node.js 24.22.0 and npm 11.19.1, on macOS, with the exact versions from this lesson's `package.json` (React 19.3.1, Vite 8.3.5, TypeScript 7.0.2 for `tsc`, ESLint 10.13.0, and `eslint-plugin-react-hooks` 7.1.1). Since the course assumes Linux Mint, this checkpoint was reinstalled from scratch inside a `node:24.22.0-bookworm` container and produced the same filename in `dist/` seen here, `index-7jh0TEYR.js`; it was not run on a real Linux Mint, but nothing shown depends on the operating system, except the `fsevents` warning that follows. On macOS, `npm ci` also prints an `install-scripts` warning: it refers to `fsevents`, an optional package that only installs on macOS and does not appear on your Mint; there is no need to approve it. The figures are run in `~/curso-react/figuras/`, the same folder as previous lessons; its `package.json` does not change. They are compiled with `tsc` and executed with `node` over a test DOM (jsdom), as in Lesson 0. What is seen “in the browser” was measured with headless Chrome (`--headless`), driven by a script that clicks buttons and reads the page through the Chrome DevTools Protocol: it is a real browser executing the JavaScript in `dist/`, not a simulation. The script sits next to the figures in `medir.mjs`, and its first comment explains how to run it. It needs Google Chrome or Chromium, which Linux Mint does not install by default; if you do not have it, it is not required to follow the lesson: perform the same steps manually in your browser and you should see the same thing. The outputs of each measurement and of each triggered error, with the exact changes made in each copy, are in [`programas/02-estado-instantanea-forma/ejercicios/`](../programas/02-estado-instantanea-forma/ejercicios). Long paths printed by ESLint and `tsc` are shown relative to `~/curso-react`, and in one ESLint output the spaces used by the formatter to align the rule column were trimmed. The errors in “The error you will see” were triggered in a copy of the checkpoint, never in the original, which afterward passed `npm ci`, `npm run lint`, and `npm run build` once again. The programs are in [`programas/02-estado-instantanea-forma/`](../programas/02-estado-instantanea-forma): `revisor/` is the checkpoint and the figures sit right next to it.
 
 ## By the end you will be able to
 
@@ -35,7 +35,7 @@ Open the `revisor` from Lesson 1 and ask it for three things an operator would a
 
 All three ask for the same thing: for the panel to **remember** something between one render and the next. In React, that remembered thing is called **state**, and the tool is `useState`, which you already used in Lesson 0 inside `useReporte`. Lesson 9 of TypeScript taught you how to write it; this lesson teaches you how to **think** about it, because almost all mistakes with state come from thinking of it as a variable. A variable is modified, and the change is visible on the very next line. State is not: each render receives a fixed snapshot, and requesting a change does not touch that snapshot, but rather asks React to take another one ([React, “State as a Snapshot”](https://react.dev/learn/state-as-a-snapshot)). Thinking of state as a variable explains both bugs in the scene, though each from a different angle: the note that does not appear comes from the snapshot (you gave React the same snapshot, retouched, and React saw nothing new), and the draft that drags over comes from where React stores state (it preserved the editor's state because, to React, the exact same editor was still sitting in that position).
 
-The lesson has six parts: state as a snapshot (2.1); copying instead of mutating (2.2); the shape of state (2.3); lifting state up (2.4); `key` to reset it (2.5); and the complete walkthrough (2.6). This is what the result looks like, measured with headless Chrome on the checkpoint, selecting `pagos`, saving a note, and switching services (these are steps 3 to 6 of the walkthrough in 2.6):
+There are three new concepts. The first is **state as a snapshot**, with the updater form (2.1). The second is **state that is copied and has a shape**: copying instead of mutating (2.2) and the five rules for the shape of state (2.3). The third is **who owns the state and when it resets**: lifting state up to the component that shares it (2.4) and `key` to reset it (2.5). Section 2.6 adds no concept: it is the complete walkthrough, where the three are seen together. This is what the result looks like, measured with headless Chrome on the checkpoint, selecting `pagos`, saving a note, and switching services (these are steps 3 to 6 of the walkthrough in 2.6):
 
 ```text
 3. desmarcas y eliges pagos
@@ -293,7 +293,7 @@ Read it line by line:
 - **If the text is empty, the note is removed.** `Object.entries` turns the object into an array of `[key, value]` pairs, `filter` excludes the one for the service, and `Object.fromEntries` reconstructs an object with the remaining ones. All three functions create new objects; none of them touch `notas`. Thus, “clearing the text and saving” removes the “con nota” badge from the row, which is what a person would expect.
 - **If there is text, it is copied and written.** `{ ...notas, [nombre]: limpio }` is the spread shown above, with a computed key in square brackets.
 
-Why a separate function rather than three lines inside `Panel`? For the same reason as `contarFallas` in Lesson 1: a pure function—same inputs, same output, touching nothing outside—stands on its own, can be tested without React as you will see with `resumen.ts` in Lesson 8, and can be called from an updater function without fear of `StrictMode` calling it twice.
+Why a separate function rather than three lines inside `Panel`? For the same reason as `contarFallas` in Lesson 1: a pure function—same inputs, same output, touching nothing outside—stands on its own, can be tested without React (you will see this with `resumen.ts` in Lesson 8), and can be called from an updater function without fear of `StrictMode` calling it twice.
 
 #### 2.2.3 Why so much ceremony
 
@@ -420,7 +420,7 @@ That is why, in the checkpoint, `seleccionado` is `string | null`—the name, or
       const elegido = estados.find((estado) => estado.nombre === seleccionado);
 ```
 
-`elegido` is not state: it is a constant that lives for the duration of the render. The documentation proposes exactly this with its `selectedId`: store only the identifier, which is essential, and compute the rest during rendering ([React, “Choosing the State Structure”](https://react.dev/learn/choosing-the-state-structure)). And it brings a bonus: if the service disappears from the report, `find` returns `undefined` and the details simply do not render; there is no need to “clean up” the selection with any code ([React, “You Might Not Need an Effect”](https://react.dev/learn/you-might-not-need-an-effect)). It is safe to look up by name because the API guarantees no two services share the same name—the exact same guarantee that underpins `key={estado.nombre}` from Lesson 1.
+`elegido` is not state: it is a constant that lives for the duration of the render. The documentation proposes exactly this with its `selectedId`: store only the identifier, which is essential, and compute the rest during rendering ([React, “Choosing the State Structure”](https://react.dev/learn/choosing-the-state-structure)). And it brings a bonus: if the service disappears from the report, `find` returns `undefined` and the details simply do not render; there is no need to “clean up” the selection with any code ([React, “You Might Not Need an Effect”](https://react.dev/learn/you-might-not-need-an-effect)). It is safe to look up by name as long as the API keeps its rule that no two services share the same name—the same rule that `key={estado.nombre}` from Lesson 1 relies on; if the API ever broke it, `find` would return the first match and React would warn in the console about duplicate keys.
 
 #### 2.3.3 Do not store what can be computed
 
@@ -583,7 +583,7 @@ export function FilaEstado({
   readonly estado: EstadoPublico;
   readonly seleccionado: boolean;
   readonly tieneNota: boolean;
-  readonly alSeleccionar: (nombre: string) => void;
+  readonly alSeleccionar: (nombre: string | null) => void;
 }) {
   return (
     <li className={estado.tipo}>
@@ -591,7 +591,7 @@ export function FilaEstado({
         type="button"
         className="seleccionar"
         aria-pressed={seleccionado}
-        onClick={() => alSeleccionar(estado.nombre)}
+        onClick={() => alSeleccionar(seleccionado ? null : estado.nombre)}
       >
         {estado.nombre}
       </button>
@@ -605,7 +605,7 @@ export function FilaEstado({
 Several decisions packed into few lines:
 
 - **A `<button>`, not a `<span>` with `onClick`.** A native button is reachable with the Tab key, can be triggered with Enter or the Space bar, and a screen reader announces it as a button. With a `<span>` you would have to craft all of that by hand.
-- **`aria-pressed`.** Indicates the “pressed” state of a toggle button: with `true` or `false`, the button is announced as something that can be toggled and states whether it currently is ([MDN, `aria-pressed`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-pressed)). MDN also advises against changing the button's label when its pressed state changes, and the `revisor` adheres to this: the button says `pagos` whether it is selected or not. The stylesheet uses this exact attribute to thicken the underline, with the selector `.seleccionar[aria-pressed="true"]`: what the eyes see and what the screen reader announces stem from the same data.
+- **`aria-pressed`, and a button that really toggles.** Indicates the “pressed” state of a toggle button: with `true` or `false`, the button is announced as something that can be toggled and states whether it currently is ([MDN, `aria-pressed`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-pressed)). That is why the click says `seleccionado ? null : estado.nombre`: according to MDN, a toggle button switches to `true` when pressed once and back to `false` when pressed again, and a screen reader that announces “pressed” invites the person to press it again. If the click always repeated the same name, the button would claim it can be toggled and would not toggle. Measured: pressing `pagos` twice makes the details appear and disappear, and `aria-pressed` goes from `true` to `false` (`node medir.mjs alternar`, output in `ejercicios/medir-alternar.salida.txt`). MDN also advises against changing the button's label when its pressed state changes, and the `revisor` adheres to this: the button says `pagos` whether it is selected or not. The stylesheet uses this exact attribute to thicken the underline, with the selector `.seleccionar[aria-pressed="true"]`: what the eyes see and what the screen reader announces stem from the same data.
 - **`className={estado.tipo}`.** The row class, `disponible` or `falla`, matches the type name verbatim, so there is no longer any need for an `if` branching between two almost identical `<li>` elements. The `if` that distinguishes between the two cases moved into `Descripcion`, a small component that only renders the text. It is defined **outside** `FilaEstado`, never inside, following the rule from Lesson 1: a component defined inside another is a new component on every render, and its state would reset unexpectedly ([React, “Preserving and Resetting State”](https://react.dev/learn/preserving-and-resetting-state)).
 - **`{tieneNota && …}`.** Here `&&` is safe because `tieneNota` is a boolean; the `0` trap from Lesson 1 appears only when the condition is a number.
 - **The row does not know what is selected.** It receives `seleccionado: boolean`, precomputed by the list. The row is pure: same props, same render.
@@ -627,7 +627,7 @@ export function ListaEstados({
   readonly estados: readonly EstadoPublico[];
   readonly seleccionado: string | null;
   readonly notas: Notas;
-  readonly alSeleccionar: (nombre: string) => void;
+  readonly alSeleccionar: (nombre: string | null) => void;
 }) {
   return (
     <ul>
@@ -645,7 +645,7 @@ export function ListaEstados({
 }
 ```
 
-Its `alSeleccionar` receives a `string`, whereas `Panel`'s accepts `string | null`. TypeScript allows this, because a function that accepts more cases can be used where one that accepts fewer is expected. The `null` is used by another piece: the “Cerrar detalle” button.
+Its `alSeleccionar` accepts `string | null`, just like `Panel`'s: `null` means “none selected”. It is sent by the row when the already selected service is pressed again, and also by another piece, the “Cerrar detalle” button.
 
 #### 2.4.4 The distributor
 
@@ -738,8 +738,9 @@ Object.assign(globalThis, {
   IS_REACT_ACT_ENVIRONMENT: true,
 });
 
-// react-dom decide al cargarse qué eventos de teclado sabe escuchar, así que se
-// importa después de que exista `window` (los import de arriba se cargan antes).
+// react-dom comprueba al cargarse si existe `window.document` y si el documento
+// admite el evento `input`, así que se importa después de que exista `window`
+// (los import de arriba se cargan antes).
 const { createRoot } = await import("react-dom/client");
 
 function Editor({ nombre }: { readonly nombre: string }) {
@@ -808,7 +809,7 @@ con key={nombre}:
   eliges reportes:      «Nota sobre reportes» → borrador «»
 ```
 
-Without a `key`, the editor's label updates to “Nota sobre reportes”, but the draft still says “llamar al proveedor”: the prop changed and the state stayed behind. With `key={nombre}`, the draft is empty. (A note regarding the figure: unlike those in Lesson 0, it imports `react-dom/client` **after** creating `window`. Upon loading, react-dom determines which keyboard events it knows how to listen to, and if it loads before a window exists, the typing event triggered by the figure does not reach React. In a real browser the window always exists first, so in the `revisor` none of this is needed.)
+Without a `key`, the editor's label updates to “Nota sobre reportes”, but the draft still says “llamar al proveedor”: the prop changed and the state stayed behind. With `key={nombre}`, the draft is empty. (A note regarding the figure: unlike those in Lesson 0, it imports `react-dom/client` **after** creating `window`. Upon loading, react-dom checks whether `window.document` exists and whether the document supports the `input` event, and with that result decides how to detect that someone is typing in a `<textarea>` (this was read in the installed package's code, `react-dom-client.development.js`: the variables `canUseDOM` and `isInputEventSupported`; it is not something React's documentation describes). If it loads before a window exists, that check comes out negative and the typing the figure triggers does not reach `onChange` properly. In a real browser the window always exists first, so in the `revisor` none of this is needed.)
 
 #### 2.5.2 What `key` does
 
@@ -934,7 +935,7 @@ With state lifted and the `key` in place, the stylesheet is all that remains. Th
 }
 ```
 
-`.seleccionar` strips the button of its default browser styling, leaving it as bold text underlined to indicate it can be clicked; `font: inherit` ensures it uses the same font family as the rest of the row, since buttons do not inherit it by default. The rest of the file is identical to Lesson 1. The remaining files in the checkpoint—`main.tsx`, `useReporte.ts`, `cargar.ts`, the contract, `Tarjeta`, `ResumenFallas`, configuration, and the practice server—do not change in this lesson; `package.json` only bumps its version to `0.2.0`.
+`.seleccionar` strips the button of its default browser styling, leaving it as bold text underlined to indicate it can be clicked; `font: inherit` ensures it uses the same font family as the rest of the row, since buttons do not inherit it by default. The rest of the file is identical to Lesson 1. The remaining files in the checkpoint—`main.tsx`, `useReporte.ts`, `cargar.ts`, `contrato.ts`, `Tarjeta`, `ResumenFallas`, configuration, and the practice server—do not change in this lesson; `package.json` only bumps its version to `0.2.0`.
 
 Checkpoint verification proceeds as always, from `~/curso-react/revisor/`:
 
@@ -956,12 +957,12 @@ rendering chunks...
 computing gzip size...
 dist/index.html                   0.39 kB │ gzip:  0.26 kB
 dist/assets/index-CGNql20r.css    0.68 kB │ gzip:  0.38 kB
-dist/assets/index-FUlywxKd.js   224.30 kB │ gzip: 70.28 kB
+dist/assets/index-7jh0TEYR.js   224.30 kB │ gzip: 70.28 kB
 
-✓ built in 347ms
+✓ built in 189ms
 ```
 
-The linter produces no output and the build completes with `index-FUlywxKd.js`, the exact same name produced on macOS and Linux. Because this name is derived from content, if your `revisor` is identical to the checkpoint, you will see the same one. With `npm run servidor` running in one terminal and `npm run dev` (or `npm run preview`) in another, open the page and walk through it. This is what headless Chrome measured against the production build served with `vite preview`, step by step, using `node medir.mjs recorrido`:
+The linter produces no output and the build completes with `index-7jh0TEYR.js`, the exact same name produced on macOS and Linux. Because this name is derived from content, if your `revisor` is identical to the checkpoint, you will see the same one. With `npm run servidor` running in one terminal and `npm run dev` (or `npm run preview`) in another, open the page and walk through it. This is what headless Chrome measured against the production build served with `vite preview`, step by step, using `node medir.mjs recorrido`:
 
 ```text
 1. al cargar
@@ -1000,6 +1001,8 @@ This lesson features two errors caught by tools and one that no tool detects.
 ```
 
 Two separate lines of defense stop it, each in its own way. First, `tsc`:
+
+(The exact changes made in the copy are in `ejercicios/copia-mutando.diff.txt` and the complete outputs in `ejercicios/copia-mutando.lint-tsc.salida.txt`.)
 
 ```text
 $ npx tsc -b
@@ -1069,7 +1072,7 @@ That is why the `revisor` employs both: the type alerts you in the editor as you
   }, [notas, estado.nombre]);
 ```
 
-`tsc -b` says nothing: types are valid. The linter does:
+`tsc -b` says nothing: types are valid. The linter does (`ejercicios/copia-efecto.diff.txt` and `ejercicios/copia-efecto.lint-tsc.salida.txt`):
 
 ```text
 $ npm run lint
@@ -1099,7 +1102,7 @@ Calling setState synchronously within an effect body causes cascading renders th
 ✖ 1 problem (1 error, 0 warnings)
 ```
 
-This is the `set-state-in-effect` rule, the same one Lesson 0 showed you in `useReporte`. Here it appears for the reason outlined in 2.3.3: `notaGuardada` is a copy of data already present in `notas`, and the Effect exists solely to keep the duplicate aligned with the original. It costs an extra render on every change—first with the stale copy, then with the updated one—and worse, it causes a visible bug. When switching services, `DetalleSeleccion` does not unmount: it remains in the same position and is the same component, so during that render its `notaGuardada` still holds the value from the **previous** service. The editor, which does mount anew due to its `key`, initializes with that stale value and, as explained in 2.5.3, subsequently ignores what arrives later when the Effect adjusts the copy. Built in that copy and measured with headless Chrome (`node medir.mjs efecto`):
+This is the `set-state-in-effect` rule, the same one Lesson 0 showed you in `useReporte`. Here it appears for the reason outlined in 2.3.3: `notaGuardada` is a copy of data already present in `notas`, and the Effect exists solely to keep the duplicate aligned with the original. It costs an additional render on every change—first with the stale copy, then with the updated one—and worse, it causes a visible bug. When switching services, `DetalleSeleccion` does not unmount: it remains in the same position and is the same component, so during that render its `notaGuardada` still holds the value from the **previous** service. The editor, which does mount anew due to its `key`, initializes with that stale value and, as explained in 2.5.3, subsequently ignores what arrives later when the Effect adjusts the copy. Built in that copy and measured with headless Chrome (`node medir.mjs efecto`):
 
 ```text
 a. guardas una nota en pagos, eliges catálogo y regresas: Detalle de pagos · borrador: ""
@@ -1111,6 +1114,8 @@ In step a, `catálogo` had no note, so the editor for `pagos` starts blank: the 
 
 **The error nobody sees: removing the `key`.** In a third copy, delete the line `key={estado.nombre}` from `DetalleSeleccion.tsx`:
 
+(Output in `ejercicios/copia-sin-key.lint-tsc.salida.txt`; the change, in `ejercicios/copia-sin-key.diff.txt`.)
+
 ```text
 $ npx tsc -b; echo "tsc: $?"
 tsc: 0
@@ -1118,11 +1123,11 @@ $ npx eslint . --max-warnings 0; echo "lint: $?"
 lint: 0
 ```
 
-Both pass cleanly, yet the panel exhibits the bug from the opening scene: drafts drag over from one service to another. No rule can know that, to you, an editor for `pagos` and an editor for `reportes` are different entities; that is a decision of meaning, not syntax. You only catch it by using the panel, or with a component test that exercises it on your behalf: Lesson 8 teaches how to write them. This echoes the cleanup lesson from Lesson 0: the linter and types are two lines of defense, not the entire fortress.
+Both pass cleanly, yet the panel exhibits the bug from the opening scene: drafts drag over from one service to another. No rule in the course's linter detects that, to you, an editor for `pagos` and an editor for `reportes` are different entities; that is a decision of meaning, not syntax. You only catch it by using the panel, or with a component test that exercises it on your behalf: Lesson 8 teaches how to write them. This echoes the cleanup lesson from Lesson 0: the linter and types are two lines of defense, not the entire fortress.
 
 ## What gets done wrong
 
-**Reading state right after setting it.** `establecerX(nuevo); console.log(x)` always prints the old value. If you need the new value in the same handler, store it in a constant first.
+**Reading state right after setting it.** `establecerX(nuevo); console.log(x)` prints the value from the snapshot of the current render, which is the old one (in an event handler, like these). If you need the new value in the same handler, store it in a constant first.
 
 **Passing the value directly when the next depends on the previous.** `establecerN(n + 1)` works until the day it is called twice within the same click, or from a function created in an earlier render. If the new value is computed from the old, pass a function.
 
@@ -1146,7 +1151,7 @@ Both pass cleanly, yet the panel exhibits the bug from the opening scene: drafts
 
 ### Exercise 1 — Predict the button
 
-In a copy of `fig02_01.tsx`, replace the three calls in `ConValor` with these:
+Save a copy of `fig02_01.tsx` as `ejercicio1.tsx` in `~/curso-react/figuras/` and replace, in it, the three calls in `ConValor` with these:
 
 ```tsx
 // ejercicio 1 (fragmento)
@@ -1183,7 +1188,7 @@ The button displays `1`. The update queue, in order:
 | `(actual) => actual + 1` | `5` | `6` |
 | “replace with `revisiones + 1`”, with `revisiones` at `0` | — | `1` |
 
-The last call does not depend on prior updates: it replaces the value with `0 + 1`, because the handler's snapshot still says `0`. This is the resulting output:
+The last call does not depend on prior updates: it replaces the value with `0 + 1`, because the handler's snapshot still says `0`. This is the resulting output (the file and its output are in `ejercicios/ejercicio1.tsx` and `ejercicios/ejercicio1.salida.txt`):
 
 ```text
 $ npx tsc --strict --target ES2022 --module nodenext --jsx react-jsx ejercicio1.tsx
@@ -1208,7 +1213,7 @@ The count is computed during rendering, derived from `notas`, in `Panel`:
         <p>Notas guardadas: {Object.keys(notas).length}</p>
 ```
 
-A `cuantasNotas` state would violate Rule 3, redundant state: it is information derived from `notas`. If you maintained it, `guardarNota` would have to update two states every time, and additionally decide whether to increment by one (a new note), leave it unchanged (updating an existing note), or decrement by one (clearing a note with empty text). By computing it, `conNota` handles all of that, and the count can never fall out of sync. Notice also that `&&` is unnecessary: here, a `0` is precisely what you want to render.
+A `cuantasNotas` state would violate Rule 3, redundant state: it is information derived from `notas`. If you maintained it, `guardarNota` would have to update two states every time, and additionally decide whether to increment by one (a new note), leave it unchanged (updating an existing note), or decrement by one (clearing a note with empty text). By computing it, `conNota` handles all of that, and the count always comes from `notas`, so it cannot fall out of sync with them. Notice also that `&&` is unnecessary: here, a `0` is precisely what you want to render.
 
 ### Solution 3
 
@@ -1252,7 +1257,7 @@ In step a, the title updates to “Detalle de reportes” while the input retain
 
 - [ ] `npm run lint` completes without printing any issues and `npm run build` concludes with `✓ built`, producing an `index-….js` file in `dist/assets/`.
 - [ ] With the practice server and `npm run dev` running, the “Solo fallas” checkbox filters down to only `pagos` and `reportes`, while the summary continues reporting “4 servicios revisados · 2 servicios con falla”.
-- [ ] Selecting a service toggles its button to `aria-pressed="true"` (inspect it in DevTools under the Elements tab) and displays its details; “Cerrar detalle” removes it and sets the button back to `false`.
+- [ ] Selecting a service toggles its button to `aria-pressed="true"` (inspect it in DevTools under the Elements tab) and displays its details; “Cerrar detalle” removes it and sets the button back to `false`; pressing the same service again also removes it.
 - [ ] A saved note marks the row with “· con nota”, and saving empty text removes the badge.
 - [ ] An unsaved draft does not drag over when selecting another service, and upon returning, the saved note appears.
 - [ ] You can run all four figures and explain every line of their output without referencing the lesson.
@@ -1309,4 +1314,4 @@ Answer without looking at the lesson:
 
 ---
 
-**Next:** [Lesson 3 — Effects: Synchronizing, Not “On Mount”](03-effects-sincronizar.md)
+**Next:** [Lesson 3 — Effects: synchronizing, not “when it loads”](03-effects-sincronizar.md)

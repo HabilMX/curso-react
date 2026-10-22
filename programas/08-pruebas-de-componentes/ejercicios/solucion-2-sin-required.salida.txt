@@ -1,0 +1,40 @@
+$ npx vitest run --reporter=default src/alta
+
+ RUN  v5.0.5 ~/curso-react/revisor
+
+ ❯ src/alta/FormularioAlta.test.tsx (5 tests | 1 failed) 1592ms
+   ❯ el formulario de alta (5)
+     ✓ sin datos marca los tres campos y lo anuncia 677ms
+     ✓ con datos válidos envía el alta y confirma 343ms
+     × declara los obligatorios y la bandeja anuncia solo el aviso nuevo 19ms
+     ✓ el foco no se pierde al enviar y un segundo envío se ignora 341ms
+     ✓ un nombre repetido se marca en su campo con el mensaje de la API 210ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/alta/FormularioAlta.test.tsx > el formulario de alta > declara los obligatorios y la bandeja anuncia solo el aviso nuevo
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/alta/FormularioAlta.test.tsx:52:30
+     50|     for (const etiqueta of ["Nombre", "Dirección", "Tiempo límite (ms)…
+     51|       const campo = (await screen.findByLabelText(etiqueta)) as HTMLIn…
+     52|       expect(campo.required).toBe(true);
+       |                              ^
+     53|     }
+     54|     const bandeja = screen.getByRole("region", { name: "Avisos" });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  09:10:12
+   Duration  2.90s (tests 58%, environment 28%, transform 7%, import 4%, setup 3%, worker 1%)
+
+[código de salida: 1]

@@ -1,0 +1,54 @@
+# Repetición del 21-oct-2026 con Node.js 24.22.0 (macOS), Chrome sin ventana y npm run dev. Las horas son UTC y distintas de las del texto; los desenlaces son los mismos.
+# Guion: node medir.mjs sin-guarda   (sobre: copia-sin-guarda; cambios en copia-sin-guarda.diff.txt)
+## Lo que vio el guion
+22:05:27.844 abre http://localhost:5173/
+22:05:29.375 clic en pagos
+22:05:29.547 aside:
+pagos
+
+No se pudo cargar el detalle: signal is aborted without reason
+
+Nota sobre pagos
+Guardar nota
+Cerrar detalle
+22:05:31.249 aside:
+pagos
+Estado
+En falla: HTTP 503
+Revisiones
+1
+Última revisión
+2026-10-21T22:05:28.309Z
+Nota sobre pagos
+Guardar nota
+Cerrar detalle
+22:05:31.250 clic en inventario
+22:05:31.355 aside:
+inventario
+
+No se pudo cargar el detalle: signal is aborted without reason
+
+Nota sobre inventario
+Guardar nota
+Cerrar detalle
+22:05:31.866 aside:
+inventario
+Estado
+Disponible: HTTP 200 en 118 ms
+Revisiones
+1
+Última revisión
+2026-10-21T22:05:28.309Z
+Nota sobre inventario
+Guardar nota
+Cerrar detalle
+
+## Bitácora del servidor de práctica (npm run servidor)
+22:05:23.772 servidor de práctica en http://127.0.0.1:3100
+22:05:28.009 GET /api/estados cancelada por el cliente
+22:05:28.310 GET /api/estados 200
+22:05:29.395 GET /api/servicios/pagos cancelada por el cliente
+22:05:30.895 GET /api/servicios/pagos 200
+22:05:31.264 GET /api/servicios/inventario cancelada por el cliente
+22:05:31.466 GET /api/servicios/inventario 200
+22:05:33.058 servidor de práctica detenido

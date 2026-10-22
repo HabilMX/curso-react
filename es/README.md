@@ -8,13 +8,13 @@
 
 **Dónde se ubica:** este curso es el escalón que sigue al [curso de TypeScript](https://github.com/HabilMX/curso-typescript) de esta casa. Su lección 9 ya armó un panel con componentes, `useState` y `useEffect`; aquí no se repite: se profundiza. Si nunca has escrito una página, empieza antes por el curso de Fundamentos de la web.
 
-**Lo que necesitas antes de empezar:** una computadora con Linux Mint, saber abrir una terminal, leer tipos de TypeScript (uniones, genéricos sencillos) y haber visto, aunque sea una vez, un componente de React. La [Lección 0](00-un-proyecto-de-verdad.md) instala todo lo que falta, con Node 24 LTS.
+**Lo que necesitas antes de empezar:** una computadora con Linux Mint, saber abrir una terminal, leer tipos de TypeScript (uniones, genéricos sencillos) y haber visto, aunque sea una vez, un componente de React. La [Lección 0](00-un-proyecto-de-verdad.md) comprueba que tengas Node 24 LTS (si falta, te manda a instalarlo) y arma el proyecto con Vite.
 
 ## El proyecto que vas a construir
 
 El **`revisor`**: la pantalla que muestra el estado de una lista de servicios —nombre, estado y tiempo de respuesta—. Empieza como el panel de una sola pieza de la lección 9 de TypeScript y termina como una aplicación de varias pantallas: un reporte con filtros que viajan en la dirección, el detalle de cada servicio, datos con caché que se actualizan en segundo plano, un formulario para dar de alta servicios, avisos, una suite de pruebas y una versión publicada.
 
-Es el mismo problema de los cursos de Go, Rust, TypeScript y Fundamentos de la web de esta casa. Lo que cambia es la altura: no «que funcione», sino «que se sostenga cuando crezca». El curso incluye un servidor de práctica con el contrato de la API, así que no necesitas haber terminado el curso de TypeScript para seguir este.
+Es el mismo problema de los cursos de Go, Rust, TypeScript y Fundamentos de la web de esta casa. Lo que cambia es la altura: no «que funcione», sino «que se sostenga cuando crezca». El curso incluye un servidor de práctica que responde con los datos de la API, así que no necesitas haber terminado el curso de TypeScript para seguir este.
 
 ## Las diez lecciones
 
@@ -49,4 +49,4 @@ El curso no se acaba cuando leíste la lección 9, sino cuando tu `revisor` cump
 2. **`npm test` pasa**, y cada prueba que protege un arreglo se puso roja cuando lo revertiste.
 3. **Existen los cuatro estados** —cargando, error, vacío y con datos—, más el de «datos viejos mientras se actualiza», y cada uno tiene su prueba.
 4. **Se recorre completo con el teclado**, y los avisos de cambio llegan a un lector de pantalla.
-5. **`npm run build` termina bien**, la vista previa recarga `/servicios/pagos` sin dar 404 servida con reescritura, y en `dist/` no aparece ninguna clave ni secreto.
+5. **`npm run build` termina bien**, el servidor publicado (`npm run publicado`) recarga `/servicios/pagos` sin dar 404 gracias a la reescritura, y en `dist/` no aparece ninguna clave ni secreto.

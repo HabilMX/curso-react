@@ -1,0 +1,15 @@
+$ curl -sI http://localhost:4109/servicios/pagos
+HTTP/1.1 200 OK
+Vary: Origin
+Content-Type: text/html
+Cache-Control: no-cache
+Etag: W/"188-NTjMluUw3sCMmwdKb29psG22o7w"
+Date: Thu, 22 Oct 2026 19:29:20 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+$ curl -s -o /dev/null -w "%{http_code} %{content_type}\n" http://localhost:4109/assets/no-existe.js
+200 text/html
+$ curl -sI http://localhost:4109/assets/index-Cs1CcfeN.js | grep -i "cache-control\|content-type"
+Content-Type: text/javascript
+Cache-Control: no-cache

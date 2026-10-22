@@ -1,0 +1,39 @@
+$ npx vitest run --reporter=default src/reporte/PaginaReporte.test.tsx
+
+ RUN  v5.0.5 ~/curso-react/revisor
+
+ ❯ src/reporte/PaginaReporte.test.tsx (7 tests | 1 failed) 675ms
+   ❯ la página del reporte (7)
+     ✓ cargando: anuncia la carga mientras la API no responde 106ms
+     ✓ error: muestra el motivo y un botón para reintentar 243ms
+     ✓ vacío: lo dice en lugar de dejar la lista en blanco 58ms
+     ✓ con datos: un enlace por servicio y el resumen de fallas 35ms
+     × sin fallas no pinta un 0 suelto en el resumen 92ms
+     ✓ el filtro «solo fallas» viaja en la dirección 111ms
+     ✓ una dirección con el filtro ya puesto abre filtrada 25ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/reporte/PaginaReporte.test.tsx > la página del reporte > sin fallas no pinta un 0 suelto en el resumen
+AssertionError: expected '2 servicios revisados0' to be '2 servicios revisados' // Object.is equality
+
+Expected: "2 servicios revisados"
+Received: "2 servicios revisados0"
+
+ ❯ src/reporte/PaginaReporte.test.tsx:48:33
+     46|     montarEn("/");
+     47|     const resumen = await screen.findByText(/servicios revisados/);
+     48|     expect(resumen.textContent).toBe("2 servicios revisados");
+       |                                 ^
+     49|   });
+     50|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  09:10:00
+   Duration  2.15s (tests 34%, environment 26%, transform 24%, import 11%, setup 5%)
+
+[código de salida: 1]

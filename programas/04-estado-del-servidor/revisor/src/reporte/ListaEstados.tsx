@@ -11,7 +11,7 @@ export function ListaEstados({
   readonly estados: readonly EstadoPublico[];
   readonly seleccionado: string | null;
   readonly notas: Notas;
-  readonly alSeleccionar: (nombre: string) => void;
+  readonly alSeleccionar: (nombre: string | null) => void;
 }) {
   return (
     <ul>

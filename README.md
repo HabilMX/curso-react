@@ -2,7 +2,7 @@
 
 **Por Dorian Chávez, fundador de Hábil y arquitecto de integración.**
 
-**Cada punto de control de este curso se revisa con el linter de React, se prueba y se compila en cada cambio, y el resultado queda a la vista de cualquiera.**
+**Cada punto de control de este curso se revisa con el linter de React y se compila en cada cambio; desde la lección 8, además, pasa su suite de pruebas. El resultado queda a la vista de cualquiera.**
 
 > El curso está en cinco idiomas: español (el original), inglés, francés, portugués de Brasil y búlgaro.
 
@@ -24,7 +24,7 @@ El **`revisor`**, el mismo de los cursos de Go, Rust, TypeScript y de Fundamento
 
 Se repite el proyecto y no se inventa otro porque la comparación enseña más que empezar de nuevo: quien hizo el panel en TypeScript ve el mismo problema resuelto con otras herramientas, y la diferencia entre «el panel que funciona» y «el panel que se sostiene» es justo lo que este curso enseña. Lo que cambia es la altura del problema, no el problema.
 
-**No necesitas haber terminado la API del curso de TypeScript.** El curso incluye un servidor de práctica con el mismo contrato público (`GET /api/estados`, `GET /salud`) y las pocas rutas nuevas que el panel necesita desde la lección 4 (detalle de un servicio, alta y reintento). Es el único código de servidor del curso y no se explica: el curso es de pantalla.
+**No necesitas haber terminado la API del curso de TypeScript.** El curso incluye un servidor de práctica con los mismos datos públicos (`GET /api/estados`, `GET /salud`) y las pocas rutas nuevas que el panel necesita desde la lección 4 (detalle de un servicio, alta y reintento). Es el único código de servidor del curso y no se explica: el curso es de pantalla.
 
 ## Las lecciones
 
@@ -53,17 +53,17 @@ Lo que la tabla promete por lección es lo que la lección trae.
 
 ## Versiones con las que se escribió
 
-Medidas con `npm view` el 7 de octubre de 2026 y fijadas en el curso con versión exacta. Se vuelven a medir antes de publicar y ninguna se da por buena porque la heredó otro documento.
+Medidas con `npm view` el 21 de octubre de 2026 y fijadas en el curso con versión exacta: son las que instalan los `package-lock.json` de los puntos de control. Se vuelven a medir antes de publicar y ninguna se da por buena porque la heredó otro documento.
 
 | | Versión | Nota |
 |---|---|---|
 | Node.js | 24 LTS | La misma línea del curso de TypeScript. Vite 8 pide 20.19 o 22.12 o superior; Vitest 5 pide 22.12 o 24 o superior; React Router 8 pide 22.22 o superior |
-| React y React DOM | 19.3.0 | Publicada el 9 de septiembre de 2026 |
-| Vite y `@vitejs/plugin-react` | 8.3.3 y 6.1.2 | |
+| React y React DOM | 19.3.1 | Publicada el 14 de octubre de 2026 |
+| Vite y `@vitejs/plugin-react` | 8.3.5 y 6.1.2 | |
 | TypeScript | 7.0.2 | La que fija el curso de TypeScript |
-| React Router | 8.4.0 | Un solo paquete, `react-router` |
-| TanStack Query | 5.104.1 | |
-| Vitest, Testing Library y `user-event` | 5.0.3, 16.3.3 y 14.6.7 | |
+| React Router | 8.5.0 | Un solo paquete, `react-router` |
+| TanStack Query | 5.104.5 | |
+| Vitest, Testing Library y `user-event` | 5.0.5, 16.3.3 y 14.6.8 | Desde la lección 8 |
 | `eslint-plugin-react-hooks` | 7.1.1 | Aloja también las reglas del compilador |
 | React Compiler | 1.0.0 | `babel-plugin-react-compiler`; estable desde octubre de 2025 |
 
@@ -88,11 +88,11 @@ El curso no se acaba cuando leíste la lección 9, sino cuando tu `revisor` cump
 2. **`npm test` pasa**, y cada prueba que protege un arreglo se ha puesto roja al revertirlo (la lección 8 enseña a comprobarlo).
 3. **Existen los cuatro estados**: cargando, error, vacío y con datos —más el de «datos viejos mientras se actualiza»—, y cada uno tiene su prueba.
 4. **Se recorre completo con el teclado** y los avisos de cambio (`N servicios con falla`, errores del formulario) llegan a un lector de pantalla.
-5. **`npm run build` termina bien, la vista previa recarga `/servicios/pagos` sin dar 404 servida con reescritura, y en `dist/` no aparece ninguna clave ni secreto.**
+5. **`npm run build` termina bien, el servidor publicado (`npm run publicado`) recarga `/servicios/pagos` sin dar 404 gracias a la reescritura, y en `dist/` no aparece ninguna clave ni secreto.**
 
 ## Cómo se comprueba que los programas funcionan
 
-Cada lección tiene un **punto de control**: el `revisor` tal como queda al terminar esa lección. Para comprobarlo hace falta [Node.js](https://nodejs.org/en/download) 24 LTS, y cada punto de control se revisa con cuatro comandos: `npm ci` (instala exactamente las versiones del archivo de bloqueo), `npm run lint` (el linter de React no debe avisar nada), `npm test` (la salida de la suite se compara con la documentada) y `npm run build` (el paquete compila sin errores de tipos).
+Cada lección tiene un **punto de control**: el `revisor` tal como queda al terminar esa lección. Para comprobarlo hace falta [Node.js](https://nodejs.org/en/download) 24 LTS, y cada punto de control se revisa con tres comandos: `npm ci` (instala exactamente las versiones del archivo de bloqueo), `npm run lint` (el linter de React no debe avisar nada) y `npm run build` (el paquete compila sin errores de tipos). **Desde el punto de control de la lección 8 se suma un cuarto, `npm test`** (la salida de la suite se compara con la documentada): las pruebas nacen en esa lección, así que los puntos de control 0 a 7 no tienen suite ni script `test`, a propósito.
 
 Hay dos clases de programa. **Los puntos de control** son el proyecto completo de la lección, con su `package.json`; **las figuras** (`figNN_NN.tsx`) son piezas pequeñas que se dibujan en un DOM de prueba y cuya salida documentada se compara contra la real. Las que a propósito fallan —un aviso del linter, un error de React— traen el mensaje exacto que la lección enseña a leer.
 

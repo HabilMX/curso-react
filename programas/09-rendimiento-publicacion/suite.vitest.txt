@@ -1,0 +1,37 @@
+
+> revisor@0.9.0 test
+> vitest run --reporter=default
+
+ RUN  v5.0.5 ~/curso-react/revisor
+
+ ✓ src/avisos/avisos.test.ts (4 tests) 8ms
+ ✓ src/reporte/ResumenFallas.test.tsx (1 test) 153ms
+ ✓ src/reporte/resumen.test.ts (3 tests) 67ms
+ ✓ src/reporte/panel.test.ts (2 tests) 5ms
+ ✓ src/app/rutas.test.tsx (3 tests) 486ms
+   ✓ las rutas (3)
+     ✓ una dirección desconocida muestra la página de no encontrada 414ms
+ ✓ src/detalle/PaginaServicio.test.tsx (3 tests) 778ms
+   ✓ la página de un servicio (3)
+     ✓ muestra el detalle del servicio de la dirección 428ms
+ ✓ src/reporte/PaginaReporte.test.tsx (7 tests) 791ms
+   ✓ la página del reporte (7)
+     ✓ error: muestra el motivo y un botón para reintentar 331ms
+ ✓ src/compartido/esquema.test.ts (2 tests) 6ms
+ ✓ src/configuracion.test.ts (3 tests) 4ms
+ ✓ src/alta/FormularioAlta.test.tsx (5 tests) 1259ms
+   ✓ el formulario de alta (5)
+     ✓ sin datos marca los tres campos y lo anuncia 554ms
+ ✓ src/consultas/cliente.test.ts (2 tests) 3020ms
+   ✓ el cliente de consultas (2)
+     ✓ reintenta dos veces un 503: puede ser pasajero 3005ms
+
+ Test Files  11 passed (11)
+      Tests  35 passed (35)
+   Start at  16:13:56
+   Duration  6.23s (environment 53%, tests 18%, transform 13%, import 8%, setup 7%)
+
+Environment  jsdom was created 11 times · 19.53s total, 53% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

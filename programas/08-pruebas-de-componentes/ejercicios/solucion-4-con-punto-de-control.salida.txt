@@ -1,0 +1,12 @@
+$ npx vitest run --reporter=default src/reporte/DatosViejos.test.tsx
+
+ RUN  v5.0.5 ~/curso-react/revisor
+
+ ✓ src/reporte/DatosViejos.test.tsx (2 tests) 216ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  09:10:35
+   Duration  783ms (environment 38%, tests 30%, setup 11%, transform 11%, import 9%, worker 1%)
+
+[código de salida: 0]

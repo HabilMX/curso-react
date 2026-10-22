@@ -1,0 +1,5 @@
+# Corrido el 21-oct-2026 con Node.js 24.22.0 (macOS), sobre una copia del punto de control. Rutas mostradas a partir de ~/curso-react.
+$ node medir.mjs efecto   # sobre la copia construida, servida con vite preview
+a. guardas una nota en pagos, eliges catálogo y regresas: Detalle de pagos · borrador: ""
+b. guardas una nota en catálogo y eliges pagos: Detalle de pagos · borrador: "revisar el disco"
+   filas: catálogo: disponible (HTTP 200, 42 ms) · con nota | pagos: falla (HTTP 503) · con nota | inventario: disponible (HTTP 200, 118 ms) | reportes: falla (tiempo límite agotado)

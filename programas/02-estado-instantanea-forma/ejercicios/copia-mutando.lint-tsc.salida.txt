@@ -1,0 +1,25 @@
+# Corrido el 21-oct-2026 con Node.js 24.22.0 (macOS), sobre una copia del punto de control. Rutas mostradas a partir de ~/curso-react.
+$ npx tsc -b
+src/reporte/Panel.tsx(6,10): error TS6133: 'conNota' is declared but its value is never read.
+src/reporte/Panel.tsx(23,5): error TS2542: Index signature in type 'Readonly<Record<string, string>>' only permits reading.
+tsc: 1
+$ npm run lint
+
+~/curso-react/revisor/src/reporte/Panel.tsx
+   6:10  error  'conNota' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+  23:5   error  Error: This value cannot be modified
+
+Modifying a value returned from 'useState()', which should not be modified directly. Use the setter function to update instead.
+
+~/curso-react/revisor/src/reporte/Panel.tsx:23:5
+  21 |
+  22 |   function guardarNota(nombre: string, texto: string): void {
+> 23 |     notas[nombre] = texto;
+     |     ^^^^^ `notas` cannot be modified
+  24 |     establecerNotas(notas);
+  25 |   }
+  26 |  react-hooks/immutability
+
+✖ 2 problems (2 errors, 0 warnings)
+
+lint: 1

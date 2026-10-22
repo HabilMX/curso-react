@@ -1,0 +1,26 @@
+# Corrido el 21-oct-2026 con Node.js 24.22.0 (macOS), copia limpia con npm ci.
+$ npm run lint
+
+> revisor@0.2.0 lint
+> eslint . --max-warnings 0
+
+$ npm run build
+
+> revisor@0.2.0 build
+> tsc -b && vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 30 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.39 kB │ gzip:  0.26 kB
+dist/assets/index-CGNql20r.css    0.68 kB │ gzip:  0.38 kB
+dist/assets/index-7jh0TEYR.js   224.30 kB │ gzip: 70.28 kB
+
+✓ built in 189ms
+
+# Repetido en Linux el mismo día: contenedor oficial node:24.22.0-bookworm (Debian 12), copia sin node_modules/ ni dist/, npm ci (código 0), npm run lint (sin avisos) y npm run build:
+dist/assets/index-CGNql20r.css    0.68 kB │ gzip:  0.38 kB
+dist/assets/index-7jh0TEYR.js   224.30 kB │ gzip: 70.28 kB
+# Mismos nombres que en macOS. No se corrió en una Linux Mint real.

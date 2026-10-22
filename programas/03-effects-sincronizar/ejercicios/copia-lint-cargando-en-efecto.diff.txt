@@ -1,0 +1,20 @@
+--- revisor/src/detalle/useDetalle.ts	2026-10-21 01:41:40
++++ copia-lint-cargando-en-efecto/src/detalle/useDetalle.ts	2026-10-21 16:02:58
+@@ -11,6 +11,7 @@
+   const [carga, establecerCarga] = useState<CargaDetalle>({ tipo: "cargando" });
+ 
+   useEffect(() => {
++    establecerCarga({ tipo: "cargando" });
+     const control = new AbortController();
+ 
+     cargarDetalle(nombre, control.signal).then(
+--- revisor/src/reporte/ContenidoReporte.tsx	2026-10-21 01:41:41
++++ copia-lint-cargando-en-efecto/src/reporte/ContenidoReporte.tsx	2026-10-21 16:02:58
+@@ -41,7 +41,6 @@
+           />
+           {seleccionado !== null && existe && (
+             <PanelDetalle
+-              key={seleccionado}
+               nombre={seleccionado}
+               notaGuardada={notas[seleccionado] ?? ""}
+               alGuardarNota={alGuardarNota}

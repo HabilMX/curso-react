@@ -1,0 +1,13 @@
+diff --color -u revisor/src/reporte/Panel.tsx copia-mutando/src/reporte/Panel.tsx
+--- revisor/src/reporte/Panel.tsx	2026-10-21 01:40:26
++++ copia-mutando/src/reporte/Panel.tsx	2026-10-21 15:53:38
+@@ -20,7 +20,8 @@
+   const [notas, establecerNotas] = useState<Notas>({});
+ 
+   function guardarNota(nombre: string, texto: string): void {
+-    establecerNotas((actuales) => conNota(actuales, nombre, texto));
++    notas[nombre] = texto;
++    establecerNotas(notas);
+   }
+ 
+   return (

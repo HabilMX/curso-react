@@ -1,0 +1,4 @@
+10c10
+<       {fallas > 0 && <strong> · {textoFallas(fallas)}</strong>}
+---
+>       {fallas && <strong> · {textoFallas(fallas)}</strong>}

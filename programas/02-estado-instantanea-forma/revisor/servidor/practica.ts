@@ -1,4 +1,4 @@
-// Servidor de práctica del curso de React. Responde el mismo contrato público que
+// Servidor de práctica del curso de React. Responde los mismos datos públicos que
 // la API del curso de TypeScript (GET /api/estados y GET /salud) con datos fijos,
 // para que el panel tenga a quién preguntarle. No se explica en el curso: el curso
 // es de pantalla. Se arranca con `npm run servidor`.

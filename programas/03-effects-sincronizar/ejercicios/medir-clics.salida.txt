@@ -1,0 +1,25 @@
+# Repetición del 21-oct-2026 con Node.js 24.22.0 (macOS), Chrome sin ventana y npm run dev. Las horas son UTC y distintas de las del texto; los desenlaces son los mismos.
+# Guion: node medir.mjs clics   (sobre: el punto de control sin cambios)
+## Lo que vio el guion
+22:06:40.403 abre http://localhost:5173/
+22:06:41.929 document.querySelector(".actualizado").textContent → "Actualizado a las 4:06:40 p.m."
+22:06:41.929 clic en la casilla
+22:06:43.937 clic en la casilla
+22:06:45.942 clic en catálogo
+22:06:47.951 clic en inventario
+22:06:52.961 document.querySelector(".actualizado").textContent → "Actualizado a las 4:06:50 p.m."
+22:06:52.962 clic en la casilla
+22:06:54.982 clic en la casilla
+22:07:02.007 document.querySelector(".actualizado").textContent → "Actualizado a las 4:07:00 p.m."
+
+## Bitácora del servidor de práctica (npm run servidor)
+22:06:36.403 servidor de práctica en http://127.0.0.1:3100
+22:06:40.526 GET /api/estados cancelada por el cliente
+22:06:40.828 GET /api/estados 200
+22:06:45.962 GET /api/servicios/cat%C3%A1logo cancelada por el cliente
+22:06:46.164 GET /api/servicios/cat%C3%A1logo 200
+22:06:47.968 GET /api/servicios/inventario cancelada por el cliente
+22:06:48.171 GET /api/servicios/inventario 200
+22:06:50.828 GET /api/estados 200
+22:07:00.830 GET /api/estados 200
+22:07:03.096 servidor de práctica detenido

@@ -1,0 +1,12 @@
+$ npx vitest run --reporter=default src/pruebas/control.test.tsx
+
+ RUN  v5.0.5 ~/curso-react/revisor
+
+ ✓ src/pruebas/control.test.tsx (1 test) 61ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  09:09:58
+   Duration  457ms (environment 67%, tests 17%, setup 11%, transform 4%, import 1%, worker 1%)
+
+[código de salida: 0]

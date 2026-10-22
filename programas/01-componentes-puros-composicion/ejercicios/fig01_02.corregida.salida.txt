@@ -1,0 +1,7 @@
+# Corrido el 21-oct-2026 con Node.js 24.22.0 (macOS) en ~/curso-react/figuras/, con el package.json de esta carpeta.
+$ node fig01_02.corregida.js
+1) el arreglo antes de dibujar:   pagos, catálogo, reportes
+2) el arreglo después de dibujar: pagos, catálogo, reportes
+3) se montó una vez y el contador dice: 0
+4) mismas props, ¿misma hora en los dos dibujos? sí
+$ npx eslint fig01_02.corregida.tsx   # sin problemas, código de salida 0

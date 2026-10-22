@@ -1,0 +1,7 @@
+# Corrido el 21-oct-2026 con Node.js 24.22.0 (macOS) en la copia del lazo (copia-lazo.diff.txt): el linter queda en verde.
+$ npx tsc -b   # código de salida 0
+$ npm run lint
+
+> revisor@0.3.0 lint
+> eslint . --max-warnings 0
+

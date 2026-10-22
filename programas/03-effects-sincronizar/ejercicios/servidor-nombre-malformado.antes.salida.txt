@@ -1,0 +1,18 @@
+# Defecto medido el 21-oct-2026 con Node.js 24.22.0, ANTES del arreglo (revisor/servidor/practica.ts, renglón 86):
+$ npm run servidor &
+22:02:02.709 servidor de práctica en http://127.0.0.1:3100
+22:02:04.175 GET /api/servicios/%25 404
+$ curl --path-as-is -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:3100/api/servicios/%
+(curl termina con código 52: el servidor cerró la conexión sin responder)
+file://~/curso-react/revisor/servidor/practica.ts:86
+    const nombre = decodeURIComponent(servicio[1] ?? "");
+                   ^
+
+URIError: URI malformed
+    at decodeURIComponent (<anonymous>)
+    at Server.<anonymous> (file://~/curso-react/revisor/servidor/practica.ts:86:20)
+    at Server.emit (node:events:514:28)
+    at parserOnIncoming (node:_http_server:1293:12)
+    at HTTPParser.parserOnHeadersComplete (node:_http_common:125:17)
+
+Node.js v24.22.0

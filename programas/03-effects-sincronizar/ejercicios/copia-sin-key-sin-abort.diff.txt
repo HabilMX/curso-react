@@ -1,0 +1,20 @@
+--- revisor/src/detalle/useDetalle.ts	2026-10-21 01:41:40
++++ copia-sin-key-sin-abort/src/detalle/useDetalle.ts	2026-10-21 16:02:58
+@@ -25,7 +25,6 @@
+       },
+     );
+ 
+-    return () => control.abort();
+   }, [nombre]);
+ 
+   return carga;
+--- revisor/src/reporte/ContenidoReporte.tsx	2026-10-21 01:41:41
++++ copia-sin-key-sin-abort/src/reporte/ContenidoReporte.tsx	2026-10-21 16:02:58
+@@ -41,7 +41,6 @@
+           />
+           {seleccionado !== null && existe && (
+             <PanelDetalle
+-              key={seleccionado}
+               nombre={seleccionado}
+               notaGuardada={notas[seleccionado] ?? ""}
+               alGuardarNota={alGuardarNota}

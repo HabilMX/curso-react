@@ -1,0 +1,4 @@
+Only in /private/tmp/claude-501/-Users-dchavez/9d42b1dd-86d5-46bd-9eb5-3f8daf0f2b7f/scratchpad/r08work/revisor/src/detalle: EditorNota.test.tsx
+Only in /private/tmp/claude-501/-Users-dchavez/9d42b1dd-86d5-46bd-9eb5-3f8daf0f2b7f/scratchpad/r08work/revisor/src/detalle: EditorNotaIngenua.test.tsx
+Only in /private/tmp/claude-501/-Users-dchavez/9d42b1dd-86d5-46bd-9eb5-3f8daf0f2b7f/scratchpad/r08work/revisor/src/pruebas: control.test.tsx
+Only in /private/tmp/claude-501/-Users-dchavez/9d42b1dd-86d5-46bd-9eb5-3f8daf0f2b7f/scratchpad/r08work/revisor/src/reporte: DatosViejos.test.tsx

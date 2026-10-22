@@ -1,0 +1,5 @@
+# Corrido el 21-oct-2026 con Node.js 24.22.0 (macOS), sobre una copia del punto de control. Rutas mostradas a partir de ~/curso-react.
+$ node medir.mjs sin-key  # sobre la copia construida, servida con vite preview
+a. escribes en pagos sin guardar y eliges reportes: Detalle de reportes · borrador: "borrador de pagos"
+b. guardas una nota en pagos y eliges catálogo: Detalle de catálogo · borrador: "llamar al proveedor"
+c. cierras el detalle y eliges reportes: Detalle de reportes · borrador: ""

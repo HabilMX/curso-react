@@ -1,0 +1,9 @@
+# Corrido el 21-oct-2026 con Node.js 24.22.0 (macOS), sobre una copia del punto de control. Rutas mostradas a partir de ~/curso-react.
+$ npx tsc --strict --target ES2022 --module nodenext --jsx react-jsx ejercicio1.tsx
+$ node ejercicio1.js
+ejercicio (+5, actualizadora, +1):
+  dentro del clic, revisiones vale 0
+  después del clic, el botón dice 1
+con la forma actualizadora (actual => actual + 1, tres veces):
+  dentro del clic, revisiones vale 0
+  después del clic, el botón dice 3

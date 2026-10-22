@@ -1,0 +1,45 @@
+# Repetición del 21-oct-2026 con Node.js 24.22.0 (macOS), Chrome sin ventana y npm run dev. Las horas son UTC y distintas de las del texto; los desenlaces son los mismos.
+# Guion: node medir.mjs sin-key-sin-abort   (sobre: copia-sin-key-sin-abort; cambios en copia-sin-key-sin-abort.diff.txt)
+## Lo que vio el guion
+22:05:49.113 abre http://localhost:5173/
+22:05:50.634 clic en pagos
+22:05:50.941 aside:
+pagos
+
+Cargando detalle…
+
+Nota sobre pagos
+Guardar nota
+Cerrar detalle
+22:05:50.942 clic en inventario
+22:05:51.453 aside:
+inventario
+Estado
+Disponible: HTTP 200 en 118 ms
+Revisiones
+1
+Última revisión
+2026-10-21T22:05:49.530Z
+Nota sobre inventario
+Guardar nota
+Cerrar detalle
+22:05:53.455 aside:
+inventario
+Estado
+En falla: HTTP 503
+Revisiones
+1
+Última revisión
+2026-10-21T22:05:49.530Z
+Nota sobre inventario
+Guardar nota
+Cerrar detalle
+
+## Bitácora del servidor de práctica (npm run servidor)
+22:05:45.508 servidor de práctica en http://127.0.0.1:3100
+22:05:49.230 GET /api/estados cancelada por el cliente
+22:05:49.530 GET /api/estados 200
+22:05:51.150 GET /api/servicios/inventario 200
+22:05:52.140 GET /api/servicios/pagos 200
+22:05:53.471 GET /api/servicios/pagos cancelada por el cliente
+22:05:54.504 servidor de práctica detenido

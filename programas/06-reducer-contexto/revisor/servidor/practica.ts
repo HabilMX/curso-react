@@ -1,4 +1,4 @@
-// Servidor de práctica del curso de React. Responde el mismo contrato público que
+// Servidor de práctica del curso de React. Responde los mismos datos públicos que
 // la API del curso de TypeScript (GET /api/estados y GET /salud) y las rutas que el
 // panel necesita desde la Lección 3 (detalle) y la 4 (reintento y alta). Guarda los
 // servicios en memoria: al reiniciarlo, vuelven los cuatro de siempre. No se explica
@@ -95,6 +95,9 @@ function validarAlta(valor: unknown): { ok: true; valor: NuevoServicio } | { ok:
 
   if (typeof url !== "string" || !/^https?:\/\/\S+$/.test(url)) {
     campos.url = "escribe una dirección que empiece con http:// o https://";
+  } else if (/^https?:\/\/[^/?#]*@/.test(url)) {
+    // Con usuario o clave: se rechaza, y la respuesta no repite la dirección.
+    campos.url = "quita el usuario y la clave de la dirección";
   }
 
   if (typeof timeoutMs !== "number" || !Number.isSafeInteger(timeoutMs) || timeoutMs <= 0) {
@@ -174,7 +177,14 @@ async function atender(solicitud: IncomingMessage, respuesta: ServerResponse): P
   const reintento = /^\/api\/servicios\/([^/]+)\/reintento$/.exec(ruta);
 
   if (metodo === "POST" && reintento !== null) {
-    const nombre = decodeURIComponent(reintento[1] ?? "");
+    let nombre: string;
+
+    try {
+      nombre = decodeURIComponent(reintento[1] ?? "");
+    } catch {
+      enviarJson(respuesta, 400, { detalle: "nombre de servicio inválido" });
+      return;
+    }
 
     despues(respuesta, DEMORA_MS, () => {
       if (!estados.some((estado) => estado.nombre === nombre)) {
@@ -194,7 +204,14 @@ async function atender(solicitud: IncomingMessage, respuesta: ServerResponse): P
   const servicio = /^\/api\/servicios\/([^/]+)$/.exec(ruta);
 
   if (metodo === "GET" && servicio !== null) {
-    const nombre = decodeURIComponent(servicio[1] ?? "");
+    let nombre: string;
+
+    try {
+      nombre = decodeURIComponent(servicio[1] ?? "");
+    } catch {
+      enviarJson(respuesta, 400, { detalle: "nombre de servicio inválido" });
+      return;
+    }
     const demora = DEMORA_DETALLE_MS[nombre] ?? DEMORA_DETALLE_PREDETERMINADA_MS;
 
     despues(respuesta, demora, () => {

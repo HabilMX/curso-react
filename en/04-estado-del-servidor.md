@@ -1,4 +1,4 @@
-# Lesson 4 — Server State with TanStack Query
+# Lesson 4 — Server state with TanStack Query
 
 *It is 4:50 PM and at 5:00 PM operations closes the shift with a question: “has pagos recovered yet?”. On your dashboard, `pagos` is still in the red. Someone from the infrastructure team swears they restarted it five minutes ago. You open the details for `pagos`: it says “En falla”. You close the details, open the ones for `catálogo`, go back to `pagos`… and the dashboard fetches everything from scratch again, with its usual “Cargando…”, as if it had never seen it before. You click “Actualizar”: the list turns green, but the details you had open still say “En falla”. Two parts of the same screen tell two different stories about the same service, and you have ten minutes to say which one is the truth. The problem is not the API. It is that each component fetches its data on its own and neither knows what the other knows. This lesson gives the dashboard a single place where what arrived from the server lives.*
 
@@ -14,7 +14,7 @@
 
 **What this lesson does not do.** It does not add screens or URLs: the list and details remain on the same page, and selection remains a state in `Panel`; routes arrive in [Lesson 5](05-rutas-url-como-estado.md). It does not use Suspense for data fetching: it explains what it would do and why this dashboard does not need it. It does not write automated tests: those for the four states arrive in [Lesson 8](08-pruebas-de-componentes.md). It does not register services: the practice server already knows how to do so as of this lesson, but the form belongs to [Lesson 7](07-formularios-accesibilidad.md). And it does not explain the practice server, which here grows to its final version: it only states what new routes it has.
 
-**About the runs.** Everything was run on October 21, 2026 with Node.js 24.22.0 and npm 11.19.1, on macOS, with the exact versions from this lesson's `package.json`. The checkpoint was reinstalled with `npm ci` and passed `npm run lint` and `npm run build`, with the same filename in `dist/` that the course runs also obtained in a Linux container (`index-BzO-N0-M.js`); that is why what you see here is what you will see on your Linux Mint, except for an `npm ci` warning about `fsevents` that only appears on macOS and is explained where it comes up. What is seen “in the browser” was measured with headless Chrome (`--headless`), controlled via its debugging protocol: a small program opened the page, clicked buttons just as you would, and recorded, in milliseconds since the page opened, every request sent to `/api/` and every change on the screen. It is the same log you see in the “Network” tab of developer tools, described in writing. The timestamps in the practice server log are in UTC; the time displayed by the dashboard (“Actualizado a las 2:11:47 a.m.”) is the machine's local time, which was in Central Mexico time. Long paths are shown starting from `~/curso-react`. To compare sizes, the Lesson 3 checkpoint was also built, with the same result that the course runs record for it (`index-CTkBRgQQ.js`). The programs are in [`programas/04-estado-del-servidor/`](../programas/04-estado-del-servidor): `revisor/` is the checkpoint and the three figures are beside it, with their own `package.json`, which is the one from the figures in Lesson 0 plus `@tanstack/react-query`. All three were re-run from scratch in a new folder, starting from the Lesson 0 `package.json` and adding only Query, as indicated in 4.1, producing identical outputs to those shown. Each lesson in the course was written with its own ports to avoid colliding with other runs on the same machine; you should use the usual ones: 3100 for the practice server, 5173 for `npm run dev` and 4173 for `npm run preview`.
+**About the runs.** Everything was run on October 21, 2026 with Node.js 24.22.0 and npm 11.19.1, on macOS, with the exact versions from this lesson's `package.json`. The checkpoint was reinstalled with `npm ci` and passed `npm run lint` and `npm run build`, with the same filename in `dist/` that the course runs also obtained in a Linux container (`index-CHheidKQ.js`); that is why what you see here is what you will see on your Linux Mint, except for an `npm ci` warning about `fsevents` that only appears on macOS and is explained where it comes up. After the checkpoint's last change (the row button that toggles and the `%` guard on the practice server) it was reinstalled from scratch with `npm ci` in a Linux container (the official `node:24.22.0-bookworm` image) and produced the same name on macOS and on Linux. What is seen “in the browser” was measured with headless Chrome (`--headless`), controlled via its debugging protocol: a small program opened the page, clicked buttons just as you would, and recorded, in milliseconds since the page opened, every request sent to `/api/` and every change on the screen. It is the same log you see in the “Network” tab of developer tools, described in writing. The browser captures from 4.5, 4.6.1, and 4.9 were taken with a version of `PanelDetalle` that, if refreshing the detail failed, showed only the error and hid the data; the one you see in 4.6 fixes that, and it was verified that it still delivers the same thing when the requests succeed, which is all those captures record. The timestamps in the practice server log are in UTC; the time displayed by the dashboard (“Actualizado a las 2:11:47 a.m.”) is the machine's local time, which was in Central Mexico time. Long paths are shown starting from `~/curso-react`. To compare sizes, the Lesson 3 checkpoint was also built, with the same result that the course runs record for it (`index-CTkBRgQQ.js`). The programs are in [`programas/04-estado-del-servidor/`](../programas/04-estado-del-servidor): `revisor/` is the checkpoint and the three figures are beside it, with their own `package.json`, which is the one from the figures in Lesson 0 plus `@tanstack/react-query`. All three were re-run from scratch in a new folder, starting from the Lesson 0 `package.json` and adding only Query, as indicated in 4.1, producing identical outputs to those shown. Each lesson in the course was written with its own ports to avoid colliding with other runs on the same machine; you should use the usual ones: 3100 for the practice server, 5173 for `npm run dev` and 4173 for `npm run preview`.
 
 ## By the end you will be able to
 
@@ -39,9 +39,9 @@ Look at what `revisor` does today, at the end of Lesson 3, through the eyes of s
 
 That page does not stop at complaining: it recommends, if you do not use a framework, “using or building a client-side cache”, and names three open-source solutions; the first is **TanStack Query**. And it adds something worth reading slowly: if you build your own, you will use Effects under the hood, but you will also need to add logic to deduplicate requests, cache responses, and avoid network waterfalls. That is what the library does. Underneath, there is still a `fetch` with a `signal`; what changes is **who owns the data**. Until today, the owner of the report was the component requesting it. From this lesson onward, the owner is a cache that lives outside components, and components only **subscribe** to what they need.
 
-That shift has a name that gives this lesson its title: **server state**. The state that Lesson 2 taught you to manage—the “Solo fallas” checkbox, the selected service, the draft of a note—is yours: it originates on the screen, only the screen changes it, and it is always up to date. The report is something else. It is a **copy** of something that lives on another computer, which other people can change without notifying you, which takes time to arrive, which can fail when requested, and which begins to grow stale the moment it arrives. Treating it with `useState` is treating a photograph as if it were a window.
+That shift has a name that gives this lesson its title: **server state**. The state that Lesson 2 taught you to manage—the “Solo fallas” checkbox, the selected service, the draft of a note—is yours: it originates on the screen, only the screen changes it, and it does not go stale on its own. The report is something else. It is a **copy** of something that lives on another computer, which other people can change without notifying you, which takes time to arrive, which can fail when requested, and which begins to grow stale the moment it arrives. Treating it with `useState` is treating a photograph as if it were a window.
 
-The lesson has nine parts: the problem measured (4.1); installation and the client (4.2); keys, query functions, and polling (4.3); `status` versus `fetchStatus` (4.4); the four states plus one (4.5); mutations and invalidation (4.6); what Suspense does not do (4.7); the error boundary (4.8); and the complete walkthrough (4.9). At the end you will build this, and you will know why the JavaScript grew by about 36 kilobytes:
+There are three new concepts. The first is **the query: a piece of server data with a key and a cache**, and it takes three sections: the problem measured (4.1), installation and the client (4.2), and keys, query functions, and polling (4.3). The second is **the states of a query and how the screen renders them**: `status` versus `fetchStatus` (4.4) and the four states plus one (4.5); they are completed, after the third, by what Suspense does not do with those states (4.7) and the error boundary, which catches the error state when it escapes the component (4.8). The third is **mutation and invalidation**: changing data on the server and telling the cache (4.6). Section 4.9 adds no concept: it is the complete walkthrough, where the three are seen together. At the end you will build this, and you will know why the JavaScript grew by about 37 kilobytes:
 
 ```text
 $ npm run build
@@ -56,7 +56,7 @@ rendering chunks...
 computing gzip size...
 dist/index.html                   0.39 kB │ gzip:  0.26 kB
 dist/assets/index-Bjb9BrLB.css    0.75 kB │ gzip:  0.40 kB
-dist/assets/index-BzO-N0-M.js   262.38 kB │ gzip: 81.53 kB
+dist/assets/index-CHheidKQ.js   262.59 kB │ gzip: 81.55 kB
 
 ✓ built in 263ms
 ```
@@ -300,7 +300,7 @@ createRoot(raiz).render(
 
 Having `crearClienteConsultas()` called at the module level, rather than inside a component, is not a stylistic detail. If you created it inside a component, every render of that component would create a brand new, empty cache, and you would lose everything figure 1 just demonstrated. In `main.tsx` it runs once, when the browser loads the module. (The `LimiteDeError` wrapping everything is explained in 4.8.)
 
-And here is the size mentioned at the end of “The why”. The Lesson 3 checkpoint was also built for comparison: its JavaScript weighed 225.86 kB (70.67 kB gzipped) and came from 33 modules; this lesson's weighs 262.38 kB (81.53 kB gzipped) and comes from 83. Between one lesson and the next, `revisor`'s own code barely grew—two hooks were even deleted—so those extra 36 kB and 50 modules are, for the most part, the library. It is worth asking whether it is worth it. For a dashboard that only requested one thing once, probably not; for one that has caching, polling, retries, deduplication, invalidation, and stale data while updating, what weighs is what you save yourself from writing and maintaining.
+And here is the size mentioned at the end of “The why”. The Lesson 3 checkpoint was also built for comparison: its JavaScript weighed 225.86 kB (70.67 kB gzipped) and came from 33 modules; this lesson's weighs 262.59 kB (81.55 kB gzipped) and comes from 83. Between one lesson and the next, `revisor`'s own code barely grew—two hooks were even deleted—so those extra 37 kB and 50 modules are, for the most part, the library. It is worth asking whether it is worth it. For a dashboard that only requested one thing once, probably not; for one that has caching, polling, retries, deduplication, invalidation, and stale data while updating, what weighs is what you save yourself from writing and maintaining.
 
 ### 4.3 Keys, query functions, and polling
 
@@ -394,7 +394,7 @@ export function consultaDetalle(nombre: string) {
 }
 ```
 
-Its `cargarDetalle` does not change from Lesson 3. With this, `useReporte.ts` and `useDetalle.ts` disappear from the project, and with `useReporte` goes the `useEffectEvent` that Lesson 3 gave it so polling would not restart. That was not a misuse: it was the correct way to solve that problem with a hand-written Effect. Quite simply, there is no longer a hand-written Effect.
+Its `cargarDetalle` does not change from Lesson 3. With this, `src/reporte/useReporte.ts` and `src/detalle/useDetalle.ts` disappear from the project, and with `useReporte` goes the `useEffectEvent` that Lesson 3 gave it so polling would not restart. That was not a misuse: it was the correct way to solve that problem with a hand-written Effect. Quite simply, there is no longer a hand-written Effect.
 
 And what about `useTituloDocumento`, the other Effect from Lesson 3? That one stays. It synchronizes `document.title` with what React knows, which is exactly why an Effect exists. Not every Effect goes away: the one that fetched data goes away.
 
@@ -567,13 +567,13 @@ Three things changed compared to Lesson 3:
 
 - **The query replaces the hook.** `useQuery(consultaReporte(cadaMs))` returns the complete object, and `Panel` passes it as-is to `ContenidoReporte`. There is no longer a `cargar` prop: the component does not receive the data-fetching function, because the function lives in the query.
 - **“Actualizado a las” comes from `dataUpdatedAt`.** In Lesson 3 it was its own state, `actualizadoEn`, written in an `alRecibir` wrapped in `useEffectEvent`. Now Query already tracks the timestamp when the last good data arrived, as a millisecond timestamp ([TanStack Query, «useQuery»](https://tanstack.com/query/latest/docs/framework/react/reference/useQuery)), and it is `0` until any arrives. It is state that stopped being stored because it could already be read: the Lesson 2 rule of “do not store what you can calculate”, applied to the cache.
-- **The “Actualizar” button calls `refetch`** and is disabled while `isFetching` is `true`. And the footer adds “· actualizando…” in exactly the fourth case of the figure: data exists and is being refetched. That is the difference between `status` and `fetchStatus`, rendered in a single line.
+- **The “Actualizar” button calls `refetch`** and is disabled while `isFetching` is `true`. The `void` in `onClick={() => void consulta.refetch()}` is the JavaScript operator that evaluates an expression and discards its result ([MDN, “void”](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/void)): `refetch` returns a promise, and writing `void` makes it visible that here it is neither awaited nor used, instead of leaving it dangling by oversight. And the footer adds “· actualizando…” in exactly the fourth case of the figure: data exists and is being refetched. That is the difference between `status` and `fetchStatus`, rendered in a single line.
 
 ### 4.5 The four states, plus one
 
 Data coming from a server has, at a minimum, **four states** that the screen must render: loading, error, empty, and with data. The first three are the ones people forget. The error state, because on the developer's machine the API always responds. And the **empty** state, because on the developer's machine there is always test data: an empty list renders as a list with no rows, which on screen looks indistinguishable from a broken UI. That is why the course plan calls it “the fourth state” and highlights it in bold.
 
-The fifth, which only exists thanks to caching, is **with data and with error**: the last update failed, but there is an earlier report to display. That is row 5 of figure 2. `ContenidoReporte` renders all five, in this order:
+The fifth, which only exists thanks to caching, is **with data and with error**: the last update failed, but there is an earlier report to display. That is row 5 of figure 2. `ContenidoReporte` renders all five, in this order (the detail in 4.6 does the same, on its own scale):
 
 ```tsx
 // revisor/src/reporte/ContenidoReporte.tsx
@@ -729,11 +729,13 @@ The interesting part is in the log, and in the network trace recorded by the bro
 
 Three `503`s after the canceled one: the original attempt and the **two retries** from `retry: 2`. Look at the gaps between a response and the next request: about 1,000 ms and then about 2,000 ms. That is Query's default backoff, starting at one second and doubling on each attempt, capped at 30 seconds ([TanStack Query, «Query Retries»](https://tanstack.com/query/latest/docs/framework/react/guides/query-retries)). Meanwhile, the screen remained on “Cargando…”: retries are silent, and the alert only appears when they are exhausted. With the default `retry: 3`, the user would have waited about eight seconds to find out the API was down; with `2`, about four. (A detail when reading: in the browser log, between the first request and its `503` there are only 33 ms, even though the server takes 300. It is not that the server answered earlier; the server log does show the 300 ms. Rather, as the page was opening, the browser delivered the first notifications together to the program recording them, and the program timestamped when it received them. From the second request onward, notifications arrived one by one and the 300 ms reappears: from 1373 to 1685 and from 3682 to 3986.)
 
+Notice also that on that screen there are two buttons, “Reintentar” and “Actualizar”, and both call `consulta.refetch()`. This is not a layout oversight: they belong to different owners. “Reintentar” belongs to `ContenidoReporte` and exists only in the error-without-data state, where it is the only way out the person has in sight. “Actualizar” belongs to `Panel` and is always there, because refreshing a report that is visible is an action of the card, not of the error. That they coincide in this single state is the price of each component knowing only about its own business; if it bothers you in your product, the way out is to hide “Actualizar” when there is no data, and that is a design decision, not a Query one.
+
 And an observation not found on any single line: “Actualizado a las…” does not appear, because `dataUpdatedAt` remains at `0`. Good data never arrived. If the server had gone down **after** a successful load, you would see the fifth state, the list with the amber notice above it.
 
 ### 4.6 Mutations and invalidation
 
-Up to this point, everything has been reads. But the detail view for a service now has a button that **changes** something on the server: “Volver a revisar” asks the practice server to check the service again. The server has a new route for this, `POST /api/servicios/:nombre/reintento`, which always finds the service recovered: it returns `200` with `{"nombre":"pagos","tipo":"disponible","codigoHttp":200,"duracionMs":95}` and, crucially, **changes what it has stored**, so that the next `GET /api/estados` already returns `pagos` in green. (It also returns `404` if the service does not exist, and as of this lesson has the route `POST /api/servicios` to register services; that one is used in Lesson 7.)
+Up to this point, everything has been reads. But the detail view for a service now has a button that **changes** something on the server: “Volver a revisar” asks the practice server to check the service again. The server has a new route for this, `POST /api/servicios/:nombre/reintento`, which, if the service exists, finds it recovered: it returns `200` with `{"nombre":"pagos","tipo":"disponible","codigoHttp":200,"duracionMs":95}` and, crucially, **changes what it has stored**, so that the next `GET /api/estados` already returns `pagos` in green. (If the service does not exist, it returns `404`; if the name in the URL cannot be decoded, as in `/api/servicios/%`, it returns `400` with `{"detalle":"nombre de servicio inválido"}`; and as of this lesson it has the route `POST /api/servicios` to register services; that one is used in Lesson 7.)
 
 An operation that changes data on the server is called a **mutation**, and in Query it has its own hook, `useMutation`. The network boundary is like the other two: fetch, check the status code, validate the shape.
 
@@ -824,10 +826,15 @@ export function PanelDetalle({
     <aside className="detalle" aria-label={`Detalle de ${nombre}`}>
       <h3>{nombre}</h3>
       {consulta.isPending && <p role="status">Cargando detalle…</p>}
-      {consulta.isError && (
+      {consulta.isError && consulta.data === undefined && (
         <p role="alert">No se pudo cargar el detalle: {consulta.error.message}</p>
       )}
-      {consulta.isSuccess && (
+      {consulta.isError && consulta.data !== undefined && (
+        <p role="alert" className="viejo">
+          Mostrando el último detalle que llegó: la actualización falló ({consulta.error.message}).
+        </p>
+      )}
+      {consulta.data !== undefined && (
         <dl>
           <dt>Estado</dt>
           <dd>
@@ -856,7 +863,9 @@ export function PanelDetalle({
 }
 ```
 
-The button is disabled and changes its text to “Revisando…” while `reintento.isPending` is true, so that no one sends the same `POST` five times out of impatience. If the mutation fails, `reintento.isError` displays the alert beneath the button. And notice that the detail query continues to use `isPending` and `isSuccess`, not `isFetching`: while the details are refetched following invalidation, the user continues seeing the previous data rather than a “Cargando detalle…” that erases it.
+The button is disabled and changes its text to “Revisando…” while `reintento.isPending` is true, so that no one sends the same `POST` five times out of impatience. If the mutation fails, `reintento.isError` displays the alert beneath the button. And notice that the detail query uses `isPending` and the presence of `data`, not `isFetching`: while the details are refetched following invalidation, the user continues seeing the previous data rather than a “Cargando detalle…” that erases it.
+
+The detail also renders the fifth state from 4.5. If the refresh fails but a detail was already there, `status` is `error` and `data` is still present; that is why the data block depends on `consulta.data !== undefined` and not on `consulta.isSuccess`, which in that case would be `false` and would make disappear exactly what the person needs in order to decide. With a detail that never arrived, on the other hand, only the error alert is shown, as in `ContenidoReporte`.
 
 #### 4.6.1 What happens when clicking “Volver a revisar”, measured
 
@@ -973,7 +982,7 @@ Read it in three parts:
 
 - **`getDerivedStateFromError`** is static: it has no access to `this`, only receives the error and returns the new state. React calls it during rendering, so it must be pure, just like any render (Lesson 1).
 - **`componentDidCatch`** is called later, once React has finished rendering, and therefore can perform side effects: here, logging the error and the component stack to the console. In a production system, this would be the place to send it to an error-tracking service.
-- **`render`** renders the alert if an error occurred, or the children if not. The button reloads the entire page: a render error is almost always a bug in the code, and there is nothing better to offer than starting over. Notice that the alert displays `error.message` as-is. Because it is rendered as text children in JSX, it does not open an XSS vulnerability, but it does expose the raw exception message to anyone, which might reveal internal details: field names, routes, query fragments. In this practice dashboard it aids debugging; in a public-facing application, it is better to display a generic message and keep details confined to `componentDidCatch` logging.
+- **`render`** renders the alert if an error occurred, or the children if not. The button reloads the entire page: a render error is almost always a bug in the code, and at the top level of the dashboard, starting over is the most direct way to recover a healthy tree. (A smaller boundary, around a single section, could offer to re-render only that part without losing what the person has in the rest; the course uses a single one, at the top.) A precision about the type: `getDerivedStateFromError(error: Error)` assumes that what was thrown is an `Error`, but in JavaScript anything can be thrown ([MDN, “throw”](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/throw)). If a child threw a bare string, `error.message` would be `undefined` and the alert would appear without a message. With that, the course's boundary stays short; Lesson 5 returns to the `unknown` type of what is thrown. Notice that the alert displays `error.message` as-is. Because it is rendered as text children in JSX, it does not open an XSS vulnerability, but it does expose the raw exception message to anyone, which might reveal internal details: field names, routes, query fragments. In this practice dashboard it aids debugging; in a public-facing application, it is better to display a generic message and keep details confined to `componentDidCatch` logging.
 
 What an error boundary does **not** catch is just as important as what it does catch. According to the same page: errors in event handlers (an `onClick` that throws), asynchronous code (a `setTimeout`, a dangling promise), server rendering, and errors within the boundary itself. The page adds an exception that you will encounter in [Lesson 7](07-formularios-accesibilidad.md): what is thrown inside a transition, such as a form action, does reach the boundary. That explains the division of responsibilities in this dashboard: a failed `fetch` is not a rendering error, it is data that failed to arrive, and Query handles it as state; the error boundary is reserved for what no one anticipated.
 
@@ -987,7 +996,7 @@ Using two terminals, just like in Lesson 0. In the first, the practice server; a
 08:11:23.119 servidor de práctica en http://127.0.0.1:3100 (escenario: normal)
 ```
 
-In the second, `npm run dev`, and open `http://localhost:5173/`. You should see the list of four services, the summary “4 servicios revisados · 2 servicios con falla”, “Actualizado a las…”, and every ten seconds, a momentary “· actualizando…” in the footer. Select `pagos`, wait for its details, and click “Volver a revisar”: the row turns green, then the details, and the button reverts to its original text. That is the log from 4.6.1.
+In the second, `npm run dev`, and open `http://localhost:5173/`. You should see the list of four services, the summary “4 servicios revisados · 2 servicios con falla”, “Actualizado a las…”, and every ten seconds, a momentary “· actualizando…” in the footer. Select `pagos`, wait for its details, and click “Volver a revisar”: the row turns green, then the details, and the button reverts to its original text. That is the log from 4.6.1. And one more check, on the row itself: the `pagos` button is a toggle button (`aria-pressed`, Lesson 2), so pressing it **again** closes the detail. It was measured in headless Chrome, driven through its debugging protocol: `aria-pressed` was `false` on opening, `true` after the first click (with the detail in view), `false` after the second (without the detail), and `true` after the third. With the earlier code, which always sent the name, the second click left it `true` and the detail open.
 
 Then, build and inspect the production version, with the server still running: `npm run build` and `npm run preview`, at `http://localhost:4173/`. This is what the log recorded when Chrome opened that version:
 
@@ -1015,7 +1024,7 @@ Actualizado a las 2:13:10 a.m.
 Actualizar
 ```
 
-Shut everything down with Ctrl+C. Finally, the checkpoint verification, the one that any automated CI run executes: `npm ci`, `npm run lint`, and `npm run build`, all three with exit code 0. The linter reported nothing, and the build produced the exact same filename that the course runs obtained on macOS and Linux: `index-BzO-N0-M.js`.
+Shut everything down with Ctrl+C. Finally, the checkpoint verification, the one that any automated CI run executes: `npm ci`, `npm run lint`, and `npm run build`, all three with exit code 0. The linter reported nothing, and the build produced the exact same filename that the course runs obtained on macOS and Linux: `index-CHheidKQ.js`.
 
 ## The error you will see
 
@@ -1095,7 +1104,7 @@ src/reporte/ContenidoReporte.tsx(35,11): error TS2339: Property 'estados' does n
 src/reporte/ContenidoReporte.tsx(42,32): error TS7006: Parameter 'estado' implicitly has an 'any' type.
 ```
 
-Without that `if`, `consulta.data` can be `undefined`—which is precisely the `pending` case—and TypeScript refuses to destructure it. The second error is a consequence of the first: not knowing what `estados` is, it also cannot know what each `estado` is. What is valuable here is that the warning arrives **before** running: in the browser, that oversight would be a `TypeError` during the initial render, exactly the kind of error that ends up in the error boundary from 4.8. The fix is not `consulta.data!.estados` nor `consulta.data?.estados ?? []`: the first lies, and the second turns “I don't know yet” into “there are no services”, which is the fourth state and means something completely different. The fix is rendering the `pending` case.
+Without that `if`, `consulta.data` can be `undefined`—which is precisely the `pending` case—and TypeScript refuses to destructure it. (Both warnings depend on `"strict": true` in the `tsconfig`, the one set in Lesson 0: without it, `undefined` would slip through without complaint.) The second error is a consequence of the first: not knowing what `estados` is, it also cannot know what each `estado` is. What is valuable here is that the warning arrives **before** running: in the browser, that oversight would be a `TypeError` during the initial render, exactly the kind of error that ends up in the error boundary from 4.8. The fix is not `consulta.data!.estados` nor `consulta.data?.estados ?? []`: the first lies, and the second turns “I don't know yet” into “there are no services”, which is the fourth state and means something completely different. The fix is rendering the `pending` case.
 
 ## What gets done wrong
 
@@ -1172,9 +1181,10 @@ Under the “catálogo” heading, the details **for `pagos`** appear: “En fal
 ## How do I know I succeeded
 
 - [ ] `npm ls @tanstack/react-query`, inside `~/curso-react/revisor/`, prints `@tanstack/react-query@5.104.5`, and `src/` no longer contains `useReporte.ts` or `useDetalle.ts`.
-- [ ] `npm run lint` finishes without reporting any issues, and `npm run build` finishes with `✓ built` leaving in `dist/assets/` a file named `index-BzO-N0-M.js`: if your code is identical to the checkpoint, the filename matches.
+- [ ] `npm run lint` finishes without reporting any issues, and `npm run build` finishes with `✓ built` leaving in `dist/assets/` a file named `index-CHheidKQ.js`: if your code is identical to the checkpoint, the filename matches.
 - [ ] `node fig04_01.js` prints `1 llamada(s)` upon opening and `0 llamada(s)` upon returning in the Query half, and you can explain where each number comes from.
 - [ ] With `ESCENARIO=vacio`, the dashboard says “No hay servicios configurados todavía.”; with `ESCENARIO=caido`, it displays the alert with “Reintentar” and the log records three `503`s (plus, if it gets through in time, a `cancelada por el cliente` beforehand).
+- [ ] In the browser, the `pagos` row button toggles: one click shows the detail (`aria-pressed="true"`) and a second click hides it (`aria-pressed="false"`).
 - [ ] Under the normal scenario, clicking “Volver a revisar” on `pagos` logs a `POST /api/servicios/pagos/reintento 200` followed by a `GET /api/estados 200` and a `GET /api/servicios/pagos 200`, and the row for `pagos` turns green without clicking “Actualizar”.
 - [ ] You can name the five combinations of `status` and `fetchStatus` from figure 2 and identify which one prints “· actualizando…” in the footer.
 - [ ] With `npm run preview`, opening the page produces a single `GET /api/estados` request in the log.
@@ -1232,4 +1242,4 @@ Answer without looking at the lesson:
 
 ---
 
-**Next:** [Lesson 5 — Routes and the URL as State](05-rutas-url-como-estado.md)
+**Next:** [Lesson 5 — Routes and the URL as state](05-rutas-url-como-estado.md)

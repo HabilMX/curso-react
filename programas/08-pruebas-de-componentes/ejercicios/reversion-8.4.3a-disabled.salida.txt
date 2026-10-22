@@ -1,0 +1,52 @@
+$ npx vitest run --reporter=default src/alta
+
+ RUN  v5.0.5 ~/curso-react/revisor
+
+stderr | src/alta/FormularioAlta.test.tsx > el formulario de alta > el foco no se pierde al enviar y un segundo envío se ignora
+A suspended resource finished loading inside a test, but the event was not wrapped in act(...).
+
+When testing, code that resolves suspended data should be wrapped into act(...):
+
+act(() => {
+  /* finish loading suspended data */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ❯ src/alta/FormularioAlta.test.tsx (5 tests | 1 failed) 669ms
+   ❯ el formulario de alta (5)
+     ✓ sin datos marca los tres campos y lo anuncia 186ms
+     ✓ con datos válidos envía el alta y confirma 193ms
+     ✓ declara los obligatorios y la bandeja anuncia solo el aviso nuevo 19ms
+     × el foco no se pierde al enviar y un segundo envío se ignora 142ms
+     ✓ un nombre repetido se marca en su campo con el mensaje de la API 127ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/alta/FormularioAlta.test.tsx > el formulario de alta > el foco no se pierde al enviar y un segundo envío se ignora
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/alta/FormularioAlta.test.tsx:82:48
+     80|     // jsdom no saca el foco de un botón desactivado (Chrome sí: lo ma…
+     81|     // que se comprueba la causa: el botón sigue habilitado y anuncia …
+     82|     expect(pendiente.hasAttribute("disabled")).toBe(false);
+       |                                                ^
+     83|     expect(pendiente.getAttribute("aria-disabled")).toBe("true");
+     84|     expect(document.activeElement).toBe(pendiente);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  09:10:03
+   Duration  2.17s (environment 44%, tests 32%, transform 11%, import 7%, setup 5%)
+
+[código de salida: 1]

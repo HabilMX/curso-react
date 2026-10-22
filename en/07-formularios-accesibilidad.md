@@ -1,4 +1,4 @@
-# Lesson 7 — Forms, Actions, and Accessibility
+# Lesson 7 — Forms, actions, and accessibility
 
 *It is 5:52 PM on a Friday and the change freeze is at 6:00 PM. The operations team needs to register the `correo` service in the internal tool before leaving, and the person on call is Raúl, who works with a screen reader. He fills in the three fields, presses Enter, and hears nothing. He presses Enter again: nothing. He does not know whether the registration went through, whether it went through twice, or whether the form is waiting for something. What happened is that the address did not start with `https://`: the page painted the field red and wrote the error below it, in a text nobody connected to the field or to an announcement. For anyone looking at the screen, the error was obvious. For Raúl it did not exist. Eight minutes left. The form he needs is the one this lesson builds, and the second Enter, the one nobody heard, is the one you are going to fix in exercise 3.*
 
@@ -12,14 +12,14 @@
 
 **What this lesson does not do.** It does not use any form or validation library: everything comes from React and from the schema you already know, on purpose, so you can see what each piece solves. It does not use Server Functions or Server Components: `<form action>` receives here a function that runs in the browser (why the dashboard does not use Server Components is discussed in [Lesson 9](09-rendimiento-publicacion.md)). It does not add automated tests: the form's behavior is shown with figures that run in a test DOM and with the checkpoint open in a browser. And it is not an accessibility course: it teaches what this form needs, against the sources that define it, and names what cannot be verified without a person and a screen reader.
 
-**About the runs.** Everything was run on October 21, 2026 with Node.js 24.22.0 and npm 11.19.1, on macOS, with the exact versions from this lesson's `package.json`. The checkpoints of this lesson and the next two were installed from scratch with `npm ci`, and `npm run lint` and `npm run build` finished cleanly; this lesson's produced `dist/assets/index-WLyq37jn.js`. It was not repeated in a Linux container. The compiler error in “The error you will see” was triggered in a copy of the checkpoint, not in the original. The figures were run with their own `package.json` in [`programas/07-formularios-accesibilidad/`](../programas/07-formularios-accesibilidad), alongside `revisor/`; they are compiled with `tsc` and run with `node`, as in previous lessons, and they add a single new dependency, `dom-accessibility-api` 0.7.1, which computes an element's accessible name and description following the W3C specification. What is seen “in the browser” was measured with headless Chrome: the HTML of `/servicios/nuevo` with `--headless --dump-dom` against `vite preview`, and the accessibility tree, focus, and live regions by driving Chrome through its debugging protocol (*Chrome DevTools Protocol*) with a Node script, against `npm run dev` and the practice API. Those runs used ports 4107, 5107, and 3107 instead of 4173, 5173, and 3100, because other things were running on the machine at the same time; to point the *proxy* to the API on 3107, `vite.config.ts` was changed in a **copy** of the checkpoint, not in the original. Nothing changes for you. The “before” measurements were taken with the form as it was before this lesson's fixes (success announced twice, no `required`, no `aria-atomic` on the tray, no `startTransition`, and `disabled={pending}` on the button), in that same copy; the “after” ones, with the checkpoint. It was not run on a real Linux Mint; nothing shown depends on the OS. **What was not measured**, and is stated where it appears: how the form sounds in a real screen reader (NVDA, Orca, or VoiceOver) and going through it with the keyboard in a real window. Those two checks are in “How I know I got it”, with step-by-step instructions to do them by hand. Long paths are shown starting from `~/curso-react`.
+**About the runs.** Everything was run on October 21, 2026 with Node.js 24.22.0 and npm 11.19.1, on macOS, with the exact versions from this lesson's `package.json`. The checkpoints of this lesson and the next two were installed from scratch with `npm ci`, and `npm run lint` and `npm run build` finished cleanly; this lesson's produced `dist/assets/index-C_lOH5GL.js`. The checkpoint was also installed from scratch with `npm ci` in a Linux container (Debian 12, official `node:24.22.0-bookworm` image), where `npm run lint` and `npm run build` finished cleanly. The filename above was measured again on October 22, 2026, on macOS only. The compiler error in “The error you will see” was triggered in a copy of the checkpoint, not in the original. The figures were run with their own `package.json` in [`programas/07-formularios-accesibilidad/`](../programas/07-formularios-accesibilidad), alongside `revisor/`; they are compiled with `tsc` and run with `node`, as in previous lessons, and they add a single new dependency, `dom-accessibility-api` 0.7.1, which computes an element's accessible name and description following the W3C specification. What is seen “in the browser” was measured with headless Chrome: the HTML of `/servicios/nuevo` with `--headless --dump-dom` against `vite preview`, and the accessibility tree, focus, and live regions by driving Chrome through its debugging protocol (*Chrome DevTools Protocol*) with a Node script, against `npm run dev` and the practice API. Those runs used ports 4107, 5107, and 3107 instead of 4173, 5173, and 3100, because other things were running on the machine at the same time; to point the *proxy* to the API on 3107, `vite.config.ts` was changed in a **copy** of the checkpoint, not in the original. Nothing changes for you. The “before” measurements were taken with the form as it was before this lesson's fixes (success announced twice, no `required`, no `aria-atomic` on the tray, no `startTransition`, and `disabled={pending}` on the button), in that same copy; the “after” ones, with the checkpoint. It was not run on a real Linux Mint; nothing shown depends on the OS. **What was not measured**, and is stated where it appears: how the form sounds in a real screen reader (NVDA, Orca, or VoiceOver) and going through it with the keyboard in a real window. Those two checks are in “How I know I got it”, with step-by-step instructions to do them by hand. Long paths are shown starting from `~/curso-react`. The practice server (the same file since Lesson 4) responds `400` with `{"detalle":"nombre de servicio inválido"}` to an address with a malformed `%`, such as `/api/servicios/%`, and to its `/reintento` route; it used to respond `500`. It was measured with `curl` against a copy, before and after, and the process stayed alive in both cases.
 
 ## By the end you will be able to
 
 - Explain the difference between a controlled and an uncontrolled field, trigger React's warning for a `value` without `onChange`, and decide which of the two suits a form that is submitted as a whole.
 - Wire a `<form action>` to `useActionState`, read in the state what the last action returned, and show “Dando de alta…” with `useFormStatus` from a child component of the form.
 - Show with a figure that React clears uncontrolled fields after an action, and keep what was typed when there were errors.
-- Validate the three fields with a schema that collects **all** the errors, and verify with the compiler that the schema and the `NuevoServicio` type cannot diverge.
+- Validate the three fields with a schema that collects **all** the errors, and verify with the compiler that the schema and the `NuevoServicio` type cannot drift apart without `tsc` noticing.
 - Mark an invalid field with `aria-invalid` and `aria-describedby`, and measure with a figure the accessible name and description a screen reader receives.
 - Choose between `role="status"` and `role="alert"` for a notice, and explain with the specification why the live region has to exist **before** the message arrives.
 - Read in Chrome's accessibility tree whether a field is required or invalid and whether a live region is read in full, before and after a change.
@@ -55,7 +55,7 @@ A browser `<input>` has its own value. If you type in it, the value changes with
 - **Uncontrolled.** You write `<input defaultValue="correo" />`. React sets the **initial** value and then steps aside: what the person types lives in the DOM element, and you read it when you need it (when submitting, for example). The documentation says it precisely: even if you pass an initial value, your JSX “only specifies the initial value. It does not control what the value should be right now.”
 - **Controlled.** You write `<input value={nombre} onChange={…} />`. React forces the field to **always** show the value you pass it. Every keystroke fires `onChange`, you update the state, React re-renders, and the field shows the new value. If you do not update the state, the field does not change.
 
-The first figure puts both side by side, plus a third that badly mixes the two ideas: a `value` without `onChange`. In all three, the figure “types” `correo2` as a person would (it changes the value and fires the `input` event) and reads what was left. The controlled one has a twist to make it obvious who is in charge: its `onChange` stores the text in uppercase.
+The first figure puts both side by side, plus a third that badly mixes the two ideas: a `value` without `onChange`. In all three, the figure “types” `correo2` as a person would (it changes the value and fires the `input` event) and reads what was left. The controlled one also carries an `<output>` that shows the same value in uppercase, to make visible the difference between what the state **stores** and what the screen **computes** from it.
 
 ```tsx
 // fig07_01.tsx
@@ -94,8 +94,8 @@ function Controlado() {
   const [nombre, establecerNombre] = useState("correo");
   return (
     <>
-      <input aria-label="controlado" value={nombre} onChange={(e) => establecerNombre(e.target.value.toUpperCase())} />
-      <output>{nombre}</output>
+      <input aria-label="controlado" value={nombre} onChange={(e) => establecerNombre(e.target.value)} />
+      <output>{nombre.toUpperCase()}</output>
     </>
   );
 }
@@ -117,7 +117,9 @@ async function probar(titulo: string, arbol: React.ReactNode, texto: string): Pr
   }
 
   await act(async () => escribir(campo, texto));
-  console.log(`  escribí «${texto}» → el campo dice «${campo.value}»`);
+  const salida = contenedor.querySelector("output");
+  const derivado = salida === null ? "" : `; el <output> dice «${salida.textContent}»`;
+  console.log(`  escribí «${texto}» → el campo dice «${campo.value}»${derivado}`);
   await act(async () => raiz.unmount());
   contenedor.remove();
 }
@@ -133,7 +135,7 @@ $ node fig07_01.js
 1. no controlado (defaultValue):
   escribí «correo2» → el campo dice «correo2»
 2. controlado (value + onChange):
-  escribí «correo2» → el campo dice «CORREO2»
+  escribí «correo2» → el campo dice «correo2»; el <output> dice «CORREO2»
 3. value sin onChange:
   [aviso de React] You provided a `value` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultValue`. Otherwise, set either `onChange` or `readOnly`.
   escribí «correo2» → el campo dice «correo»
@@ -142,7 +144,7 @@ $ node fig07_01.js
 Read the three lines from bottom to top, which is the best way to understand them:
 
 - **The third** received `correo2` and went back to `correo`. React put it back, because `value="correo"` says the field is `correo` **always**, and nobody changes that value. Before that, React warned in the console with a message worth reading in full: you provided a `value` without `onChange`, which makes the field read-only; if it should be able to change, use `defaultValue`; if not, add `onChange` or `readOnly`. It is this section's warning, and its fix depends on what you wanted.
-- **The second** received `correo2` and shows `CORREO2`. The field's value is the one **your** state decided, not the one that was typed. That is “controlled”: you can transform, reject, or limit each keystroke.
+- **The second** received `correo2`, the field shows `correo2`, and the `<output>` shows `CORREO2`. The field says what **your** state says: `onChange` stored `e.target.value` as is and React rendered again with that value. That is “controlled”: the screen knows every keystroke at the moment it happens, and with it can compute whatever it wants—an uppercase version, a letter count, whether the button is enabled. The uppercase is **computed** while rendering, in the `<output>`; it is not stored, by the same rule as [Lesson 2](02-estado-instantanea-forma.md): what can be computed is not stored. And there is a stronger reason not to store it. The temptation is to write `establecerNombre(e.target.value.toUpperCase())` so that the field itself “corrects” as you type, and the `<input>` documentation uses exactly that line as an example of a **mistake**: a controlled field must update its state with `e.target.value`, synchronously, and with nothing else; otherwise the caret may jump to the beginning on every keystroke ([React, `<input>`, “My input caret jumps to the beginning on every keystroke”](https://react.dev/reference/react-dom/components/input#my-input-caret-jumps-to-the-beginning-on-every-keystroke)). This figure does not trigger it, because it “types” the word in one stroke and not key by key with the caret in the middle of a word; that is precisely why the rule is learned from the documentation and not from a run that comes out fine. If a value must end up in uppercase, normalize it on submit, not on every keystroke.
 - **The first** received `correo2` and shows `correo2`. React did not intervene.
 
 There is a fourth case the figure does not trigger, but the documentation names: a field cannot switch from uncontrolled to controlled during its lifetime. If a `value` starts as `undefined` (for example, because the state does not have data yet) and later receives a string, React warns that a component “is changing an uncontrolled input to be controlled”. The fix is for `value` to be a string from the first render, even if it is `""`.
@@ -535,7 +537,7 @@ The `enviar` function follows the order of a boundary, the same one `cargarRepor
 
 #### 7.2.8 Validating with the schema: all the errors at once
 
-The schema comes from the TypeScript course almost unchanged. An `Esquema<T>` is an object with a `leer` method that receives `unknown` and returns a result: either a value of type `T`, or an error detail. `Inferir` extracts the type `T` from a schema, so you do not write it twice. Added to the schemas from there are two this form needs: `urlHttp`, which accepts only `http:` or `https:` addresses and normalizes them with `URL`, and `enteroPositivoDeTexto`, which reads a number written as text, because **everything that comes out of a `FormData` is text**.
+The schema comes from the TypeScript course almost unchanged. An `Esquema<T>` is an object with a `leer` method that receives `unknown` and returns a result: either a value of type `T`, or an error detail. `Inferir` extracts the type `T` from a schema, so you do not write it twice. Added to the schemas from there are two this form needs: `urlHttp`, which accepts only `http:` or `https:` addresses and normalizes them with `URL`, and `enteroPositivoDeTexto`, which reads a number written as text, because **everything that comes out of a `FormData` is text**. On top of that, `urlHttp` rejects an address that carries a user or a password, such as `https://usuario:clave@correo.example/`: that data is a secret. Its message, «quita el usuario y la clave de la dirección» (remove the user and the password from the address), says what to fix **without repeating the address**, because the message is painted next to the field and an error is no place for a secret. The practice server rejects the same thing, with the same message, in its `400`.
 
 ```ts
 // revisor/src/compartido/esquema.ts
@@ -569,6 +571,12 @@ export const urlHttp: Esquema<string> = {
       const url = new URL(valor.trim());
 
       if (url.protocol === "http:" || url.protocol === "https:") {
+        // Usuario y clave en la dirección son un secreto: se rechazan, y el mensaje
+        // no repite la dirección, porque terminaría pintado junto al campo.
+        if (url.username !== "" || url.password !== "") {
+          return { ok: false, detalle: "quita el usuario y la clave de la dirección" };
+        }
+
         return { ok: true, valor: url.href };
       }
     } catch {
@@ -643,6 +651,9 @@ const urlHttp: Esquema<string> = {
     try {
       const url = new URL(String(v).trim());
       if (url.protocol === "http:" || url.protocol === "https:") {
+        if (url.username !== "" || url.password !== "") {
+          return { ok: false, detalle: "quita el usuario y la clave de la dirección" };
+        }
         return { ok: true, valor: url.href };
       }
     } catch {
@@ -726,7 +737,7 @@ export type ValoresAlta = ValoresDe<typeof camposAlta>;
 export type ErroresAlta = ErroresDe<typeof camposAlta>;
 export type TextosAlta = Readonly<Record<keyof typeof camposAlta, string>>;
 
-// Si el contrato y el esquema dejan de coincidir, esta línea deja de compilar.
+// Si el tipo que la API espera y el esquema dejan de coincidir, esta línea deja de compilar.
 export const comprobarContrato: (valores: ValoresAlta) => NuevoServicio = (valores) => valores;
 ```
 
@@ -951,6 +962,8 @@ sin relaciones:
 ```
 
 What a screen reader reads when it reaches the field is, in essence, those two lines plus the role and the state: “Nombre, edit text, invalid, escribe un valor. Un nombre corto y único, por ejemplo: correo”. The version without relationships has an **empty name and an empty description**: visually it says the same thing, but for someone who cannot see the screen it is a nameless text field. That is the opening scene, measured. (The figure computes what **the specification** says the browser must expose; how each screen reader pronounces it cannot be measured with a run, and is checked by hand.)
+
+An improvement the checkpoint does not include, because it does not change the accessible name or description: the time-limit field is of type `text` and asks for a whole number, and on a phone the keyboard that appears is the letters one. The `inputmode="numeric"` attribute asks the browser for the numeric keyboard ([MDN, `inputmode`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/inputmode)); in JSX it is written `inputMode`. Adding it would require one more property on `Campo`, and it is a good extra exercise if you are going to use the form from a phone.
 
 There are three decisions in the component that have a source:
 
@@ -1242,9 +1255,9 @@ rendering chunks...
 computing gzip size...
 dist/index.html                   0.39 kB │ gzip:   0.26 kB
 dist/assets/index-BBxlOd8Z.css    1.50 kB │ gzip:   0.66 kB
-dist/assets/index-WLyq37jn.js   366.82 kB │ gzip: 114.40 kB
+dist/assets/index-C_lOH5GL.js   367.12 kB │ gzip: 114.47 kB
 
-✓ built in 312ms
+✓ built in 239ms
 ```
 
 #### 7.4.2 The review, point by point
@@ -1336,7 +1349,7 @@ src/alta/estadoFormulario.ts(21,56): error TS2353: Object literal may only speci
 código de salida: 1
 ```
 
-You renamed one key and the compiler found six places in four files where that breaks something, and it ended with code 1. That code is what matters: it is why `npm run build`, which is `tsc -b && vite build`, never reaches `vite build`. They read in two groups. The two `TS2741` errors say the same thing from two places: `ValoresAlta` no longer has `timeoutMs`, so it cannot be used as `NuevoServicio`. One is in `esquemaAlta.ts(21,…)`, which is `comprobarContrato`, and the other in `FormularioAlta.tsx(40,…)`, the call to `darDeAlta(validacion.valor)`. The other four are places that still write `timeoutMs` by hand (the two attributes of the time-limit `Campo` in `FormularioAlta`, `textosDe`, and `erroresDe`) and that no longer match the types derived from the schema. Without those derived types, the form would send the API a body with `tiempoMs` and the API would respond `400` for a `timeoutMs` field the form no longer knows how to show. With them, the error appears before anything runs. `comprobarContrato` is the line that guarantees that warning even if someday nobody else calls `darDeAlta` with the schema's values.
+You renamed one key and the compiler found six places in four files where that breaks something, and it ended with code 1. That code is what matters: it is why `npm run build`, which is `tsc -b && vite build`, never reaches `vite build`. They read in two groups. The two `TS2741` errors say the same thing from two places: `ValoresAlta` no longer has `timeoutMs`, so it cannot be used as `NuevoServicio`. One is in `esquemaAlta.ts(21,…)`, which is `comprobarContrato`, and the other in `FormularioAlta.tsx(40,…)`, the call to `darDeAlta(validacion.valor)`. The other four are places that still write `timeoutMs` by hand (the two attributes of the time-limit `Campo` in `FormularioAlta`, `textosDe`, and `erroresDe`) and that no longer match the types derived from the schema. Without those derived types, the form would send the API a body with `tiempoMs` and the API would respond `400` for a `timeoutMs` field the form no longer knows how to show. With them, the error appears before anything runs. `comprobarContrato` is the line that keeps that warning even if someday nobody else calls `darDeAlta` with the schema's values. Beware of what it does not cover: it compares TypeScript types at compile time, so it does not detect that the real API changes its shape later; that is what the run-time guard at the network boundary (7.2.9) is for.
 
 **The silent one: `useFormStatus` in the wrong component.** If you move `useFormStatus` to `FormularioAlta` to “save yourself a component”, `pending` is always `false`: the button never says “Dando de alta…”, is never marked as unavailable, and never ignores the second submission, so a double click submits twice. There is no warning in the console or in the linter. Figure 3 measured it (`mismo=false` in both runs) and the documentation flags it as a caveat. The fix is the checkpoint's: the hook goes in a component rendered **inside** the `<form>`.
 
@@ -1419,7 +1432,7 @@ One way is for the `con-errores` state to carry a submission counter and for the
 </div>
 ```
 
-With a different `key` on each submission, React does not reuse the `<p>`: it removes the old one and inserts a new one, and the `alert` region changes even though the text is the same. When you adapt figure 5 (giving the `<p>` a `key={envio}`), the second submission must count changes, not `0`. Notice that `enviar`'s first argument, which the checkpoint ignores under the name `_previo`, is exactly the one that provides the counter: it is the previous state `useActionState` hands you. If you use it, remove the underscore from its name, because it is no longer an ignored argument.
+With a different `key` on each submission, React does not reuse the `<p>`: it removes the old one and inserts a new one, and the `alert` region changes even though the text is the same. What this demonstrates is a change in the DOM, which is what figure 5 measures; whether a particular screen reader pronounces again a text identical to one it just said depends on the reader and the browser, and was not measured here: check it by hand with the one you use, as in the screen reader checkbox of “How I know I got it”. When you adapt figure 5 (giving the `<p>` a `key={envio}`), the second submission must count changes, not `0`. Notice that `enviar`'s first argument, which the checkpoint ignores under the name `_previo`, is exactly the one that provides the counter: it is the previous state `useActionState` hands you. If you use it, remove the underscore from its name, because it is no longer an ignored argument.
 
 ### Solution 4
 
@@ -1427,7 +1440,7 @@ The panel shows the same as the `Accessibility.getFullAXTree` readings in 7.4.2,
 
 ## How I know I got it
 
-- [ ] `npm ci`, `npm run lint`, and `npm run build` finish cleanly inside `~/curso-react/revisor/`, and `npm run build` produces `dist/assets/index-WLyq37jn.js` if your code is identical to the checkpoint's.
+- [ ] `npm ci`, `npm run lint`, and `npm run build` finish cleanly inside `~/curso-react/revisor/`, and `npm run build` produces `dist/assets/index-C_lOH5GL.js` if your code is identical to the checkpoint's.
 - [ ] With `npm run dev`, opening `http://localhost:5173/servicios/nuevo` shows the “Dar de alta” link marked as current in the navigation and the form with three fields; in the developer tools, each field has `aria-invalid="false"` and `aria-describedby` with its help text.
 - [ ] Submitting empty marks the three fields, writes “Revisa los campos marcados.”, and, in the network tab, **no** request to `/api/servicios` appears.
 - [ ] With the practice server running, registering `correo` with `https://correo.example` and `1500` shows “Se dio de alta correo” in the notice tray (and nowhere else), adds the row in “Altas de esta sesión”, leaves the fields empty, and the list at `/` now includes `correo`.
@@ -1458,7 +1471,7 @@ Answer without looking at the lesson:
 - [React, `useActionState`](https://react.dev/reference/react/useActionState): the signature, the action's two arguments, the state's type, the error boundary if the action throws, and why it is not called twice under `StrictMode`. Consulted on October 21, 2026.
 - [React, `useFormStatus`](https://react.dev/reference/react-dom/hooks/useFormStatus): `pending`, `data`, `method`, and `action`, and why it only reports on the parent `<form>`. Consulted on October 21, 2026.
 - [React, `useOptimistic`](https://react.dev/reference/react/useOptimistic): the optimistic state that only exists while the action is in progress and the warning if it is changed outside an action. Consulted on October 21, 2026.
-- [React, `<input>`](https://react.dev/reference/react-dom/components/input): controlled and uncontrolled fields, `defaultValue`, the warning for `value` without `onChange`, and switching from uncontrolled to controlled. Consulted on October 21, 2026.
+- [React, `<input>`](https://react.dev/reference/react-dom/components/input): controlled and uncontrolled fields, `defaultValue`, the warning for `value` without `onChange`, switching from uncontrolled to controlled, and why state is updated with `e.target.value` and not with a transformation of it. Consulted on October 21, 2026.
 - [W3C, “Accessible Rich Internet Applications (WAI-ARIA) 1.2”](https://www.w3.org/TR/wai-aria-1.2/): the `status` and `alert` roles with their implicit values, and the `aria-invalid`, `aria-describedby`, and `aria-required` attributes. Consulted on October 21, 2026.
 - [W3C, “Using ARIA”](https://www.w3.org/TR/using-aria/): the first and second rules of ARIA use. Consulted on October 21, 2026.
 - [W3C, “ARIA Authoring Practices Guide: Read Me First”](https://www.w3.org/WAI/ARIA/apg/practices/read-me-first/): “No ARIA is better than Bad ARIA” and why roles do not add keyboard behavior. Consulted on October 21, 2026.
@@ -1494,4 +1507,4 @@ Answer without looking at the lesson:
 
 ---
 
-**Next:** [Lesson 8 — Component Tests](08-pruebas-de-componentes.md)
+**Next:** [Lesson 8 — Component tests](08-pruebas-de-componentes.md)

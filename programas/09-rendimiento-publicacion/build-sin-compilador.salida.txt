@@ -1,0 +1,13 @@
+$ npx vite build
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 191 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.39 kB │ gzip:   0.26 kB
+dist/assets/index-CbqUABMA.css    1.27 kB │ gzip:   0.59 kB
+dist/assets/index-DuGgkiHN.js   367.32 kB │ gzip: 114.56 kB
+
+✓ built in 263ms
+$ grep -o memo_cache_sentinel dist/assets/*.js | wc -l      # sin el compilador
+       1

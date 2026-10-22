@@ -1,0 +1,5 @@
+# Corrido el 21-oct-2026 con Node.js 24.22.0 (macOS), sobre una copia del punto de control. Rutas mostradas a partir de ~/curso-react.
+$ node medir.mjs alternar    # punto de control construido, servido con vite preview
+a. eliges pagos: Detalle de pagos · aria-pressed: true
+b. pulsas pagos otra vez: ¿hay detalle? false · aria-pressed: false
+c. eliges pagos y luego reportes: Detalle de reportes · pagos aria-pressed: false

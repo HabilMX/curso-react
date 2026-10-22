@@ -1,6 +1,6 @@
 # Leçon 2 — État : instantané, immuabilité et forme
 
-*Il est 18 h 05 et l'astreinte de nuit commence à 18 h 30. Avant de partir, tu veux laisser à ta collègue une note dans le `revisor` : « pagos : le fournisseur indique qu'il revient à 20 h 00, ne pas escalader ». Tu choisis `pagos`, tu écris la note, tu l'enregistres… et la ligne ne bouge pas. Tu repasses mentalement ce que tu as fait : le code ajoute la note à l'objet des notes et l'enregistre à nouveau dans l'état. La note est bien là, en mémoire ; la console le confirme. Mais l'écran n'en sait rien. Dix secondes plus tard arrive la scrutation suivante, le panneau s'affiche à nouveau et, tout à coup, la mention « con nota » apparaît, comme si quelqu'un l'avait posée à contretemps. Et en choisissant `reportes`, la zone de texte indique toujours « pagos : le fournisseur indique qu'il revient… ». Si ta collègue enregistre sans lire, la note de `pagos` finit collée dans `reportes`. Il reste vingt-cinq minutes. Les deux dysfonctionnements proviennent de la même erreur : penser l'état de React comme une variable que l'on modifie. Il n'en est rien : c'est une photographie que l'on remplace, et React la conserve à un endroit précis de l'arbre. Cette leçon explique cette phrase et la traduit en code.*
+*Il est 18 h 05 et l'astreinte de nuit commence à 18 h 30. Avant de partir, tu veux laisser à ta collègue une note dans le `revisor` : « pagos : le fournisseur indique qu'il revient à 20 h 00, ne pas escalader ». Tu choisis `pagos`, tu écris la note, tu l'enregistres… et la ligne ne bouge pas. Tu repasses mentalement ce que tu as fait : le code ajoute la note à l'objet des notes et l'enregistre à nouveau dans l'état. La note est bien là, en mémoire ; la console le confirme. Mais l'écran n'en sait rien. Dix secondes plus tard arrive l'interrogation périodique suivante (polling), le panneau s'affiche à nouveau et, tout à coup, la mention « con nota » apparaît, comme si quelqu'un l'avait posée à contretemps. Et en choisissant `reportes`, la zone de texte indique toujours « pagos : le fournisseur indique qu'il revient… ». Si ta collègue enregistre sans lire, la note de `pagos` finit collée dans `reportes`. Il reste vingt-cinq minutes. Les deux dysfonctionnements proviennent de la même erreur : penser l'état de React comme une variable que l'on modifie. Il n'en est rien : c'est une photographie que l'on remplace, et React la conserve à un endroit précis de l'arbre. Cette leçon explique cette phrase et la traduit en code.*
 
 **Durée :** 2 × 45 min (la coupure naturelle se situe entre les sections 2.3 et 2.4)
 
@@ -12,7 +12,7 @@
 
 **Ce que cette leçon ne fait pas.** Elle n'apporte pas de nouvelles données depuis l'API : le détail d'un service se construit avec ce qui est déjà arrivé dans le rapport, et demander à l'API le détail d'un seul service fait l'objet de la [Leçon 3](03-effects-sincronizar.md), avec sa concurrence entre les réponses (*race condition*). Les notes vivent en mémoire : si tu recharges la page, elles sont perdues, et c'est très bien ainsi pour le moment. Le filtre et la sélection ne voyagent pas non plus dans l'adresse de la page ; le fait qu'un filtre puisse être partagé en copiant le lien relève de la [Leçon 5](05-rutas-url-como-estado.md). Il n'y a ni contexte ni réducteur (*reducer*), qui font l'objet de la [Leçon 6](06-reducer-contexto.md), ni formulaires avec `action`, qui font l'objet de la [Leçon 7](07-formularios-accesibilidad.md). Et il n'y a aucun nouvel Effect : la leçon entière se résout avec `useState`, des calculs pendant le rendu et une `key`.
 
-**À propos des exécutions.** Tout a été exécuté le 21 octobre 2026 avec Node.js 24.22.0 et npm 11.19.1, sous macOS, avec les versions exactes du `package.json` de cette leçon (React 19.3.1, Vite 8.3.5, TypeScript 7.0.2 pour `tsc`, ESLint 10.13.0 et `eslint-plugin-react-hooks` 7.1.1). Comme le cours suppose Linux Mint, ce point de contrôle a été réinstallé depuis zéro dans un conteneur `node:24.22.0-bookworm` et a produit le même nom de fichier dans `dist/` que celui visible ici, `index-FUlywxKd.js` ; il n'a pas été exécuté sur un vrai Linux Mint, mais rien de ce qui est montré ne dépend du système. Sous macOS, `npm ci` affiche en outre un avertissement concernant `install-scripts` : il fait référence à `fsevents`, un paquet optionnel qui ne s'installe que sous macOS et qui n'apparaît pas sur ton Mint ; il n'est pas nécessaire de l'approuver. Les figures sont exécutées dans `~/curso-react/figuras/`, le même dossier que dans les leçons précédentes ; leur `package.json` ne change pas. Elles sont compilées avec `tsc` et exécutées avec `node` sur un DOM de test (jsdom), comme dans la leçon 0. Ce que l'on voit « dans le navigateur » a été mesuré avec Chrome sans interface graphique (`--headless`), piloté par un script qui clique sur les boutons et lit la page via le protocole de débogage de Chrome : c'est un vrai navigateur exécutant le JavaScript de `dist/`, pas une simulation. Le script se trouve aux côtés des figures, dans `medir.mjs`, et son premier commentaire explique comment le lancer ; si tu préfères, effectue les mêmes étapes manuellement dans ton navigateur et tu devrais observer la même chose. Les longs chemins affichés par ESLint et `tsc` sont présentés à partir de `~/curso-react`, et dans une sortie d'ESLint, les espaces d'alignement de la colonne de règle ont été raccourcis. Les erreurs de « L'erreur que tu vas voir » ont été provoquées dans une copie du point de contrôle, jamais dans l'original, qui, une fois tout cela terminé, a de nouveau passé `npm ci`, `npm run lint` et `npm run build`. Les programmes se trouvent dans [`programas/02-estado-instantanea-forma/`](../programas/02-estado-instantanea-forma) : `revisor/` est le point de contrôle et les figures se trouvent à ses côtés.
+**À propos des exécutions.** Tout a été exécuté le 21 octobre 2026 avec Node.js 24.22.0 et npm 11.19.1, sous macOS, avec les versions exactes du `package.json` de cette leçon (React 19.3.1, Vite 8.3.5, TypeScript 7.0.2 pour `tsc`, ESLint 10.13.0 et `eslint-plugin-react-hooks` 7.1.1). Comme le cours suppose Linux Mint, ce point de contrôle a été réinstallé depuis zéro dans un conteneur `node:24.22.0-bookworm` et a produit le même nom de fichier dans `dist/` que celui visible ici, `index-7jh0TEYR.js` ; il n'a pas été exécuté sur un vrai Linux Mint, mais rien de ce qui est montré ne dépend du système d'exploitation, sauf l'avertissement de `fsevents` qui suit. Sous macOS, `npm ci` affiche en outre un avertissement concernant `install-scripts` : il fait référence à `fsevents`, un paquet optionnel qui ne s'installe que sous macOS et qui n'apparaît pas sur ton Mint ; il n'est pas nécessaire de l'approuver. Les figures sont exécutées dans `~/curso-react/figuras/`, le même dossier que dans les leçons précédentes ; leur `package.json` ne change pas. Elles sont compilées avec `tsc` et exécutées avec `node` sur un DOM de test (jsdom), comme dans la leçon 0. Ce que l'on voit « dans le navigateur » a été mesuré avec Chrome en mode headless (`--headless`), piloté par un script qui clique sur les boutons et lit la page via le protocole de débogage de Chrome : c'est un vrai navigateur exécutant le JavaScript de `dist/`, pas une simulation. Le script se trouve aux côtés des figures, dans `medir.mjs`, et son premier commentaire explique comment le lancer. Il nécessite Google Chrome ou Chromium, que Linux Mint n'installe pas par défaut ; si tu n'en disposes pas, il n'est pas indispensable pour suivre la leçon : effectue les mêmes étapes manuellement dans ton navigateur et tu devrais observer la même chose. Les sorties de chaque mesure et de chaque erreur provoquée, avec les modifications exactes de chaque copie, se trouvent dans [`programas/02-estado-instantanea-forma/ejercicios/`](../programas/02-estado-instantanea-forma/ejercicios). Les longs chemins affichés par ESLint et `tsc` sont présentés à partir de `~/curso-react`, et dans une sortie d'ESLint, les espaces d'alignement de la colonne de règle ont été raccourcis. Les erreurs de « L'erreur que tu vas voir » ont été provoquées dans une copie du point de contrôle, jamais dans l'original, qui, une fois tout cela terminé, a de nouveau passé `npm ci`, `npm run lint` et `npm run build`. Les programmes se trouvent dans [`programas/02-estado-instantanea-forma/`](../programas/02-estado-instantanea-forma) : `revisor/` est le point de contrôle et les figures se trouvent à ses côtés.
 
 ## À la fin, tu seras capable de
 
@@ -29,13 +29,13 @@ Ouvre le `revisor` de la leçon 1 et demande-lui trois choses qu'un opérateur r
 
 **« Montre-moi seulement ce qui est en panne. »** Avec quatre services, ce n'est pas nécessaire, mais le véritable `revisor` d'une entreprise en surveille des dizaines. Une case à cocher « Solo fallas » doit mémoriser si elle est cochée, et deux éléments distincts ont besoin de le savoir : la case elle-même, pour s'afficher cochée, et la liste, pour décider quelles lignes afficher.
 
-**« Je veux voir un service en détail. »** La personne choisit `pagos` et un encadré apparaît avec son état. Dix secondes plus tard, la scrutation suivante arrive et `pagos` s'est rétabli : l'encadré doit afficher « Disponible », et non ce qu'il affichait dix secondes plus tôt. Cela dépend de **ce que** tu conserves lorsque quelqu'un fait un choix : le service tout entier ou seulement son nom.
+**« Je veux voir un service en détail. »** La personne choisit `pagos` et un encadré apparaît avec son état. Dix secondes plus tard, l'interrogation périodique suivante arrive et `pagos` s'est rétabli : l'encadré doit afficher « Disponible », et non ce qu'il affichait dix secondes plus tôt. Cela dépend de **ce que** tu conserves lorsque quelqu'un fait un choix : le service tout entier ou seulement son nom.
 
 **« Laisse-moi noter quelque chose. »** Une note par service, qui survive au fait de changer de service puis d'y revenir, et qui signale la ligne pour que l'équipe suivante la voie. Et pendant que tu écris, un brouillon qui ne s'immisce pas dans la note d'un autre service.
 
 Toutes les trois demandent la même chose : que le panneau **se souvienne** de quelque chose entre un rendu et le suivant. En React, ce dont on se souvient s'appelle l'**état** (*state*), et l'outil pour cela est `useState`, que tu as déjà utilisé dans la leçon 0 au sein de `useReporte`. La leçon 9 de TypeScript t'a appris à l'écrire ; cette leçon t'apprend à **le penser**, car presque toutes les erreurs avec l'état viennent du fait de le concevoir comme une variable. Une variable se modifie, et la modification se voit à la ligne suivante. Pour l'état, il n'en est rien : chaque rendu reçoit une photographie fixe, et demander une modification ne touche pas à cette photographie, mais demande à React d'en prendre une autre ([React, « State as a Snapshot »](https://react.dev/learn/state-as-a-snapshot)). Penser l'état comme une variable explique les deux dysfonctionnements de la scène d'ouverture, chacun de son côté : la note qui n'apparaît pas provient de la photographie (tu as redonné à React la même, retouchée, et React n'a rien vu de neuf), et le brouillon qui persiste provient de l'endroit où React conserve l'état (il a gardé celui de l'éditeur car, pour lui, à cette position se trouvait toujours le même éditeur).
 
-La leçon comporte six parties : l'état comme photographie (2.1) ; copier plutôt que muter (2.2) ; la forme de l'état (2.3) ; faire remonter l'état (2.4) ; `key` pour le réinitialiser (2.5) ; et le parcours complet (2.6). Voici à quoi ressemble le résultat, mesuré avec Chrome sans interface graphique sur le point de contrôle, en sélectionnant `pagos`, en enregistrant une note et en changeant de service (ce sont les étapes 3 à 6 du parcours de 2.6) :
+Il y a trois nouveaux concepts. Le premier est **l'état comme photographie**, avec la forme de mise à jour (2.1). Le deuxième est **un état que l'on copie et qui a une forme** : copier plutôt que muter (2.2) et les cinq règles de structuration de l'état (2.3). Le troisième est **qui est propriétaire de l'état et quand il se réinitialise** : faire remonter l'état vers le composant qui le partage (2.4) et `key` pour le réinitialiser (2.5). La section 2.6 n'ajoute pas de concept : c'est le parcours complet, où les trois apparaissent ensemble. Voici à quoi ressemble le résultat, mesuré avec Chrome en mode headless sur le point de contrôle, en sélectionnant `pagos`, en enregistrant une note et en changeant de service (ce sont les étapes 3 à 6 du parcours de 2.6) :
 
 ```text
 3. desmarcas y eliges pagos
@@ -157,7 +157,7 @@ C'est là qu'intervient la seconde version. Si, au lieu d'une valeur, tu lui pas
 Trois points à retenir :
 
 - **Le nom du paramètre.** La documentation suggère de le nommer avec les initiales de la variable (`n => n + 1`) ou, si tu préfères quelque chose de plus long, en répétant le nom complet ou en lui préfixant `prev` ([React, « Queueing a Series of State Updates »](https://react.dev/learn/queueing-a-series-of-state-updates)). Ce cours utilise un nom en espagnol qui indique clairement ce qu'il est : `actual`, `actuales`. C'est un choix délibéré, pensé pour que la lecture soit homogène avec le reste du code.
-- **Elle doit être pure.** La fonction de mise à jour s'exécute pendant le rendu, elle ne doit donc que calculer et renvoyer : pas question d'y demander des données, d'imprimer quoi que ce soit ou d'appeler une autre fonction `establecer…`. En `StrictMode`, et uniquement pendant le développement, React l'appelle **deux fois** et ne conserve que l'un des résultats (dans la version construite pour la production, il ne l'appelle qu'une seule fois), précisément pour débusquer les fonctions impures ([React, `useState`](https://react.dev/reference/react/useState)). C'est le même test gratuit que celui vu dans la leçon 0, appliqué ici à l'état.
+- **Elle doit être pure.** La fonction de mise à jour s'exécute pendant le rendu, elle ne doit donc que calculer et renvoyer : pas question d'y demander des données, d'afficher quoi que ce soit ou d'appeler une autre fonction `establecer…`. En `StrictMode`, et uniquement pendant le développement, React l'appelle **deux fois** et ne conserve que l'un des résultats (dans la version construite pour la production, il ne l'appelle qu'une seule fois), précisément pour débusquer les fonctions impures ([React, `useState`](https://react.dev/reference/react/useState)). C'est le même test gratuit que celui vu dans la leçon 0, appliqué ici à l'état.
 - **Si tu as besoin de la nouvelle valeur immédiatement, calcule-la toi-même.** Si, après `establecerRevisiones(revisiones + 1)`, tu souhaites utiliser la nouvelle valeur au sein du même gestionnaire, enregistre-la au préalable dans une constante : `const siguiente = revisiones + 1`. Lire `revisiones` te donnerait l'ancienne photographie ; la référence de `useState` présente ce cas en tête de sa section consacrée aux problèmes fréquents ([React, `useState`](https://react.dev/reference/react/useState)).
 
 #### 2.1.3 Dans le `revisor` : `establecerNotas((actuales) => …)`
@@ -261,7 +261,7 @@ clic en «copiar»: pantalla «notas guardadas: 1», dibujos: 2
 
 Après « mutar », le compteur de rendus reste à `1` et l'écran continue d'afficher `0`. L'objet a pourtant bien changé : il contient la note de `pagos`. Mais ce que tu as passé à React est **le même objet** qu'il avait déjà, `Object.is` a répondu « identique » et React n'a rien fait. La documentation l'explique avec l'exemple d'un point qui suit la souris : sans la fonction qui met à jour l'état, React n'a aucune idée du fait que l'objet a changé et ne réagit pas ([React, « Updating Objects in State »](https://react.dev/learn/updating-objects-in-state)) ; et la référence de `useState` répertorie cela sous le problème « j'ai mis à jour l'état, mais l'écran ne change pas » ([React, `useState`](https://react.dev/reference/react/useState)).
 
-Regarde maintenant la dernière ligne : après « copiar », il y a un nouveau rendu et l'écran affiche `1`. Remarque que le nouvel objet contient la note de `pagos` par deux voies différentes : la mutation précédente, qui restait tapie au sein de l'ancien objet et qui a été copiée avec `...notas`, ainsi que la copie elle-même. L'écran a affiché la mutation **lorsqu'autre chose a provoqué le rendu**. C'est précisément ce que tu as observé dans la scène initiale avec la scrutation des dix secondes : la mention « con nota » est apparue à contretemps, lorsque le rapport suivant a forcé un rendu et que la mutation cachée a été révélée au grand jour. Une mutation n'est pas toujours perdue ; parfois, elle apparaît tardivement, ce qui est pire, car cela donne l'illusion que le code fonctionne.
+Regarde maintenant la dernière ligne : après « copiar », il y a un nouveau rendu et l'écran affiche `1`. Remarque que le nouvel objet contient la note de `pagos` par deux voies différentes : la mutation précédente, qui restait tapie au sein de l'ancien objet et qui a été copiée avec `...notas`, ainsi que la copie elle-même. L'écran a affiché la mutation **lorsqu'autre chose a provoqué le rendu**. C'est précisément ce que tu as observé dans la scène initiale avec l'interrogation périodique toutes les dix secondes : la mention « con nota » est apparue à contretemps, lorsque le rapport suivant a forcé un rendu et que la mutation cachée a été révélée au grand jour. Une mutation n'est pas toujours perdue ; parfois, elle apparaît tardivement, ce qui est pire, car cela donne l'illusion que le code fonctionne.
 
 #### 2.2.2 Copier : la syntaxe de décomposition
 
@@ -293,7 +293,7 @@ Lis-la ligne par ligne :
 - **Si le texte devient vide, la note est retirée.** `Object.entries` transforme l'objet en une liste de paires `[clé, valeur]`, `filter` écarte celle du service, et `Object.fromEntries` réassemble un objet avec celles qui restent. Les trois fonctions créent de nouveaux objets ; aucune ne touche à `notas`. Ainsi, « effacer le texte et enregistrer » retire la mention « con nota » de la ligne, ce à quoi une personne s'attend légitimement.
 - **S'il y a du texte, on copie et on écrit.** `{ ...notas, [nombre]: limpio }` correspond à la décomposition vue plus haut, avec une clé calculée entre crochets.
 
-Pourquoi une fonction séparée plutôt que trois lignes dans `Panel` ? Pour la même raison que `contarFallas` dans la leçon 1 : une fonction pure — mêmes entrées, même sortie, sans toucher à rien d'extérieur — se comprend d'elle-même, peut être testée sans React, comme tu le verras avec `resumen.ts` dans la Leçon 8, et peut être appelée depuis la fonction de mise à jour sans craindre que `StrictMode` ne l'exécute deux fois.
+Pourquoi une fonction séparée plutôt que trois lignes dans `Panel` ? Pour la même raison que `contarFallas` dans la leçon 1 : une fonction pure — mêmes entrées, même sortie, sans toucher à rien d'extérieur — se comprend d'elle-même, peut être testée sans React (tu le verras avec `resumen.ts` dans la Leçon 8) et peut être appelée depuis la fonction de mise à jour sans craindre que `StrictMode` ne l'exécute deux fois.
 
 #### 2.2.3 Pourquoi tout ce cérémonial
 
@@ -409,7 +409,7 @@ llega el siguiente sondeo (pagos se recuperó):
   guarda el nombre: pagos está disponible
 ```
 
-La liste indique que `pagos` est disponible, et le composant qui a stocké l'objet persiste à dire qu'il est en panne : il détient une photographie vieille d'une scrutation, et personne ne la mettra à jour, car l'état n'est initialisé que lors du tout premier rendu. Celui qui a conservé le nom dit la vérité sans rien faire de particulier : à chaque rendu, il recherche `pagos` dans la liste qui vient d'arriver. Imagine l'opérateur de la scène d'ouverture lisant « En falla » dans le détail et « disponible » sur la ligne juste à côté, alors que l'astreinte est sur le point de débuter.
+La liste indique que `pagos` est disponible, et le composant qui a stocké l'objet persiste à dire qu'il est en panne : il détient une photographie qui date de l'interrogation périodique précédente, et personne ne la mettra à jour, car l'état n'est initialisé que lors du tout premier rendu. Celui qui a conservé le nom dit la vérité sans rien faire de particulier : à chaque rendu, il recherche `pagos` dans la liste qui vient d'arriver. Imagine l'opérateur de la scène d'ouverture lisant « En falla » dans le détail et « disponible » sur la ligne juste à côté, alors que l'astreinte est sur le point de débuter.
 
 C'est pourquoi, dans le point de contrôle, `seleccionado` est de type `string | null` — le nom, ou rien — et le service choisi est recherché au moment du rendu, dans `ContenidoReporte` :
 
@@ -420,7 +420,7 @@ C'est pourquoi, dans le point de contrôle, `seleccionado` est de type `string |
       const elegido = estados.find((estado) => estado.nombre === seleccionado);
 ```
 
-`elegido` n'est pas un état : c'est une constante dont la durée de vie est celle du rendu. La documentation propose exactement cette approche avec son `selectedId` : conserver uniquement l'identifiant, qui constitue l'information essentielle, et calculer le reste pendant le rendu ([React, « Choosing the State Structure »](https://react.dev/learn/choosing-the-state-structure)). Et cela s'accompagne d'un avantage : si le service disparaît du rapport, `find` renvoie `undefined` et le détail n'est tout simplement pas affiché ; il n'est nullement nécessaire de « nettoyer » la sélection par du code additionnel ([React, « You Might Not Need an Effect »](https://react.dev/learn/you-might-not-need-an-effect)). Rechercher par nom est sûr car l'API garantit qu'il n'existe pas deux services portant le même nom, la même garantie qui sous-tend la `key={estado.nombre}` de la leçon 1.
+`elegido` n'est pas un état : c'est une constante dont la durée de vie est celle du rendu. La documentation propose exactement cette approche avec son `selectedId` : conserver uniquement l'identifiant, qui constitue l'information essentielle, et calculer le reste pendant le rendu ([React, « Choosing the State Structure »](https://react.dev/learn/choosing-the-state-structure)). Et cela s'accompagne d'un avantage : si le service disparaît du rapport, `find` renvoie `undefined` et le détail n'est tout simplement pas affiché ; il n'est nullement nécessaire de « nettoyer » la sélection par du code additionnel ([React, « You Might Not Need an Effect »](https://react.dev/learn/you-might-not-need-an-effect)). Rechercher par nom est sûr tant que l'API respecte sa règle de ne pas avoir deux services portant le même nom, la même règle sur laquelle s'appuie la `key={estado.nombre}` de la leçon 1 ; si un jour l'API l'enfreignait, `find` renverrait le premier qu'il trouve et React signalerait dans la console les `key` en double.
 
 #### 2.3.3 Ne pas stocker ce qui peut être calculé
 
@@ -449,7 +449,7 @@ export function filtrarEstados(
 ```
 
 - **Le service sélectionné**, que tu viens de voir.
-- **Le résumé.** `ResumenFallas` reçoit la liste **complète**, et non la liste filtrée, à dessein : « 4 servicios revisados · 2 servicios con falla » décrit ce que la scrutation a inspecté, et non ce que tu as choisi de laisser visible. La mesure Chrome le confirme : avec la case cochée, le résumé continue d'indiquer 4 et 2.
+- **Le résumé.** `ResumenFallas` reçoit la liste **complète**, et non la liste filtrée, à dessein : « 4 servicios revisados · 2 servicios con falla » décrit ce que l'interrogation périodique a inspecté, et non ce que tu as choisi de laisser visible. La mesure Chrome le confirme : avec la case cochée, le résumé continue d'indiquer 4 et 2.
 - **Le fait qu'une ligne possède une note.** `ListaEstados` transmet à chaque ligne `tieneNota={notas[estado.nombre] !== undefined}`. Il n'existe aucune liste distincte de « services avec note » qu'il faudrait maintenir à jour.
 
 Et si ces calculs étaient lourds ? Filtrer quatre, ou même quatre cents éléments à chaque rendu ne l'est absolument pas. La démarche du cours est celle de son README : on mesure d'abord, on optimise ensuite, et la Leçon 9 apportera cette mesure. Enregistrer un calcul dans l'état « pour ne pas le répéter » n'est pas une optimisation : c'est une copie que quelqu'un doit maintenir synchronisée, et la manière la plus fréquente de la synchroniser — un Effect qui la recalcule — est précisément celle que le linter rejette, comme tu vas le constater dans « L'erreur que tu vas voir ».
@@ -460,7 +460,7 @@ Et si ces calculs étaient lourds ? Filtrer quatre, ou même quatre cents élém
 
 Tu sais désormais comment modifier l'état et que stocker. Il reste à décider **où**. La documentation pose cela comme un principe : pour chaque élément d'état unique, tu choisis le composant qui en est le « propriétaire », et c'est cela avoir une **source unique de vérité** ; cela ne signifie pas que tout l'état vive en un seul endroit, mais que chaque morceau a un composant bien défini qui en a la garde ([React, « Sharing State Between Components »](https://react.dev/learn/sharing-state-between-components)). Lorsque deux composants ont besoin de la même donnée, le propriétaire est leur **plus proche ancêtre commun** : on retire l'état des enfants, on l'installe chez le parent et on le leur transmet vers le bas par les props, avec les fonctions chargées de le modifier. C'est ce que la documentation appelle **faire remonter l'état** (*lifting state up*), et elle souligne qu'il s'agit de l'une des opérations les plus courantes en React ([React, « Sharing State Between Components »](https://react.dev/learn/sharing-state-between-components)).
 
-Appliquons la question « qui en a besoin ? » aux trois nouveaux états du `revisor` :
+Applique la question « qui en a besoin ? » aux trois nouveaux états du `revisor` :
 
 | État | Qui le lit | Qui le modifie | Ancêtre commun |
 |---|---|---|---|
@@ -552,7 +552,7 @@ export function FiltroFallas({
 
 Un élément `<input>` auquel on transmet `checked` est un **champ contrôlé** : c'est React qui décide s'il est coché, et non le navigateur. C'est pourquoi la documentation exige qu'avec `checked`, tu fournisses un `onChange` qui mette à jour cette valeur de manière synchrone ; sans cela, le champ reste en lecture seule et React le signale dans la console par « You provided a `checked` prop to a form field without an `onChange` handler » ([React, `<input>`](https://react.dev/reference/react-dom/components/input)). Pour une case à cocher, on lit `evento.target.checked`, et non `evento.target.value`, ce qui constitue un autre oubli courant relevé par la même page. De plus, la case est imbriquée dans son `<label>` : ainsi, cliquer sur le texte « Solo fallas » permet aussi de la cocher, et un lecteur d'écran annonce la case avec son intitulé. C'est du HTML natif, sans ARIA.
 
-Le terme « contrôlé » s'applique également à des composants entiers : la documentation qualifie de contrôlé un composant dont les informations essentielles proviennent de ses props et non de son propre état, et de non contrôlé celui qui les conserve lui-même ([React, « Sharing State Between Components »](https://react.dev/learn/sharing-state-between-components)). `FiltroFallas` est contrôlé ; `EditorNota`, avec son brouillon, est non contrôlé. Attention à ce double sens : le `<textarea>` d' `EditorNota` est un champ contrôlé (sa valeur est fixée par `borrador`), mais le composant en lui-même est non contrôlé, car ce `borrador` vit en son sein et `Panel` ne peut y toucher. Le premier terme concerne le champ de formulaire ; le second, le composant ; la documentation précise d'ailleurs elle-même que « contrôlé » et « non contrôlé » ne sont pas des termes techniques au sens strict. Aucun des deux n'est supérieur à l'autre : le contrôlé permet au parent d'orchestrer ; le non contrôlé est plus aisé à employer. La Leçon 7 reviendra sur cette nuance à propos des formulaires.
+Le terme « contrôlé » s'applique également à des composants entiers : la documentation qualifie de contrôlé un composant dont les informations essentielles proviennent de ses props et non de son propre état, et de non contrôlé celui qui les conserve lui-même ([React, « Sharing State Between Components »](https://react.dev/learn/sharing-state-between-components)). `FiltroFallas` est contrôlé ; `EditorNota`, avec son brouillon, est non contrôlé. Attention à ce double sens : le `<textarea>` d'`EditorNota` est un champ contrôlé (sa valeur est fixée par `borrador`), mais le composant en lui-même est non contrôlé, car ce `borrador` vit en son sein et `Panel` ne peut y toucher. Le premier terme concerne le champ de formulaire ; le second, le composant ; la documentation précise d'ailleurs elle-même que « contrôlé » et « non contrôlé » ne sont pas des termes techniques au sens strict. Aucun des deux n'est supérieur à l'autre : le contrôlé permet au parent d'orchestrer ; le non contrôlé est plus aisé à employer. La Leçon 7 reviendra sur cette nuance à propos des formulaires.
 
 #### 2.4.3 La ligne : un bouton qui indique s'il est sélectionné
 
@@ -583,7 +583,7 @@ export function FilaEstado({
   readonly estado: EstadoPublico;
   readonly seleccionado: boolean;
   readonly tieneNota: boolean;
-  readonly alSeleccionar: (nombre: string) => void;
+  readonly alSeleccionar: (nombre: string | null) => void;
 }) {
   return (
     <li className={estado.tipo}>
@@ -591,7 +591,7 @@ export function FilaEstado({
         type="button"
         className="seleccionar"
         aria-pressed={seleccionado}
-        onClick={() => alSeleccionar(estado.nombre)}
+        onClick={() => alSeleccionar(seleccionado ? null : estado.nombre)}
       >
         {estado.nombre}
       </button>
@@ -605,7 +605,7 @@ export function FilaEstado({
 Plusieurs décisions en peu de lignes :
 
 - **Un `<button>`, pas un `<span>` avec `onClick`.** Un bouton natif est accessible avec la touche Tab, s'active avec Entrée ou la barre d'espace, et un lecteur d'écran l'annonce comme bouton. Avec un `<span>`, tu devrais reconstituer tout cela manuellement.
-- **`aria-pressed`.** Indique l'état enfoncé d'un bouton bascule : avec `true` ou `false`, le bouton est annoncé comme un élément activable et précise s'il l'est actuellement ([MDN, `aria-pressed`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-pressed)). MDN demande en outre de ne pas modifier le texte du bouton lorsque cet état bascule, et le `revisor` respecte cette consigne : le bouton indique `pagos`, qu'il soit sélectionné ou non. La feuille de style utilise ce même attribut pour épaissir le soulignement, avec le sélecteur `.seleccionar[aria-pressed="true"]` : ce que l'œil perçoit et ce que le lecteur d'écran énonce proviennent de la même donnée.
+- **`aria-pressed`, et un bouton qui bascule vraiment.** Indique l'état enfoncé d'un bouton bascule : avec `true` ou `false`, le bouton est annoncé comme un élément activable et précise s'il l'est actuellement ([MDN, `aria-pressed`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-pressed)). C'est pourquoi le clic dit `seleccionado ? null : estado.nombre` : selon MDN, un bouton bascule passe à `true` quand on l'enfonce une fois et revient à `false` quand on l'enfonce une autre fois, et un lecteur d'écran qui annonce « enfoncé » invite à l'enfoncer de nouveau. Si le clic renvoyait toujours le même nom, le bouton dirait qu'il peut basculer et ne basculerait pas. Mesuré : en cliquant deux fois sur `pagos`, le détail apparaît puis disparaît, et `aria-pressed` passe de `true` à `false` (`node medir.mjs alternar`, sortie dans `ejercicios/medir-alternar.salida.txt`). MDN demande en outre de ne pas modifier le texte du bouton lorsque cet état bascule, et le `revisor` respecte cette consigne : le bouton indique `pagos`, qu'il soit sélectionné ou non. La feuille de style utilise ce même attribut pour épaissir le soulignement, avec le sélecteur `.seleccionar[aria-pressed="true"]` : ce que l'œil perçoit et ce que le lecteur d'écran énonce proviennent de la même donnée.
 - **`className={estado.tipo}`.** La classe CSS de la ligne, `disponible` ou `falla`, correspond exactement au texte du type, si bien qu'un `if` avec deux `<li>` quasi identiques n'est plus nécessaire. Le `if` qui distingue les deux cas a été déplacé dans `Descripcion`, un petit composant chargé d'afficher le texte. Il est défini **en dehors** de `FilaEstado`, jamais à l'intérieur, selon la règle de la leçon 1 : un composant défini au sein d'un autre devient un composant nouveau à chaque rendu, et son état serait réinitialisé sans crier gare ([React, « Preserving and Resetting State »](https://react.dev/learn/preserving-and-resetting-state)).
 - **`{tieneNota && …}`.** Ici, `&&` est sûr car `tieneNota` est un booléen ; le piège du `0` de la leçon 1 ne surgit que lorsque la condition est numérique.
 - **La ligne ne sait pas ce qui est sélectionné globalement.** Elle reçoit `seleccionado: boolean`, déjà calculé par la liste. La ligne est pure : mêmes props, même rendu.
@@ -627,7 +627,7 @@ export function ListaEstados({
   readonly estados: readonly EstadoPublico[];
   readonly seleccionado: string | null;
   readonly notas: Notas;
-  readonly alSeleccionar: (nombre: string) => void;
+  readonly alSeleccionar: (nombre: string | null) => void;
 }) {
   return (
     <ul>
@@ -645,7 +645,7 @@ export function ListaEstados({
 }
 ```
 
-Son `alSeleccionar` prend un `string`, alors que celui de `Panel` admet `string | null`. TypeScript le tolère parfaitement, car une fonction qui accepte un ensemble plus large de cas peut être employée là où l'on attend une fonction plus restrictive. Le `null` est exploité par un autre élément : le bouton « Cerrar detalle ».
+Son `alSeleccionar` accepte `string | null`, comme celui de `Panel` : le `null` signifie « aucun sélectionné ». Il est envoyé par la ligne quand on clique de nouveau sur le service déjà sélectionné, et aussi par un autre élément, le bouton « Cerrar detalle ».
 
 #### 2.4.4 Celui qui répartit
 
@@ -738,8 +738,9 @@ Object.assign(globalThis, {
   IS_REACT_ACT_ENVIRONMENT: true,
 });
 
-// react-dom decide al cargarse qué eventos de teclado sabe escuchar, así que se
-// importa después de que exista `window` (los import de arriba se cargan antes).
+// react-dom comprueba al cargarse si existe `window.document` y si el documento
+// admite el evento `input`, así que se importa después de que exista `window`
+// (los import de arriba se cargan antes).
 const { createRoot } = await import("react-dom/client");
 
 function Editor({ nombre }: { readonly nombre: string }) {
@@ -808,7 +809,7 @@ con key={nombre}:
   eliges reportes:      «Nota sobre reportes» → borrador «»
 ```
 
-Sans `key`, l'intitulé de l'éditeur devient « Nota sobre reportes », mais le brouillon affiche toujours « llamar al proveedor » : la prop a changé et l'état est resté. Avec `key={nombre}`, le brouillon redevient vide. (Une précision au sujet de la figure : à la différence de celles de la leçon 0, elle importe `react-dom/client` **après** avoir créé `window`. react-dom détermine à son chargement quels événements de clavier il sait écouter, et s'il est chargé avant qu'une fenêtre n'existe, l'événement de saisie provoqué par la figure ne parvient pas à React. Dans un vrai navigateur, la fenêtre existe toujours en premier, si bien que dans le `revisor`, rien de tout cela n'est nécessaire.)
+Sans `key`, l'intitulé de l'éditeur devient « Nota sobre reportes », mais le brouillon affiche toujours « llamar al proveedor » : la prop a changé et l'état est resté. Avec `key={nombre}`, le brouillon redevient vide. (Une précision au sujet de la figure : à la différence de celles de la leçon 0, elle importe `react-dom/client` **après** avoir créé `window`. react-dom vérifie à son chargement si `window.document` existe et si le document prend en charge l'événement `input`, et c'est ce résultat qui détermine la manière de détecter qu'on écrit dans un `<textarea>` (on l'a lu dans le code du paquet installé, `react-dom-client.development.js` : les variables `canUseDOM` et `isInputEventSupported` ; ce n'est pas quelque chose que décrit la documentation de React). S'il est chargé avant qu'une fenêtre n'existe, cette vérification est négative et la saisie provoquée par la figure n'arrive pas correctement à `onChange`. Dans un vrai navigateur, la fenêtre existe toujours en premier, si bien que dans le `revisor`, rien de tout cela n'est nécessaire.)
 
 #### 2.5.2 Ce que fait la `key`
 
@@ -894,7 +895,7 @@ export function EditorNota({
 }
 ```
 
-`borrador` commence avec `notaGuardada`, la note préexistante ou `""`. Cela mérite une précision, car la documentation met en garde contre quelque chose qui y ressemble : copier une prop dans l'état. Son exemple montre un message qui effectue `useState(messageColor)` : si le parent transmet ultérieurement une autre couleur, l'état ne s'en aperçoit pas, parce que **l'état n'est initialisé que lors du premier rendu** ([React, « Choosing the State Structure »](https://react.dev/learn/choosing-the-state-structure)). La même page indique le cas où cela fait sens : lorsque tu **souhaites** explicitement ignorer les modifications futures de la prop, auquel cas il convient que son nom commence par `initial` ou `default` pour que cela soit apparent.
+`borrador` commence avec `notaGuardada`, la note préexistante ou `""`. Cela mérite une précision, car la documentation met en garde contre quelque chose qui y ressemble : copier une prop dans l'état. Son exemple montre un message qui effectue `useState(messageColor)` : si le parent transmet ultérieurement une autre couleur, l'état ne s'en aperçoit pas, parce que **l'état n'est initialisé que lors du premier rendu** ([React, « Choosing the State Structure »](https://react.dev/learn/choosing-the-state-structure)). La même page indique le cas où cela a du sens : lorsque tu **souhaites** explicitement ignorer les modifications futures de la prop, auquel cas il convient que son nom commence par `initial` ou `default` pour que cela soit apparent.
 
 Ici, c'est précisément le comportement recherché. Pendant que la personne tape, le brouillon ne doit pas être réinitialisé sous prétexte qu'un nouveau rapport arrive ; il ne doit repartir à zéro que lors d'un changement de service. Et c'est la `key` de `DetalleSeleccion` qui s'en charge : chaque fois que le service change, l'éditeur est monté de nouveau et `useState(notaGuardada)` relit la note enregistrée de **ce** service. C'est pourquoi, dans la mesure effectuée avec Chrome, revenir sur `pagos` affiche « llamar al proveedor », la note enregistrée, et non le brouillon resté non sauvegardé. Le tandem « valeur initiale + `key` » forme le motif complet ; retirer l'un des deux éléments brise l'ensemble.
 
@@ -934,7 +935,7 @@ Avec l'état remonté et la `key` en place, il ne manque que la feuille de style
 }
 ```
 
-`.seleccionar` retire au bouton son apparence de bouton ordinaire pour le réduire à un nom en gras, souligné pour mettre en évidence qu'il est cliquable ; `font: inherit` fait en sorte qu'il hérite de la même police que le reste de la ligne, car les boutons n'en héritent pas par défaut. Le reste du fichier est celui de la leçon 1. Les autres fichiers du point de contrôle — `main.tsx`, `useReporte.ts`, `cargar.ts`, le contrat, `Tarjeta`, `ResumenFallas`, la configuration et le serveur d'exercice — ne sont pas modifiés dans cette leçon ; le fichier `package.json` passe simplement sa version à `0.2.0`.
+`.seleccionar` retire au bouton son apparence de bouton ordinaire pour le réduire à un nom en gras, souligné pour mettre en évidence qu'il est cliquable ; `font: inherit` fait en sorte qu'il hérite de la même police que le reste de la ligne, car les boutons n'en héritent pas par défaut. Le reste du fichier est celui de la leçon 1. Les autres fichiers du point de contrôle — `main.tsx`, `useReporte.ts`, `cargar.ts`, `contrato.ts`, `Tarjeta`, `ResumenFallas`, la configuration et le serveur d'entraînement — ne sont pas modifiés dans cette leçon ; le fichier `package.json` passe simplement sa version à `0.2.0`.
 
 La vérification du point de contrôle se déroule comme d'habitude, depuis `~/curso-react/revisor/` :
 
@@ -956,12 +957,12 @@ rendering chunks...
 computing gzip size...
 dist/index.html                   0.39 kB │ gzip:  0.26 kB
 dist/assets/index-CGNql20r.css    0.68 kB │ gzip:  0.38 kB
-dist/assets/index-FUlywxKd.js   224.30 kB │ gzip: 70.28 kB
+dist/assets/index-7jh0TEYR.js   224.30 kB │ gzip: 70.28 kB
 
-✓ built in 347ms
+✓ built in 189ms
 ```
 
-Le linter ne formule aucune remarque et la compilation se conclut par `index-FUlywxKd.js`, le nom exact apparu tant sous macOS que sous Linux. Ce nom étant dérivé du contenu, si ton `revisor` est rigoureusement identique au point de contrôle, tu obtiendras le même. Avec `npm run servidor` dans un terminal et `npm run dev` (ou `npm run preview`) dans un autre, ouvre la page et parcours-la. Voici ce qu'a mesuré Chrome sans interface graphique sur la version construite, servie avec `vite preview`, pas à pas, à l'aide de `node medir.mjs recorrido` :
+Le linter ne formule aucune remarque et la construction se conclut par `index-7jh0TEYR.js`, le nom exact apparu tant sous macOS que sous Linux. Ce nom étant dérivé du contenu, si ton `revisor` est rigoureusement identique au point de contrôle, tu obtiendras le même. Avec `npm run servidor` dans un terminal et `npm run dev` (ou `npm run preview`) dans un autre, ouvre la page et parcours-la. Voici ce qu'a mesuré Chrome en mode headless sur la version construite, servie avec `vite preview`, pas à pas, à l'aide de `node medir.mjs recorrido` :
 
 ```text
 1. al cargar
@@ -987,7 +988,7 @@ Chaque ligne trouve son explication dans la leçon. L'étape 1 montre les bouton
 
 ## L'erreur que tu vas voir
 
-Cette leçon présente deux erreurs que les outils interrompent, et une qu'aucun outil ne perçoit.
+Cette leçon présente deux erreurs que les outils interceptent, et une qu'aucun outil ne perçoit.
 
 **La mutation de la scène d'ouverture.** Dans une copie du point de contrôle, modifie `guardarNota` dans `Panel.tsx` de façon à ajouter la note à l'objet déjà existant :
 
@@ -1000,6 +1001,8 @@ Cette leçon présente deux erreurs que les outils interrompent, et une qu'aucun
 ```
 
 Deux garde-fous distincts l'interrompent, chacun à sa manière. D'abord, `tsc` :
+
+(Les modifications exactes de la copie se trouvent dans `ejercicios/copia-mutando.diff.txt` et les sorties complètes dans `ejercicios/copia-mutando.lint-tsc.salida.txt`.)
 
 ```text
 $ npx tsc -b
@@ -1058,7 +1061,7 @@ Modifying a value returned from 'useState()', which should not be modified direc
 
 C'est pourquoi le `revisor` dispose des deux protections : le type t'alerte dans l'éditeur pendant que tu tapes, et le linter intercepte la mutation même si quelqu'un oublie le `Readonly`. Le correctif est celui vu en 2.2 : `establecerNotas((actuales) => conNota(actuales, nombre, texto))`.
 
-**Stocker ce qui peut être calculé, et le synchroniser avec un Effect.** Dans une autre copie, au lieu de passer directement à l'éditeur `notas[estado.nombre] ?? ""`, `DetalleSeleccion` stocke la note dans un état propre et la « maintient à jour » par un Effect :
+**Stocker ce qui peut être calculé, et le synchroniser avec un Effect.** Dans une autre copie, au lieu de passer directement à l'éditeur `notas[estado.nombre] ?? ""`, `DetalleSeleccion` stocke la note dans son propre état et la « maintient à jour » par un Effect :
 
 ```tsx
 // DetalleSeleccion con estado redundante (fragmento; en una copia)
@@ -1069,7 +1072,7 @@ C'est pourquoi le `revisor` dispose des deux protections : le type t'alerte dans
   }, [notas, estado.nombre]);
 ```
 
-`tsc -b` ne trouve rien à redire : les types sont valides. Le linter, en revanche, intervient :
+`tsc -b` ne trouve rien à redire : les types sont valides. Le linter, en revanche, intervient (`ejercicios/copia-efecto.diff.txt` et `ejercicios/copia-efecto.lint-tsc.salida.txt`) :
 
 ```text
 $ npm run lint
@@ -1099,7 +1102,7 @@ Calling setState synchronously within an effect body causes cascading renders th
 ✖ 1 problem (1 error, 0 warnings)
 ```
 
-Il s'agit de la règle `set-state-in-effect`, celle-là même que la leçon 0 t'a montrée dans `useReporte`. Elle apparaît ici pour la raison évoquée en 2.3.3 : `notaGuardada` est la copie d'une donnée déjà présente dans `notas`, et l'Effect n'existe que pour aligner la copie sur l'original. Cela coûte un rendu supplémentaire à chaque modification — d'abord avec l'ancienne copie, puis avec la nouvelle — et, pire encore, cela génère un bogue bien visible. Lors d'un changement de service, `DetalleSeleccion` n'est pas remonté : il est à la même position et constitue le même composant, de sorte que lors de ce rendu, son `notaGuardada` porte encore la valeur du service **précédent**. L'éditeur, qui lui est remonté grâce à sa `key`, démarre avec cette ancienne valeur et, comme expliqué en 2.5.3, n'écoute plus ce qui lui parvient par la suite lorsque l'Effect vient rectifier la copie. Une fois cette copie construite et mesurée avec Chrome sans interface graphique (`node medir.mjs efecto`) :
+Il s'agit de la règle `set-state-in-effect`, celle-là même que la leçon 0 t'a montrée dans `useReporte`. Elle apparaît ici pour la raison évoquée en 2.3.3 : `notaGuardada` est la copie d'une donnée déjà présente dans `notas`, et l'Effect n'existe que pour aligner la copie sur l'original. Cela coûte un rendu supplémentaire à chaque modification — d'abord avec l'ancienne copie, puis avec la nouvelle — et, pire encore, cela génère un bogue bien visible. Lors d'un changement de service, `DetalleSeleccion` n'est pas remonté : il est à la même position et constitue le même composant, de sorte que lors de ce rendu, son `notaGuardada` porte encore la valeur du service **précédent**. L'éditeur, qui lui est remonté grâce à sa `key`, démarre avec cette ancienne valeur et, comme expliqué en 2.5.3, n'écoute plus ce qui lui parvient par la suite lorsque l'Effect vient rectifier la copie. Une fois cette copie construite et mesurée avec Chrome en mode headless (`node medir.mjs efecto`) :
 
 ```text
 a. guardas una nota en pagos, eliges catálogo y regresas: Detalle de pagos · borrador: ""
@@ -1111,6 +1114,8 @@ b. guardas una nota en catálogo y eliges pagos: Detalle de pagos · borrador: "
 
 **L'erreur que personne ne voit : retirer la `key`.** Dans une troisième copie, supprime la ligne `key={estado.nombre}` dans `DetalleSeleccion.tsx` :
 
+(Sortie dans `ejercicios/copia-sin-key.lint-tsc.salida.txt` ; la modification, dans `ejercicios/copia-sin-key.diff.txt`.)
+
 ```text
 $ npx tsc -b; echo "tsc: $?"
 tsc: 0
@@ -1118,11 +1123,11 @@ $ npx eslint . --max-warnings 0; echo "lint: $?"
 lint: 0
 ```
 
-Tous deux au vert, et le panneau hérite du dysfonctionnement de la scène d'ouverture : le brouillon se propage d'un service à l'autre. Aucune règle statique ne peut deviner que, pour toi, un éditeur pour `pagos` et un éditeur pour `reportes` sont deux entités distinctes ; c'est un choix de conception métier, et non de syntaxe. On ne s'en aperçoit qu'en manipulant le panneau, ou au moyen d'un test de composant qui le manipule à notre place : la Leçon 8 t'apprendra à les écrire. C'est le même constat que celui laissé par le nettoyage manquant de la leçon 0 : le linter et les types forment deux lignes de défense, pas l'intégralité du dispositif.
+Tous deux au vert, et le panneau hérite du dysfonctionnement de la scène d'ouverture : le brouillon se propage d'un service à l'autre. Aucune règle du linter du cours ne détecte que, pour toi, un éditeur pour `pagos` et un éditeur pour `reportes` sont deux entités distinctes ; c'est un choix de conception métier, et non de syntaxe. On ne s'en aperçoit qu'en manipulant le panneau, ou au moyen d'un test de composant qui le manipule à notre place : la Leçon 8 t'apprendra à les écrire. C'est le même constat que celui laissé par le nettoyage manquant de la leçon 0 : le linter et les types forment deux lignes de défense, pas l'intégralité du dispositif.
 
 ## Ce qui se fait de travers
 
-**Lire l'état immédiatement après l'avoir modifié.** `establecerX(nuevo); console.log(x)` affiche toujours l'ancienne valeur. Si tu as besoin de la nouvelle valeur au sein du même gestionnaire, enregistre-la au préalable dans une constante.
+**Lire l'état immédiatement après l'avoir modifié.** `establecerX(nuevo); console.log(x)` affiche la valeur de la photographie du rendu en cours, c'est-à-dire l'ancienne (dans un gestionnaire d'événement, comme ceux-ci). Si tu as besoin de la nouvelle valeur au sein du même gestionnaire, enregistre-la au préalable dans une constante.
 
 **Passer la valeur brute quand la valeur suivante dépend de la précédente.** `establecerN(n + 1)` fonctionne jusqu'au jour où elle est appelée deux fois lors du même clic, ou depuis une fonction générée lors d'un rendu antérieur. Si la nouvelle valeur est calculée à partir de l'ancienne, passe une fonction.
 
@@ -1132,7 +1137,7 @@ Tous deux au vert, et le panneau hérite du dysfonctionnement de la scène d'ouv
 
 **Trois drapeaux là où un `tipo` suffit.** `cargando`, `listo` et `conError` sous forme de booléens distincts autorisent des combinaisons qui ne correspondent à aucun écran réel. Une union discriminée interdit purement et simplement de les écrire.
 
-**Conserver l'objet sélectionné.** Il s'agit d'une copie d'un élément de la liste qui deviendra obsolète à la scrutation suivante. Conserve l'identifiant et résous l'objet au moment du rendu.
+**Conserver l'objet sélectionné.** Il s'agit d'une copie d'un élément de la liste qui deviendra obsolète à l'interrogation périodique suivante. Conserve l'identifiant et résous l'objet au moment du rendu.
 
 **Stocker ce qui peut être calculé, et pire encore, le synchroniser avec un Effect.** Une liste filtrée, un total ou un élément sélectionné ne constituent pas un état. Les calculer pendant le rendu est plus simple, plus rapide et prémunit contre toute désynchronisation.
 
@@ -1146,7 +1151,7 @@ Tous deux au vert, et le panneau hérite du dysfonctionnement de la scène d'ouv
 
 ### Exercice 1 — Prédis le bouton
 
-Dans une copie de `fig02_01.tsx`, remplace les trois appels de `ConValor` par ceux-ci :
+Enregistre une copie de `fig02_01.tsx` sous le nom `ejercicio1.tsx` dans `~/curso-react/figuras/` et remplace-y les trois appels de `ConValor` par ceux-ci :
 
 ```tsx
 // ejercicio 1 (fragmento)
@@ -1183,7 +1188,7 @@ Le bouton affiche `1`. La file d'attente des mises à jour, dans l'ordre :
 | `(actual) => actual + 1` | `5` | `6` |
 | « remplacer par `revisiones + 1` », avec `revisiones` à `0` | — | `1` |
 
-Le dernier appel ne dépend pas de ce qui précède : il remplace la valeur par `0 + 1`, car la photographie dont dispose le gestionnaire mentionne toujours `0`. Voici le résultat de l'exécution :
+Le dernier appel ne dépend pas de ce qui précède : il remplace la valeur par `0 + 1`, car la photographie dont dispose le gestionnaire mentionne toujours `0`. Voici le résultat de l'exécution (le fichier et sa sortie se trouvent dans `ejercicios/ejercicio1.tsx` et `ejercicios/ejercicio1.salida.txt`) :
 
 ```text
 $ npx tsc --strict --target ES2022 --module nodenext --jsx react-jsx ejercicio1.tsx
@@ -1208,11 +1213,11 @@ Le nombre se calcule pendant le rendu, à partir de `notas`, dans `Panel` :
         <p>Notas guardadas: {Object.keys(notas).length}</p>
 ```
 
-Un état `cuantasNotas` violerait la règle 3, l'état redondant : c'est une information qui se calcule directement depuis `notas`. Si tu le possédais, `guardarNota` devrait mettre à jour deux états à chaque opération, et de surcroît décider s'il convient d'ajouter un (nouvelle note), de laisser inchangé (note modifiée) ou de soustraire un (note supprimée avec un texte vide). Grâce au calcul dérivé, `conNota` prend déjà toutes ces décisions et le décompte ne peut jamais être erroné. Remarque également que `&&` n'est pas nécessaire : afficher un `0` ici est précisément ce que l'on souhaite.
+Un état `cuantasNotas` violerait la règle 3, l'état redondant : c'est une information qui se calcule directement depuis `notas`. Si tu le possédais, `guardarNota` devrait mettre à jour deux états à chaque opération, et de surcroît décider s'il convient d'ajouter un (nouvelle note), de laisser inchangé (note modifiée) ou de soustraire un (note supprimée avec un texte vide). Grâce au calcul dérivé, `conNota` prend déjà toutes ces décisions et le décompte provient toujours de `notas`, de sorte qu'il ne peut pas se retrouver désynchronisé par rapport à elles. Remarque également que `&&` n'est pas nécessaire : afficher un `0` ici est précisément ce que l'on souhaite.
 
 ### Solution 3
 
-Oui : le détail de `catálogo` demeure visible bien que sa ligne n'apparaisse plus. C'est ce qu'a mesuré Chrome sans interface graphique sur le point de contrôle (`node medir.mjs filtro`) :
+Oui : le détail de `catálogo` demeure visible bien que sa ligne n'apparaisse plus. C'est ce qu'a mesuré Chrome en mode headless sur le point de contrôle (`node medir.mjs filtro`) :
 
 ```text
 a. eliges catálogo: Detalle de catálogo
@@ -1238,7 +1243,7 @@ En décochant la case, le détail de `catálogo` **réapparaît**, car `seleccio
 
 ### Solution 4
 
-Lint et build demeurent au vert, exactement comme dans « L'erreur que tu vas voir ». Voici ce qu'a mesuré Chrome sans interface graphique sur cette copie construite (`node medir.mjs sin-key`) :
+Lint et build demeurent au vert, exactement comme dans « L'erreur que tu vas voir ». Voici ce qu'a mesuré Chrome en mode headless sur cette copie construite (`node medir.mjs sin-key`) :
 
 ```text
 a. escribes en pagos sin guardar y eliges reportes: Detalle de reportes · borrador: "borrador de pagos"
@@ -1251,8 +1256,8 @@ c. cierras el detalle y eliges reportes: Detalle de reportes · borrador: ""
 ## Comment savoir que j'ai réussi
 
 - [ ] `npm run lint` s'achève sans signaler le moindre problème et `npm run build` se conclut par `✓ built`, avec un fichier `index-….js` dans `dist/assets/`.
-- [ ] Avec le serveur d'exercice et `npm run dev` lancés, la case « Solo fallas » n'affiche plus que `pagos` et `reportes`, et le résumé continue d'indiquer « 4 servicios revisados · 2 servicios con falla ».
-- [ ] En sélectionnant un service, son bouton passe à `aria-pressed="true"` (observe-le dans les outils de développement du navigateur, onglet Éléments) et son détail apparaît ; « Cerrar detalle » le masque et le bouton repasse à `false`.
+- [ ] Avec le serveur d'entraînement et `npm run dev` lancés, la case « Solo fallas » n'affiche plus que `pagos` et `reportes`, et le résumé continue d'indiquer « 4 servicios revisados · 2 servicios con falla ».
+- [ ] En sélectionnant un service, son bouton passe à `aria-pressed="true"` (observe-le dans les outils de développement du navigateur, onglet Éléments) et son détail apparaît ; « Cerrar detalle » le masque et le bouton repasse à `false` ; cliquer de nouveau sur le même service le masque aussi.
 - [ ] Une note enregistrée marque la ligne par « · con nota », et enregistrer un texte vide retire la mention.
 - [ ] Un brouillon non enregistré ne se propage pas lors de la sélection d'un autre service, et au retour, la note enregistrée réapparaît.
 - [ ] Tu es en mesure d'exécuter les quatre figures et d'expliquer chaque ligne de leur sortie sans regarder la leçon.
@@ -1309,4 +1314,4 @@ Réponds sans regarder la leçon :
 
 ---
 
-**Suivante :** [Leçon 3 — Effects : synchroniser, pas « au chargement »](03-effects-sincronizar.md)
+**Suivante :** [Leçon 3 — Effects : synchroniser, pas « quand ça charge »](03-effects-sincronizar.md)

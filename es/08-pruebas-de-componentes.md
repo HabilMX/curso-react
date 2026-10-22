@@ -4,7 +4,7 @@
 
 **Tiempo:** 2 × 45 min (el corte natural está entre las secciones 8.2 y 8.3)
 
-**Qué construyes:** la suite del panel con Vitest y Testing Library: 26 pruebas en 7 archivos, que montan la aplicación completa en un DOM de prueba, con un enrutador en memoria y un `fetch` simulado, y que cubren las funciones puras, el reducer, el esquema, los estados del reporte, el detalle, las rutas, el límite de error y el formulario de alta
+**Qué construyes:** la suite del panel con Vitest y Testing Library: 27 pruebas en 7 archivos, que montan la aplicación completa en un DOM de prueba, con un enrutador en memoria y un `fetch` simulado, y que cubren las funciones puras, el reducer, el esquema, los estados del reporte, el detalle, las rutas, el límite de error y el formulario de alta
 
 **Qué aprendes:** consultas por rol y por qué importan para la accesibilidad; `getBy`, `queryBy`, `findBy`; `user-event`; `fetch` simulado; los cuatro estados, el formulario y una ruta con un enrutador en memoria; **la prueba que se pone roja al revertir el arreglo**; qué NO puede comprobar jsdom
 
@@ -12,7 +12,7 @@
 
 **Qué no hace esta lección.** No cambia ni una línea de la aplicación: el JavaScript que produce `npm run build` es idéntico, byte por byte, al de la lección 7. Todo lo nuevo son pruebas, la configuración que las corre y cuatro archivos de ayuda. No usa `@testing-library/jest-dom`, la biblioteca que agrega comparaciones como `toBeInTheDocument()`: las pruebas comparan `textContent` y atributos con el `expect` de Vitest, que alcanza y obliga a decir exactamente qué se espera. No usa `vi.mock` para reemplazar módulos de la aplicación: lo único falso es la red, por razones que se explican en 8.3. No escribe pruebas de extremo a extremo con un navegador real (Playwright, Cypress, el modo navegador de Vitest): se nombra lo que esas herramientas resolverían y se dice qué queda para comprobar a mano. Y no mide cobertura: un porcentaje de líneas ejecutadas no dice si una prueba se pondría roja ante el error que importa, y esta lección te enseña a comprobar eso otro.
 
-**Sobre las corridas.** Todo se ejecutó el 21 de octubre de 2026 con Node.js 24.22.0 y npm 11.19.1, en macOS, con las versiones exactas del `package.json` de esta lección. El punto de control se instaló desde cero con `npm ci` en una copia fuera del repositorio, y ahí `npm run lint`, `npm run build` y `npm test` terminaron con código 0; `npm run build` produjo `dist/assets/index-WLyq37jn.js`, el mismo nombre que en la lección 7. El conteo de pruebas se leyó del resumen de Vitest, no del código de salida. Todas las salidas de Vitest de la lección se tomaron con `--reporter=default` (o `--reporter=verbose`, donde se dice), que es lo que verías en tu terminal. La razón está en «El error que vas a ver»: Vitest cambia de reportero cuando detecta que lo ejecuta una herramienta automatizada, y ese otro reportero oculta la consola de las pruebas que pasan. La copia de trabajo tenía además los archivos de los ejercicios 3 y 4; para la corrida completa se le pasaron a Vitest las rutas de los siete archivos del punto de control, que es lo mismo que correr `npx vitest run` en el punto de control. Cada prueba que «se pone roja» se provocó en esa copia, cambiando un solo archivo, corriendo solo el archivo de pruebas afectado y restaurando después; al terminar, la copia se comparó con el punto de control con `diff -r` y no tenía diferencias, salvo los archivos de prueba de los ejercicios 3 y 4, que no forman parte del punto de control. No se repitió en un contenedor Linux ni en una Linux Mint real; nada de lo que se muestra depende del sistema, salvo las medidas en píxeles de la página gemela en Chrome (renglón 3 de la figura 3), que dependen de las fuentes instaladas. Lo que importa ahí es que Chrome mide y jsdom devuelve ceros. Las figuras se ejecutaron con su propio `package.json` en [`programas/08-pruebas-de-componentes/`](../programas/08-pruebas-de-componentes), junto a `revisor/`, como en las lecciones anteriores: se compilan con `tsc` y se corren con `node`. La figura 3 tiene además una página HTML gemela que se abrió en Chrome 155.0.8059.85 sin ventana, con `--headless --dump-dom` sobre el archivo local, para comparar lo que hace jsdom con lo que hace un navegador; esa corrida no abrió ningún puerto. Lo que **no** se midió en esta lección, y se dice donde aparece: el recorrido con el teclado en una ventana real y el sonido de un lector de pantalla. Los dos se midieron o se describieron en la lección 7 y vuelven aquí en «Cómo sé que lo logré». En las salidas, las rutas largas se muestran a partir de `~/curso-react`.
+**Sobre las corridas.** Todo se ejecutó el 21 de octubre de 2026 con Node.js 24.22.0 y npm 11.19.1, en macOS, con las versiones exactas del `package.json` de esta lección. El punto de control se instaló desde cero con `npm ci` en una copia fuera del repositorio, y ahí `npm run lint`, `npm run build` y `npm test` terminaron con código 0; `npm run build` produjo `dist/assets/index-C_lOH5GL.js` (medido otra vez el 22 de octubre de 2026, en macOS), el mismo nombre que en la lección 7. El conteo de pruebas se leyó del resumen de Vitest, no del código de salida. La tercera prueba de `PaginaServicio.test.tsx` (la del detalle viejo, 8.3.4) se añadió al revisar la lección: se vio roja con la página anterior (`1 failed | 26 passed (27)`) y verde con el punto de control, y las salidas del ejercicio 3 y de la suite completa se volvieron a correr con el punto de control nuevo. Todas las salidas de Vitest de la lección se tomaron con `--reporter=default` (o `--reporter=verbose`, donde se dice), que es lo que verías en una terminal interactiva; se fijó el reportero a propósito porque, fuera de una terminal, Vitest puede elegir otro que oculta la consola de las pruebas que pasan (ver «El error que vas a ver»). La copia de trabajo tenía además los archivos de los ejercicios 3 y 4; para la corrida completa se le pasaron a Vitest las rutas de los siete archivos del punto de control, que es lo mismo que correr `npx vitest run` en el punto de control. Cada prueba que «se pone roja» se provocó en esa copia, cambiando un solo archivo, corriendo solo el archivo de pruebas afectado y restaurando después; al terminar, la copia se comparó con el punto de control con `diff -r` y no tenía diferencias, salvo los archivos de prueba de los ejercicios 3 y 4, que no forman parte del punto de control. El punto de control también se instaló desde cero en un contenedor Linux (Debian 12, imagen oficial `node:24.22.0-bookworm`): ahí `npm run build` dio el mismo nombre de archivo y `npm test` terminó con código 0 y `Tests  27 passed (27)`. No se corrió en una Linux Mint real; nada de lo que se muestra depende del sistema, salvo las medidas en píxeles de la página gemela en Chrome (renglón 3 de la figura 3), que dependen de las fuentes instaladas. Lo que importa ahí es que Chrome mide y jsdom devuelve ceros. Las figuras se ejecutaron con su propio `package.json` en [`programas/08-pruebas-de-componentes/`](../programas/08-pruebas-de-componentes), junto a `revisor/`, como en las lecciones anteriores: se compilan con `tsc` y se corren con `node`. La figura 3 tiene además una página HTML gemela que se abrió en Chrome 155.0.8059.85 sin ventana, con `--headless --dump-dom` sobre el archivo local, para comparar lo que hace jsdom con lo que hace un navegador; esa corrida no abrió ningún puerto. Lo que **no** se midió en esta lección, y se dice donde aparece: el recorrido con el teclado en una ventana real y el sonido de un lector de pantalla. Los dos se midieron o se describieron en la lección 7 y vuelven aquí en «Cómo sé que lo logré». En las salidas, las rutas largas se muestran a partir de `~/curso-react`. Los archivos de prueba de los ejercicios y las salidas de la suite, del control negativo y de cada reversión están en `programas/08-pruebas-de-componentes/ejercicios/` (se volvieron a correr al aplicar la revisión, así que sus horas y duraciones difieren de las pegadas aquí). El servidor de práctica (el mismo archivo desde la lección 4) responde `400` con `{"detalle":"nombre de servicio inválido"}` a una dirección con un `%` mal formado, como `/api/servicios/%`, y a su ruta `/reintento`; antes respondía `500`. Se midió con `curl` contra una copia, antes y después, y el proceso siguió vivo en los dos casos.
 
 ## Al terminar vas a poder
 
@@ -32,7 +32,7 @@ Hasta la lección 7, cada vez que el `revisor` cambiaba, alguien comprobaba que 
 
 **¿Cómo pruebas lo que depende de la red sin depender de la red?** El reporte tiene cuatro estados más uno: cargando, error, vacío, con datos, y con datos viejos cuando la actualización falla. Ver el de «cargando» en un navegador exige una API lenta; ver el de error, una API caída; el vacío, otra API. La API de práctica tiene la variable `ESCENARIO` para eso, pero arrancarla tres veces con tres valores no es algo que corra en dos segundos. Si la prueba controla lo que responde `fetch`, cada estado es una línea.
 
-**¿Cómo sabes que la prueba mira lo mismo que mira la persona?** Una prueba que busca `.boton-enviar` o `div > button:nth-child(2)` pasa aunque el botón se haya vuelto un `<span>` que un lector de pantalla no anuncia y el teclado no alcanza. Las consultas de Testing Library empiezan por otro lado: por el **rol** y el **nombre accesible**, que son lo que el navegador entrega a la tecnología de asistencia. Si una prueba encuentra «el botón que se llama Dar de alta», ese botón existe para todos. Es la misma costumbre de la lección 7, ahora automática.
+**¿Cómo sabes que la prueba mira lo mismo que mira la persona?** Una prueba que busca `.boton-enviar` o `div > button:nth-child(2)` pasa aunque el botón se haya vuelto un `<span>` que un lector de pantalla no anuncia y el teclado no alcanza. Las consultas de Testing Library empiezan por otro lado: por el **rol** y el **nombre accesible**, que son lo que el navegador entrega a la tecnología de asistencia. Si una prueba encuentra «el botón que se llama Dar de alta», ese botón está en el árbol de accesibilidad con ese rol y ese nombre: un lector de pantalla lo anuncia así. Lo que la consulta **no** comprueba es que se alcance con Tab ni que responda a Enter o Espacio; eso lo garantiza el `<button>` nativo (lección 7) y, en esta suite, lo ejercita la prueba del foco con `usuario.tab()` y `usuario.keyboard(" ")`. Es la misma costumbre de la lección 7, ahora automática.
 
 **¿Cómo sabes que la prueba sirve?** Esta es la pregunta que casi nadie hace. Una prueba verde dice que el código actual cumple lo que la prueba afirma. No dice que la prueba se pondría roja si el arreglo desapareciera. Hay pruebas que pasan con el código bueno **y** con el malo: no protegen nada y dan una tranquilidad falsa. La única forma de saberlo es hacer el experimento: quitar el arreglo, ver el rojo, restaurar. Esta lección lo hace con tres pruebas de la suite (y una cuarta en el ejercicio 2) y te enseña a reconocer una que no pasa el examen.
 
@@ -42,40 +42,41 @@ Las cuatro respuestas caben en tres conceptos: consultar la página como lo hace
 $ npx vitest run --reporter=verbose
  RUN  v5.0.5 ~/curso-react/revisor
 
- ✓ src/compartido/esquema.test.ts > validarCampos con el esquema del alta > convierte el texto del formulario en un NuevoServicio 1ms
- ✓ src/compartido/esquema.test.ts > validarCampos con el esquema del alta > informa todos los campos inválidos a la vez 0ms
+ ✓ src/avisos/avisos.test.ts > reducirAvisos > agrega al principio con un identificador nuevo 1ms
+ ✓ src/avisos/avisos.test.ts > reducirAvisos > descarta uno por su identificador y no toca los demás 0ms
+ ✓ src/avisos/avisos.test.ts > reducirAvisos > conserva solo los 5 más recientes 0ms
+ ✓ src/avisos/avisos.test.ts > reducirAvisos > descartar todos vacía la bandeja y conserva el contador 0ms
  ✓ src/reporte/resumen.test.ts > resumen > cuenta solo los servicios en falla 1ms
  ✓ src/reporte/resumen.test.ts > resumen > usa singular y plural 0ms
  ✓ src/reporte/resumen.test.ts > resumen > filtra por falla y por nombre, sin importar mayúsculas 0ms
- ✓ src/avisos/avisos.test.ts > reducirAvisos > agrega al principio con un identificador nuevo 2ms
- ✓ src/avisos/avisos.test.ts > reducirAvisos > descarta uno por su identificador y no toca los demás 1ms
- ✓ src/avisos/avisos.test.ts > reducirAvisos > conserva solo los 5 más recientes 0ms
- ✓ src/avisos/avisos.test.ts > reducirAvisos > descartar todos vacía la bandeja y conserva el contador 0ms
- ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > cargando: anuncia la carga mientras la API no responde 29ms
- ✓ src/app/rutas.test.tsx > las rutas > una dirección desconocida muestra la página de no encontrada 83ms
- ✓ src/app/rutas.test.tsx > las rutas > el menú marca la página actual 15ms
- ✓ src/app/rutas.test.tsx > las rutas > una página que se rompe al dibujar muestra el aviso del revisor 10ms
- ✓ src/detalle/PaginaServicio.test.tsx > la página de un servicio > muestra el detalle del servicio de la dirección 100ms
- ✓ src/detalle/PaginaServicio.test.tsx > la página de un servicio > volver a revisar deja un aviso en la bandeja 28ms
- ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > error: muestra el motivo y un botón para reintentar 78ms
- ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > vacío: lo dice en lugar de dejar la lista en blanco 17ms
- ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > con datos: un enlace por servicio y el resumen de fallas 15ms
- ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > sin fallas no pinta un 0 suelto en el resumen 8ms
- ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > el filtro «solo fallas» viaja en la dirección 27ms
- ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > una dirección con el filtro ya puesto abre filtrada 9ms
- ✓ src/alta/FormularioAlta.test.tsx > el formulario de alta > sin datos marca los tres campos y lo anuncia 112ms
- ✓ src/alta/FormularioAlta.test.tsx > el formulario de alta > con datos válidos envía el alta y confirma 103ms
- ✓ src/alta/FormularioAlta.test.tsx > el formulario de alta > declara los obligatorios y la bandeja anuncia solo el aviso nuevo 9ms
- ✓ src/alta/FormularioAlta.test.tsx > el formulario de alta > el foco no se pierde al enviar y un segundo envío se ignora 109ms
- ✓ src/alta/FormularioAlta.test.tsx > el formulario de alta > un nombre repetido se marca en su campo con el mensaje de la API 84ms
+ ✓ src/compartido/esquema.test.ts > validarCampos con el esquema del alta > convierte el texto del formulario en un NuevoServicio 2ms
+ ✓ src/compartido/esquema.test.ts > validarCampos con el esquema del alta > informa todos los campos inválidos a la vez 0ms
+ ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > cargando: anuncia la carga mientras la API no responde 157ms
+ ✓ src/alta/FormularioAlta.test.tsx > el formulario de alta > sin datos marca los tres campos y lo anuncia 447ms
+ ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > error: muestra el motivo y un botón para reintentar 395ms
+ ✓ src/app/rutas.test.tsx > las rutas > una dirección desconocida muestra la página de no encontrada 629ms
+ ✓ src/detalle/PaginaServicio.test.tsx > la página de un servicio > muestra el detalle del servicio de la dirección 581ms
+ ✓ src/detalle/PaginaServicio.test.tsx > la página de un servicio > volver a revisar deja un aviso en la bandeja 86ms
+ ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > vacío: lo dice en lugar de dejar la lista en blanco 134ms
+ ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > con datos: un enlace por servicio y el resumen de fallas 53ms
+ ✓ src/app/rutas.test.tsx > las rutas > el menú marca la página actual 113ms
+ ✓ src/app/rutas.test.tsx > las rutas > una página que se rompe al dibujar muestra el aviso del revisor 122ms
+ ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > sin fallas no pinta un 0 suelto en el resumen 34ms
+ ✓ src/alta/FormularioAlta.test.tsx > el formulario de alta > con datos válidos envía el alta y confirma 546ms
+ ✓ src/detalle/PaginaServicio.test.tsx > la página de un servicio > si la actualización del detalle falla, conserva el detalle y la nota que se escribía 518ms
+ ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > el filtro «solo fallas» viaja en la dirección 401ms
+ ✓ src/reporte/PaginaReporte.test.tsx > la página del reporte > una dirección con el filtro ya puesto abre filtrada 72ms
+ ✓ src/alta/FormularioAlta.test.tsx > el formulario de alta > declara los obligatorios y la bandeja anuncia solo el aviso nuevo 176ms
+ ✓ src/alta/FormularioAlta.test.tsx > el formulario de alta > el foco no se pierde al enviar y un segundo envío se ignora 613ms
+ ✓ src/alta/FormularioAlta.test.tsx > el formulario de alta > un nombre repetido se marca en su campo con el mensaje de la API 550ms
 
  Test Files  7 passed (7)
-      Tests  26 passed (26)
-   Start at  04:05:39
-   Duration  1.06s (environment 54%, tests 19%, setup 13%, import 9%, transform 4%, worker 1%)
+      Tests  27 passed (27)
+   Start at  16:08:16
+   Duration  4.69s (environment 54%, tests 29%, setup 8%, transform 4%, import 4%, worker 1%)
 ```
 
-Son 26 líneas con `✓`, y el resumen lo confirma: `Tests  26 passed (26)`. Fíjate en cómo se leen los nombres: «el formulario de alta > el foco no se pierde al enviar y un segundo envío se ignora». Cada prueba dice qué comportamiento protege, en el idioma de quien usa el panel, no en el de quien lo programó. Cuando una se ponga roja, el nombre te va a decir qué se rompió antes de que leas una línea de código. Y fíjate en los milisegundos: las pruebas que montan la aplicación tardan de 8 a 112 ms; las de funciones puras, de 0 a 2. La suite completa, con el arranque de jsdom, tardó 1.06 s.
+Son 27 líneas con `✓`, y el resumen lo confirma: `Tests  27 passed (27)`. Fíjate en cómo se leen los nombres: «el formulario de alta > el foco no se pierde al enviar y un segundo envío se ignora». Cada prueba dice qué comportamiento protege, en el idioma de quien usa el panel, no en el de quien lo programó. Cuando una se ponga roja, el nombre te va a decir qué se rompió antes de que leas una línea de código. Y fíjate en los milisegundos: las pruebas que montan la aplicación tardaron de 34 a 629 ms en esta corrida; las de funciones puras, de 0 a 2. La suite completa, con el arranque de jsdom, tardó 4.69 s. Esos milisegundos dependen de lo que tenga encendido la máquina (la corrida anterior, con la máquina más libre, dio de 8 a 112 ms y 1.06 s), así que léelos como un orden de magnitud: lo que sí se sostiene es que las funciones puras tardan casi nada y montar la aplicación cuesta cientos de veces más.
 
 ## Los conceptos
 
@@ -130,13 +131,13 @@ Cada pieza tiene un trabajo distinto, y conviene no confundirlas:
 
 - **`vitest`** es el que corre las pruebas: encuentra los archivos `*.test.ts` y `*.test.tsx`, los transforma con la misma configuración de Vite que ya usa el proyecto (por eso entiende TypeScript y JSX sin un paso aparte) y da las funciones `test`, `describe`, `expect` y `vi`.
 - **`jsdom`** es un DOM escrito en JavaScript: `document`, `window`, elementos, eventos, formularios. No es un navegador; es la parte del navegador que se puede imitar sin dibujar nada. Ya lo usaste en las figuras de las lecciones anteriores.
-- **`@testing-library/dom`** trae las consultas (`getByRole`, `findByText`…) y la espera (`waitFor`). No sabe nada de React.
-- **`@testing-library/react`** es una capa delgada encima: `render`, que dibuja un componente de React en el DOM de prueba, y `cleanup`, que lo desmonta. Envuelve sus funciones en `act` por ti, que es la herramienta de React para aplicar todos los cambios pendientes antes de comparar ([React, `act`](https://react.dev/reference/react/act)). La documentación de React agrega que, con React Testing Library, la variable `IS_REACT_ACT_ENVIRONMENT` «ya queda puesta». Eso es cierto solo cuando el ejecutor de pruebas expone sus funciones como globales, igual que pasa con `cleanup`, y por eso `preparar.ts` la enciende a mano (8.1.3). Por eso en esta suite casi no aparece `act`: la única vez que se usa a mano es en el ejercicio 3, para navegar con el enrutador desde fuera de un clic.
+- **`@testing-library/dom`** trae las consultas (`getByRole`, `findByText`…) y la espera (`waitFor`). No sabe nada de React. Se instala aparte porque `@testing-library/react` la declara como dependencia par (*peer dependency*) y no la trae; su documentación pide instalar las dos juntas. Las figuras la importan directo para `logRoles` (8.2.2).
+- **`@testing-library/react`** es una capa delgada encima: `render`, que dibuja un componente de React en el DOM de prueba, y `cleanup`, que lo desmonta. Envuelve sus funciones en `act` por ti, que es la herramienta de React para aplicar todos los cambios pendientes antes de comparar ([React, `act`](https://react.dev/reference/react/act)). La documentación de React agrega que, con React Testing Library, la variable `IS_REACT_ACT_ENVIRONMENT` «ya queda puesta». Es cierto a medias: la biblioteca la enciende **de forma permanente** solo cuando el ejecutor expone `beforeAll` como global, igual que pasa con `cleanup`; sin globales, la enciende solo mientras dura cada `render` o cada evento que ella misma envuelve en `act`, y la apaga durante cada espera. Una actualización que ocurra fuera de esos tramos (un temporizador, una respuesta que llega tarde) no avisaría nunca. Por eso `preparar.ts` la enciende a mano (8.1.3). Por eso en esta suite casi no aparece `act`: la única vez que se usa a mano es en el ejercicio 3, para navegar con el enrutador desde fuera de un clic.
 - **`@testing-library/user-event`** simula a una persona: escribe, hace clic, pulsa teclas. Se explica en 8.2.3.
 
-El script nuevo es `"test": "vitest run"`. La palabra `run` importa: sin ella, en tu terminal `vitest` se queda vigilando tus archivos y vuelve a correr las pruebas en cada cambio, que es cómodo mientras programas y estorba en una verificación que tiene que terminar. (Solo en un servidor de integración continua o en una terminal no interactiva corre una vez por su cuenta.) Con `run`, corre una vez en cualquier lugar y sale con código 0 si todo pasó, o 1 si algo falló.
+El script nuevo es `"test": "vitest run"`. La palabra `run` importa: sin ella, en tu terminal `vitest` se queda vigilando tus archivos y vuelve a correr las pruebas en cada cambio, que es cómodo mientras programas y estorba en una verificación que tiene que terminar. (Corre una sola vez por su cuenta en un servidor de integración continua, en una terminal no interactiva o cuando detecta que lo ejecuta un asistente de programación.) Con `run`, corre una vez en cualquier lugar y sale con código 0 si todo pasó, o 1 si algo falló.
 
-Como en todo el curso, las versiones van exactas. Las midió `npm view` el 21 de octubre de 2026, y en seis renglones son más nuevas que las de la tabla del README: React 19.3.1, Vite 8.3.5, React Router 8.5.0, TanStack Query 5.104.5, Vitest 5.0.5 y `user-event` 14.6.8. Manda el `package.json`.
+Como en todo el curso, las versiones van exactas. Las midió `npm view` el 21 de octubre de 2026 y son las mismas de la tabla «Versiones con las que se escribió» del README. Si algún día difieren, manda el `package.json` del punto de control.
 
 #### 8.1.2 La configuración vive en `vite.config.ts`
 
@@ -198,10 +199,14 @@ Son tres instrucciones, y cada una tiene una razón.
 
 **`IS_REACT_ACT_ENVIRONMENT = true`** enciende los avisos de React sobre `act`. React solo avisa de una actualización de estado que ocurrió fuera de `act` si esa variable global está en `true`; la documentación de React pide ponerla en el archivo de preparación de las pruebas. React Testing Library la enciende sola, pero lo hace desde un `beforeAll` global, que con `globals` apagado no existe: es el mismo problema de `cleanup`. Sin esta línea, la suite nunca imprimiría un aviso de `act`, y «no hay ningún aviso» no demostraría nada. El `as { IS_REACT_ACT_ENVIRONMENT?: boolean }` es para TypeScript, que no conoce esa propiedad de `globalThis`.
 
-Que la línea sirve se midió con un control negativo, una prueba de usar y tirar que no es parte del punto de control: un componente cambia su estado con un temporizador, y la prueba espera con otro temporizador, no con `findBy`, así que nadie envuelve el cambio en `act`.
+Que la línea sirve se midió con un control negativo, una prueba de usar y tirar que no es parte del punto de control: un componente cambia su estado con un temporizador, y la prueba espera con otro temporizador, no con `findBy`, así que nadie envuelve el cambio en `act`. (`screen`, que aparece en la prueba, consulta todo el documento; se explica en 8.3.2.)
 
 ```tsx
-// fragmento: una prueba de control, fuera del punto de control
+// fragmento: una prueba de control, fuera del punto de control (programas/08-pruebas-de-componentes/ejercicios/control.test.tsx)
+import { render, screen } from "@testing-library/react";
+import { useEffect, useState } from "react";
+import { expect, test } from "vitest";
+
 function Tardio() {
   const [texto, establecerTexto] = useState("esperando");
   useEffect(() => {
@@ -259,7 +264,7 @@ This ensures that you're testing the behavior the user would see in the browser.
    Duration  349ms (environment 67%, tests 20%, setup 10%, transform 1%, import 1%, worker 1%)
 ```
 
-La prueba pasa en los dos casos, porque el texto sí llega a «listo». Lo que cambia es que, con la línea, React avisa en la salida de error (`stderr`) que hubo una actualización sin `act`. Ese es el aviso que la suite del `revisor` no debe tener, y no tiene: con la línea puesta, las 26 pruebas pasan sin un solo `stderr`.
+La prueba pasa en los dos casos, porque el texto sí llega a «listo». Lo que cambia es que, con la línea, React avisa en la salida de error (`stderr`) que hubo una actualización sin `act`. Ese es el aviso que la suite del `revisor` no debe tener, y no tiene: con la línea puesta, las 27 pruebas pasan sin un solo `stderr`.
 
 ¿Por qué `afterEach` y no `beforeEach`? Porque limpiar al final deja el DOM vacío también después de la **última** prueba, y porque así cada prueba empieza con lo que dejó la limpieza, no con lo que dejó otra. Las pruebas no dependen de su orden, que es la propiedad que permite correr un archivo solo, como vas a hacer en 8.4.
 
@@ -483,7 +488,7 @@ $ node fig08_01.js
 
 Ocho resultados, y cada uno enseña algo.
 
-**Antes de que lleguen los datos, `getByRole("list")` lanza y `queryByRole("list")` devuelve `null`.** Es la misma pregunta con dos respuestas distintas para «no está». Usa `getBy` cuando el elemento **tiene que** estar: si falta, la prueba se detiene en esa línea con un mensaje que dice qué buscabas y, en una prueba de Vitest, imprime el DOM completo para que veas qué había. Usa `queryBy` cuando quieres afirmar que algo **no** está: `expect(screen.queryByRole("list")).toBeNull()`. Escribir eso con `getBy` es imposible, porque lanzaría antes de llegar al `expect`. La prueba del estado vacío del `revisor` usa exactamente esa línea.
+**Antes de que lleguen los datos, `getByRole("list")` lanza y `queryByRole("list")` devuelve `null`.** Es la misma pregunta con dos respuestas distintas para «no está». Usa `getBy` cuando el elemento **tiene que** estar: si falta, la prueba se detiene en esa línea con un mensaje que dice qué buscabas y, debajo, el DOM que había (lo imprime Testing Library, no Vitest, recortado a 7 000 caracteres salvo que cambies `DEBUG_PRINT_LIMIT`; la figura lo corta con `primeraLinea` porque aquí estorba). Usa `queryBy` cuando quieres afirmar que algo **no** está: `expect(screen.queryByRole("list")).toBeNull()`. Escribir eso con `getBy` es imposible, porque lanzaría antes de llegar al `expect`. La prueba del estado vacío del `revisor` usa exactamente esa línea.
 
 **`getByRole("status")` lanza «Found multiple elements with the role "status"».** En la pantalla hay **dos** regiones de estado: la bandeja de avisos, que está siempre (lección 6), y el «Cargando…». `getBy` exige uno y solo uno. Este detalle es real en el `revisor` y explica una línea de su suite que, si no, parecería rara: la prueba de «cargando» busca el texto con `findByText("Cargando…")` y **después** comprueba que su rol sea `status`. Así encuentra el elemento sin ambigüedad y afirma de todos modos que se anuncia como región de estado. La otra salida sería filtrar por nombre, pero un `status` no toma su nombre de su contenido, así que «Cargando…» no es su nombre.
 
@@ -499,7 +504,7 @@ Una regla que sale de aquí: **no envuelvas un `getBy` en un `waitFor` a mano** 
 
 Cuando una persona usa el panel no piensa «el segundo `<button>` dentro del `<form>`». Piensa «el botón Dar de alta». Quien usa un lector de pantalla oye lo mismo: «Dar de alta, botón». Esas dos palabras son el **nombre accesible** y el **rol**, las mismas de la lección 7, y son lo que el navegador entrega a la tecnología de asistencia. Testing Library ordena sus consultas con ese criterio. En su página de consultas pone primero las que llama «accesibles para todos» (`getByRole`, `getByLabelText`, `getByPlaceholderText`, `getByText`, `getByDisplayValue`), porque reflejan la experiencia de quien usa el ratón y la vista y también la de quien usa tecnología de asistencia; después las semánticas (`getByAltText`, `getByTitle`), y al final, los identificadores de prueba (`getByTestId`) ([Testing Library, «About Queries»](https://testing-library.com/docs/queries/about/)). Detrás hay un principio que la propia biblioteca escribe así: mientras más se parezcan tus pruebas a la forma en que se usa tu programa, más confianza te pueden dar ([Testing Library, «Guiding Principles»](https://testing-library.com/docs/guiding-principles)).
 
-La consecuencia práctica es más fuerte de lo que parece: **una consulta por rol falla si el elemento no es accesible**. Para verlo, la figura 2 dibuja dos veces lo mismo: un aviso de la bandeja con su botón «Descartar» y un campo «Nombre». Arriba con los elementos nativos; abajo, una imitación que se vería igual con un poco de CSS.
+La consecuencia práctica es más fuerte de lo que parece: **una consulta por rol falla si el elemento no tiene ese rol y ese nombre en el árbol de accesibilidad**, o si está oculto para él. No es una prueba completa de accesibilidad (un `<span role="button">` sin `tabindex` pasaría la consulta y seguiría fuera del alcance del teclado), pero descarta la imitación más común, que es la de la figura 2. Para verlo, la figura 2 dibuja dos veces lo mismo: un aviso de la bandeja con su botón «Descartar» y un campo «Nombre». Arriba con los elementos nativos; abajo, una imitación que se vería igual con un poco de CSS.
 
 ```tsx
 // fig08_02.tsx
@@ -645,7 +650,7 @@ La última parte de la salida es `logRoles`, una función de depuración de Test
 
 Esto no significa que solo se use `getByRole`. La suite usa `getByLabelText` para los campos del formulario, que es más directo y dice lo mismo (el campo tiene esa etiqueta), y `getByText` o `findByText` para textos que no son controles, como «No hay servicios configurados todavía.». Lo que **no** usa es `getByTestId` ni selectores de CSS. La regla práctica: busca primero por rol; si el elemento no tiene un rol útil (un párrafo, un texto suelto), por texto; y si para encontrar algo necesitas un identificador de prueba, pregúntate primero si una persona podría encontrarlo.
 
-Hay un costo que conviene conocer. `ByRole` calcula el árbol de accesibilidad, y la documentación advierte que esos cálculos pueden ser caros con árboles de DOM grandes. Con el `revisor` no se nota (la prueba más lenta de la suite tardó 112 ms, con la aplicación completa montada), pero si una suite tuya se arrastra, ese es un sospechoso.
+Hay un costo que conviene conocer. `ByRole` calcula el árbol de accesibilidad, y la documentación advierte que esos cálculos pueden ser caros con árboles de DOM grandes. Con el `revisor` no se nota (la prueba más lenta de la suite tardó 629 ms en la corrida de 8.1, con la aplicación completa montada), pero si una suite tuya se arrastra, ese es un sospechoso.
 
 #### 8.2.3 `user-event`: una persona, no un evento
 
@@ -783,7 +788,7 @@ export function montarEn(direccion: string) {
 
 **Lo que devuelve.** `{ enrutador, usuario }`. El `usuario` sirve para actuar; el `enrutador`, para preguntar dónde quedó la aplicación (`enrutador.state.location.search`) o para navegar desde fuera, como en el ejercicio 3. Lo que **no** devuelve son las consultas de `render`: las pruebas usan `screen`, que consulta todo el `document.body`. La diferencia importa poco aquí y algo en el futuro: si mañana un componente dibuja algo con un portal fuera de su contenedor, `screen` lo sigue encontrando.
 
-Fíjate en lo que `montarEn` **no** monta: `StrictMode` ni `LimiteDeError`, que están en `main.tsx` alrededor de todo. Las pruebas montan lo que está dentro. El límite de error de las rutas sí está, porque viene dentro de `rutas`, y tiene su prueba en 8.3.4.
+Fíjate en lo que `montarEn` **no** monta: `StrictMode` ni `LimiteDeError`, que están en `main.tsx` alrededor de todo. Las pruebas montan lo que está dentro. `StrictMode` queda fuera a propósito: en desarrollo monta, desmonta y vuelve a montar cada componente (lección 3), así que la primera petición de cada consulta se cancelaría y se repetiría, y contar llamadas a `fetch` se volvería ambiguo. Si un día quieres esa doble pasada en una prueba, React Testing Library la ofrece con `configure({ reactStrictMode: true })` o con la opción `reactStrictMode` de `render`. El límite de error de las rutas sí está, porque viene dentro de `rutas`, y tiene su prueba en 8.3.4.
 
 #### 8.3.3 Los estados del reporte
 
@@ -867,7 +872,7 @@ Recórrelas en orden, porque juntas son la tabla de estados que la lección 4 pr
 
 **Vacío.** La API responde `{ "estados": [] }`. La prueba espera el texto «No hay servicios configurados todavía.» y afirma con `queryByRole("list")` que **no** hay lista. Ese segundo `expect` es el que distingue «vacío» de «una lista sin elementos»: un `<ul>` vacío no le dice nada a nadie.
 
-**Con datos.** Los cuatro servicios. La prueba toma la lista, dentro de ella todos los enlaces, y compara sus textos **en orden**. Después busca el resumen con una expresión regular, `/2 servicios con falla/`, porque ese texto vive en un `<strong>` dentro de un párrafo y comparte el párrafo con «4 servicios revisados».
+**Con datos.** Los cuatro servicios. La prueba toma la lista, dentro de ella todos los enlaces, y compara sus textos **en orden**. Después busca el resumen con una expresión regular, `/2 servicios con falla/`. Hace falta porque el texto del `<strong>` no es «2 servicios con falla» sino « · 2 servicios con falla», con el separador adelante (`ResumenFallas.tsx`, línea 10), y `getByText` con un texto fijo exige que el texto del elemento coincida completo. La expresión regular busca solo el pedazo que importa.
 
 **Sin fallas no pinta un 0 suelto.** La que la escena necesitaba. La API responde solo los dos servicios disponibles, y la prueba compara el `textContent` completo del resumen con `"2 servicios revisados"`, exacto, con `toBe`. Si en ese texto apareciera cualquier cosa más, un `0`, un espacio, un punto, la comparación fallaría. Es el caso que la API de práctica no tiene y que nadie revisaría a mano. En 8.4 lo ves fallar.
 
@@ -875,7 +880,7 @@ Recórrelas en orden, porque juntas son la tabla de estados que la lección 4 pr
 
 **Una dirección con el filtro ya puesto abre filtrada.** La otra mitad de la misma promesa: montar en `/?q=inv` y ver solo `inventario`. Es lo que pasa cuando alguien pega un enlace compartido.
 
-Faltan dos estados de la tabla, y lo digo para que no los busques. El de «con datos y error» (la actualización falló, pero se sigue mostrando el último reporte) no tiene prueba en el punto de control. El de «datos viejos mientras se actualiza», el `· actualizando…` junto a la hora, tampoco: depende de una segunda petición en curso. Las dos pruebas las escribes tú en el ejercicio 4, y sin ellas no se cumple el tercer punto de «Cómo sabes que terminaste» del curso.
+Faltan dos estados de la tabla, y lo digo para que no los busques. El de «con datos y error» del **reporte** (la actualización falló, pero se sigue mostrando el último reporte) no tiene prueba en el punto de control; el del **detalle** sí, y es la tercera prueba de 8.3.4. El de «datos viejos mientras se actualiza», el `· actualizando…` junto a la hora, tampoco: depende de una segunda petición en curso. Las dos pruebas las escribes tú en el ejercicio 4, y sin ellas no se cumple el tercer punto de «Cómo sabes que terminaste» del curso.
 
 #### 8.3.4 Las rutas, con un enrutador en memoria
 
@@ -886,7 +891,7 @@ Dos archivos prueban la navegación. El del detalle:
 import { screen } from "@testing-library/react";
 import { describe, expect, test } from "vitest";
 import { detallePagos } from "../pruebas/datos";
-import { instalarFetchFalso } from "../pruebas/fetchFalso";
+import { instalarFetchFalso, type RespuestaFalsa } from "../pruebas/fetchFalso";
 import { montarEn } from "../pruebas/montar";
 
 describe("la página de un servicio", () => {
@@ -910,12 +915,83 @@ describe("la página de un servicio", () => {
     expect(await screen.findByText("pagos se volvió a revisar: disponible")).toBeDefined();
     expect(fetchFalso.mock.calls.some(([, opciones]) => opciones?.method === "POST")).toBe(true);
   });
+
+  test("si la actualización del detalle falla, conserva el detalle y la nota que se escribía", async () => {
+    // El primer GET responde bien; los siguientes, 503. El clic en «Volver a revisar»
+    // invalida el detalle, y esa segunda petición es la que falla.
+    const detalles: RespuestaFalsa[] = [{ status: 200, cuerpo: detallePagos }];
+    instalarFetchFalso({
+      "GET /api/servicios/pagos": async () => detalles.shift() ?? { status: 503, cuerpo: { detalle: "caída" } },
+      "POST /api/servicios/pagos/reintento": {
+        status: 200,
+        cuerpo: { nombre: "pagos", tipo: "disponible", codigoHttp: 200, duracionMs: 95 },
+      },
+    });
+    const { usuario } = montarEn("/servicios/pagos");
+    const nota = await screen.findByLabelText("Nota sobre pagos");
+    await usuario.type(nota, "revisar con infraestructura");
+    await usuario.click(screen.getByRole("button", { name: "Volver a revisar" }));
+
+    expect(await screen.findByText(/Mostrando el último detalle que llegó/)).toBeDefined();
+    expect(screen.getByText("En falla: HTTP 503")).toBeDefined();
+    expect((screen.getByLabelText("Nota sobre pagos") as HTMLTextAreaElement).value).toBe("revisar con infraestructura");
+  });
 });
 ```
 
 La primera prueba monta directamente en `/servicios/pagos` y espera el estado del servicio y el encabezado «Servicio pagos». Comprueba de un golpe tres cosas que nadie revisaría juntas: que la ruta `servicios/:nombre` lleve a `PaginaServicio`, que `useParams` entregue `pagos`, y que la consulta pida `GET /api/servicios/pagos`. Si la ruta pidiera otra dirección, el falso respondería 404 y el texto esperado nunca aparecería.
 
 La segunda hace clic en «Volver a revisar» y espera el aviso en la bandeja, que es lo que la lección 6 conectó con `useReintentar`. Su última línea revisa que alguna llamada a `fetch` haya sido un `POST`: recorre `fetchFalso.mock.calls` y pregunta por el método de cada una.
+
+La tercera prueba existe por un defecto que una revisión externa encontró y que ninguna de las otras dos podía ver. Mientras la primera petición del detalle responde bien y las siguientes con `503` (una función en la tabla del falso lleva la cuenta, como en el ejercicio 4), la prueba escribe un borrador en «Nota sobre pagos», hace clic en «Volver a revisar» y espera el aviso «Mostrando el último detalle que llegó». El clic invalida el detalle, la segunda petición falla y el estado de la consulta pasa a `error` con los datos anteriores todavía en la caché. La prueba comprueba tres cosas: el aviso, el estado «En falla: HTTP 503» que sigue a la vista y el borrador de la nota intacto. Esta última importa tanto como el aviso: con la versión anterior de la página, que dibujaba el detalle solo si `consulta.isSuccess`, el editor de la nota se desmontaba con el error y el borrador se perdía.
+
+Una prueba nueva no vale hasta que se la ve roja. Con la página anterior (la condición `consulta.isSuccess` y un solo aviso de error) la suite da `1 failed | 26 passed (27)`, y el archivo, lo siguiente:
+
+```bash
+$ diff programas/08-pruebas-de-componentes/revisor/src/detalle/PaginaServicio.tsx src/detalle/PaginaServicio.tsx
+20c20
+<       {consulta.isError && consulta.data === undefined && (
+---
+>       {consulta.isError && (
+23,28c23
+<       {consulta.isError && consulta.data !== undefined && (
+<         <p role="alert" className="viejo">
+<           Mostrando el último detalle que llegó: la actualización falló ({consulta.error.message}).
+<         </p>
+<       )}
+<       {consulta.data !== undefined && (
+---
+>       {consulta.isSuccess && (
+$ npx vitest run --reporter=default src/detalle/PaginaServicio.test.tsx
+ RUN  v5.0.5 ~/curso-react/revisor
+
+ ❯ src/detalle/PaginaServicio.test.tsx (3 tests | 1 failed)
+   ❯ la página de un servicio (3)
+     ✓ muestra el detalle del servicio de la dirección
+     ✓ volver a revisar deja un aviso en la bandeja
+     × si la actualización del detalle falla, conserva el detalle y la nota que se escribía
+
+ FAIL  src/detalle/PaginaServicio.test.tsx > la página de un servicio > si la actualización del detalle falla, conserva el detalle y la nota que se escribía
+TestingLibraryElementError: Unable to find an element with the text: /Mostrando el último detalle que llegó/.
+[… el DOM que había: solo «No se pudo cargar el detalle: la API respondió 503», sin detalle ni editor …]
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+```
+
+Con el punto de control, la misma prueba pasa y la suite completa da `27 passed (27)`:
+
+```bash
+$ npx vitest run --reporter=default src/detalle/PaginaServicio.test.tsx
+ RUN  v5.0.5 ~/curso-react/revisor
+
+ ✓ src/detalle/PaginaServicio.test.tsx (3 tests)
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+```
+
+Las salidas completas están en `programas/08-pruebas-de-componentes/ejercicios/` (`detalle-viejo-con-isSuccess.salida.txt` y `detalle-viejo-punto-de-control.salida.txt`, con el `diff` en `detalle-viejo-con-isSuccess.diff.txt`).
 
 Y el de las rutas en general:
 
@@ -1104,7 +1180,7 @@ describe("el formulario de alta", () => {
 
 **Sin datos marca los tres campos y lo anuncia.** La API no tiene ninguna ruta declarada (`instalarFetchFalso({})`), así que cualquier petición respondería 404. La prueba hace clic en «Dar de alta» con el formulario vacío y comprueba cuatro cosas: el texto de la alerta, `aria-invalid="true"` en los tres campos (encontrados por su etiqueta, en un `for`), el `aria-describedby` del nombre con el error **antes** que la ayuda (el orden en que el lector los lee, lección 7), y que `fetch` no se haya llamado nunca. Esa última es la que demuestra que la validación ocurre en el navegador: si el formulario mandara la petición y esperara a que la API se quejara, la prueba seguiría viendo errores (la API falsa respondería 404) pero `not.toHaveBeenCalled()` se pondría rojo.
 
-**Con datos válidos envía el alta y confirma.** La API responde 201. La prueba escribe en los tres campos, hace clic y espera el botón «Descartar: Se dio de alta correo», que solo existe cuando hay un aviso en la bandeja. Después afirma que el texto «Se dio de alta correo.» con punto, el que mostraba el formulario antes de los arreglos de la lección 7, **no** está: el éxito se anuncia en un solo lugar. Por último lee el cuerpo de la primera llamada a `fetch`: `fetchFalso.mock.calls[0]` es el arreglo de argumentos `[entrada, opciones]`, y la desestructuración `const [, opciones]` se salta el primero. El cuerpo es JSON, así que se convierte con `JSON.parse` y se compara con `toEqual`. Fíjate en la URL: la persona escribió `https://correo.example` y viajó `https://correo.example/`, con la barra final que agrega el esquema. La prueba documenta esa normalización.
+**Con datos válidos envía el alta y confirma.** La API responde 201. La prueba escribe en los tres campos, hace clic y espera el botón «Descartar: Se dio de alta correo», que solo existe cuando hay un aviso en la bandeja. Después afirma que el texto «Se dio de alta correo.» con punto, el que tendría un formulario con su propia región de éxito (la versión con dos `status` que la lección 7 descartó en 7.3.3), **no** está: el éxito se anuncia en un solo lugar. Por último lee el cuerpo de la primera llamada a `fetch`: `fetchFalso.mock.calls[0]` es el arreglo de argumentos `[entrada, opciones]`, y la desestructuración `const [, opciones]` se salta el primero. El cuerpo es JSON, así que se convierte con `JSON.parse` y se compara con `toEqual`. Fíjate en la URL: la persona escribió `https://correo.example` y viajó `https://correo.example/`, con la barra final que agrega el esquema. La prueba documenta esa normalización.
 
 **Declara los obligatorios y la bandeja anuncia solo el aviso nuevo.** Dos de los arreglos de la lección 7, en una prueba. `campo.required` es la propiedad del DOM que refleja el atributo `required`; el `as HTMLInputElement` le dice a TypeScript que lo encontrado por etiqueta es un `<input>`, porque `findByLabelText` solo promete un `HTMLElement`. Y la bandeja se encuentra por su rol de región y su nombre, «Avisos», y dentro de ella el `status`, para leer su `aria-atomic`. Es una prueba de atributos, no de comportamiento: jsdom no tiene lector de pantalla, así que lo más cerca que puede llegar es comprobar que el atributo que el lector necesita está puesto.
 
@@ -1124,7 +1200,7 @@ describe("el formulario de alta", () => {
 
 #### 8.4.1 El experimento
 
-Una prueba verde responde «¿el código cumple esto?». No responde «¿esta prueba notaría si el arreglo desapareciera?». Para la segunda pregunta hay un solo experimento, y es el que da nombre a la sección:
+Una prueba verde responde «¿el código cumple esto?». No responde «¿esta prueba notaría si el arreglo desapareciera?». Para la segunda pregunta hay un experimento directo, y es el que da nombre a la sección:
 
 1. Copia el punto de control (o trabaja en una rama que vas a descartar).
 2. Deshaz **solo** el arreglo que la prueba dice proteger, en un solo archivo.
@@ -1188,7 +1264,7 @@ Una prueba roja de siete, la que debía. Lee el mensaje de abajo hacia arriba, q
 
 El `0` pegado al final es el error de la lección 1, visto desde una prueba: cuando `fallas` vale `0`, la expresión `0 && <strong>…</strong>` vale `0`, y React dibuja los números (no dibuja `false`, `null` ni `undefined`, pero sí `0`). Las otras seis pruebas siguen verdes, y eso también es información: en particular, «con datos» sigue verde, porque con dos fallas `fallas && …` se comporta igual que `fallas > 0 && …`. **Una sola prueba de este archivo distingue el arreglo del error**, y es la que tiene datos sin fallas. Si no existiera, la suite diría «todo bien» con el error de la escena adentro.
 
-Restaurado el archivo, el archivo de pruebas vuelve a `7 passed (7)`, y la suite completa, a 26 de 26.
+Restaurado el archivo, el archivo de pruebas vuelve a `7 passed (7)`, y la suite completa, a 27 de 27.
 
 #### 8.4.3 El botón que se lleva el foco
 
@@ -1454,7 +1530,7 @@ Ignored nodes: comments, script, style
    Duration  2.20s (tests 56%, environment 36%, import 3%, transform 3%, setup 2%)
 ```
 
-«Unable to find role="alert"», y debajo, el DOM que sí había: el límite por omisión de React Router, con «Unexpected Application Error!», el mensaje, la pila (recortada arriba) y, como Vitest corre las pruebas en modo de desarrollo, el párrafo que te sugiere poner tu propio `ErrorBoundary` o `errorElement` en la ruta. Es la pantalla que la lección 5 mostró en Chrome, ahora como texto en la salida de una prueba. La salida real imprime ese DOM dos veces; la segunda copia se quitó. `Tests  1 failed | 2 passed (3)`.
+«Unable to find role="alert"», y debajo, el DOM que sí había: el límite por omisión de React Router, con «Unexpected Application Error!», el mensaje, la pila (recortada arriba) y el párrafo que te sugiere poner tu propio `ErrorBoundary` o `errorElement` en la ruta. Ese párrafo existe solo en la versión de desarrollo de React Router: Vitest no corre en modo de producción (`NODE_ENV` vale `test`), así que Vite carga esa versión, igual que carga la de React (fíjate en `react-dom-client.development.js` en la pila). Es la pantalla que la lección 5 mostró en Chrome, ahora como texto en la salida de una prueba. La salida real imprime ese DOM dos veces; la segunda copia se quitó. `Tests  1 failed | 2 passed (3)`.
 
 Las tres pruebas pasaron el examen, cuatro veces. Lo que tienen en común vale más que cada una: **cada una afirma exactamente lo que el arreglo cambió**. El resumen se compara entero, no con un `toContain`. El botón se revisa por su atributo, no solo por el foco. La alerta se busca por su rol, y además se comprueba que no aparezca el texto del límite ajeno. Cuando una prueba afirma algo más débil que el arreglo, el error pasa por el hueco.
 
@@ -1462,7 +1538,7 @@ Las tres pruebas pasaron el examen, cuatro veces. Lo que tienen en común vale m
 
 #### 8.5.1 Un DOM que no dibuja
 
-jsdom implementa el DOM, los eventos, los formularios y buena parte de CSS. Lo que no hace es **dibujar**. Su README pone dos cosas fuera de su alcance: la navegación (cambiar de página al seguir un enlace o al asignar `location.href`) y el diseño, que define como la capacidad de calcular dónde quedarán los elementos por efecto del CSS. Para el diseño hay valores de relleno, y muchas propiedades devuelven ceros ([jsdom, README](https://github.com/jsdom/jsdom#unimplemented-parts-of-the-web-platform)).
+jsdom implementa el DOM, los eventos, los formularios y la lectura de las hojas de estilo (sabe qué regla aplica a cada elemento, como muestra el renglón 4 de la figura). Lo que no hace es **dibujar**. Su README pone dos cosas fuera de su alcance: la navegación (cambiar de página al seguir un enlace o al asignar `location.href`) y el diseño, que define como la capacidad de calcular dónde quedarán los elementos por efecto del CSS. Para el diseño hay valores de relleno, y muchas propiedades devuelven ceros ([jsdom, README](https://github.com/jsdom/jsdom#unimplemented-parts-of-the-web-platform)).
 
 Eso tiene una consecuencia que no es obvia: hay comportamientos del navegador que dependen del dibujo aunque no parezcan de dibujo. El foco es uno. La figura 3 hace cuatro preguntas a jsdom, sin React, y una página HTML gemela hace las mismas cuatro a Chrome:
 
@@ -1538,7 +1614,7 @@ $ node fig08_03.js
 Y la página gemela, `fig08_03.html` (está junto a la figura, con el mismo HTML y los mismos pasos escritos en JavaScript de navegador), abierta en Chrome sin ventana:
 
 ```bash
-$ "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --disable-gpu --no-first-run \
+$ google-chrome --headless --disable-gpu --no-first-run \
     --user-data-dir="$PWD/perfil" --virtual-time-budget=3000 --dump-dom "file://$PWD/fig08_03.html"
 1. el foco en un botón que se desactiva
    después de focus(): foco en #enviar
@@ -1554,11 +1630,11 @@ $ "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --di
    opacity: 0.6, cursor: not-allowed
 ```
 
-(Lo que se muestra es el contenido del `<pre id="salida">` donde la página escribe sus resultados; `--dump-dom` imprime la página entera. En tu Mint, el ejecutable se llama `google-chrome` o `chromium`. `--virtual-time-budget` deja correr los temporizadores y los cuadros de animación antes de imprimir. Y `--user-data-dir` usa un perfil de Chrome nuevo en la carpeta `perfil/`, para no tocar el tuyo: bórrala al terminar y no la subas al repositorio.)
+(Lo que se muestra es el contenido del `<pre id="salida">` donde la página escribe sus resultados; `--dump-dom` imprime la página entera. En Chromium el ejecutable se llama `chromium`; en macOS, donde se midió esta salida, la ruta es `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"`. `--virtual-time-budget` deja correr los temporizadores y los cuadros de animación antes de imprimir. Y `--user-data-dir` usa un perfil de Chrome nuevo en la carpeta `perfil/`, para no tocar el tuyo: bórrala al terminar y no la subas al repositorio.)
 
 Compara renglón por renglón.
 
-**1. El foco en un botón que se desactiva.** Justo después de `disabled = true`, **los dos** dicen que el foco sigue en `#enviar`. Dos cuadros de animación después, Chrome dice `body` y jsdom sigue diciendo `#enviar`. La especificación de HTML explica la diferencia. En los pasos de «actualizar la representación» (*update the rendering*), que el navegador corre cuando va a dibujar un cuadro, hay uno que dice: si el área enfocada del documento ya no es un área enfocable, se corren los pasos de enfoque sobre la ventana del documento. Y pone como ejemplo justo esto: que a un control se le ponga `disabled` ([WHATWG, HTML, «Update the rendering»](https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering)). La especificación la llama una corrección **asíncrona**: no ocurre al poner el atributo, sino en el siguiente dibujo. jsdom no dibuja, así que esa corrección nunca llega, aunque con `pretendToBeVisual` le dé `requestAnimationFrame`. Es la medición de la lección 7 (en Chrome, mientras el alta estaba pendiente, el foco ya estaba en el `body`), explicada desde la especificación y vista en jsdom. Y es la razón de la línea 82 de la prueba del formulario.
+**1. El foco en un botón que se desactiva.** Justo después de `disabled = true`, **los dos** dicen que el foco sigue en `#enviar`. Dos cuadros de animación después, Chrome dice `body` y jsdom sigue diciendo `#enviar`. La especificación de HTML explica la diferencia. En los pasos de «actualizar la representación» (*update the rendering*), que el navegador corre cuando va a dibujar un cuadro, hay uno que dice: si el área enfocada del documento ya no es un área enfocable, se corren los pasos de enfoque sobre el *viewport* del documento (en la práctica, el foco cae en el `body`, que es lo que Chrome reporta). Y pone como ejemplo justo esto: que a un control se le ponga `disabled` ([WHATWG, HTML, «Update the rendering»](https://html.spec.whatwg.org/multipage/webappapis.html#update-the-rendering)). La especificación la llama una corrección **asíncrona**: no ocurre al poner el atributo, sino en el siguiente dibujo. jsdom no dibuja, así que esa corrección nunca llega, aunque con `pretendToBeVisual` le dé `requestAnimationFrame`. Es la medición de la lección 7 (en Chrome, mientras el alta estaba pendiente, el foco ya estaba en el `body`), explicada desde la especificación y vista en jsdom. Y es la razón de la línea 82 de la prueba del formulario.
 
 Fíjate en un detalle del primer renglón de Chrome: incluso en un navegador real, una comprobación **inmediata** habría dicho «el foco sigue en el botón». Una prueba que mirara el foco justo después de desactivar el botón estaría equivocada en los dos lados.
 
@@ -1744,9 +1820,9 @@ $ npx vitest run src/detalle/EditorNotaIngenua.test.tsx
    Duration  478ms (environment 49%, tests 27%, import 9%, setup 8%, transform 6%)
 ```
 
-No pasa el examen. La razón está en `PaginaServicio`: `EditorNota` solo se dibuja cuando `consulta.isSuccess`. Al navegar a `reportes`, la consulta de ese servicio todavía no tiene datos, así que la página muestra «Cargando detalle…» y **desmonta** el editor. Cuando llegan los datos, monta uno nuevo, con su estado nuevo. El borrador se pierde por esa razón, con `key` o sin ella. La prueba comprueba algo cierto, pero no lo que la `key` arregla.
+No pasa el examen. La razón está en `PaginaServicio`: `EditorNota` solo se dibuja cuando la consulta ya tiene datos (`consulta.data !== undefined`). Al navegar a `reportes`, la consulta de ese servicio todavía no tiene datos, así que la página muestra «Cargando detalle…» y **desmonta** el editor. Cuando llegan los datos, monta uno nuevo, con su estado nuevo. El borrador se pierde por esa razón, con `key` o sin ella. La prueba comprueba algo cierto, pero no lo que la `key` arregla.
 
-El caso que la `key` arregla es cuando la página **no** pasa por «cargando»: cuando el servicio de destino ya está en la caché. Entonces `isSuccess` es verdadero desde el primer dibujo, `EditorNota` queda en el mismo lugar del árbol, y sin `key` React lo reutiliza con su estado. La prueba buena visita primero `reportes` para que su detalle quede en la caché:
+El caso que la `key` arregla es cuando la página **no** pasa por «cargando»: cuando el servicio de destino ya está en la caché. Entonces los datos ya están desde el primer dibujo, `EditorNota` queda en el mismo lugar del árbol, y sin `key` React lo reutiliza con su estado. La prueba buena visita primero `reportes` para que su detalle quede en la caché:
 
 ```tsx
 // fragmento: src/detalle/EditorNota.test.tsx, la que pasa el examen
@@ -1791,7 +1867,7 @@ Y sin `key={nombre}`, roja, con el borrador de `pagos` en el editor de `reportes
 
 ```bash
 $ diff programas/08-pruebas-de-componentes/revisor/src/detalle/PaginaServicio.tsx src/detalle/PaginaServicio.tsx
-41d40
+46d45
 <             key={nombre}
 $ npx vitest run src/detalle/EditorNota.test.tsx
  RUN  v5.0.5 ~/curso-react/revisor
@@ -2015,8 +2091,8 @@ En el DOM recortado se ve el problema: mientras llega el reporte nuevo, la panta
 
 ## Cómo sé que lo logré
 
-- [ ] `npm ci`, `npm run lint` y `npm run build` terminan bien dentro de `~/curso-react/revisor/`, y `npm run build` deja `dist/assets/index-WLyq37jn.js`, **el mismo nombre que en la lección 7**: las pruebas no cambiaron la aplicación.
-- [ ] `npm test` termina con `Test Files  7 passed (7)` y `Tests  26 passed (26)`, leídos del resumen, no del código de salida. Con `npx vitest run --reporter=verbose`, ves las 26 líneas con `✓` y sus nombres.
+- [ ] `npm ci`, `npm run lint` y `npm run build` terminan bien dentro de `~/curso-react/revisor/`, y `npm run build` deja `dist/assets/index-C_lOH5GL.js`, **el mismo nombre que en la lección 7**: las pruebas no cambiaron la aplicación.
+- [ ] `npm test` termina con `Test Files  7 passed (7)` y `Tests  27 passed (27)`, leídos del resumen, no del código de salida. Con `npx vitest run --reporter=verbose`, ves las 27 líneas con `✓` y sus nombres.
 - [ ] Con `npx vitest run --reporter=default`, la salida de la suite no tiene ningún `stderr` ni ningún aviso que mencione `act(`. Y comprobaste que eso significa algo: sin la línea de `IS_REACT_ACT_ENVIRONMENT` en `preparar.ts`, la prueba de control de 8.1.3 no avisa; con ella, sí.
 - [ ] Hiciste el examen de 8.4 con al menos dos arreglos, en una copia: `fallas > 0` en `ResumenFallas.tsx` y la guarda `onClick={alPulsar}` en `BotonEnviar.tsx`. Cada uno dejó roja la prueba que se dice en la lección, con el mensaje que se dice; restaurado, todo volvió a verde.
 - [ ] Las figuras 1, 2 y 3 dan en tu máquina la misma salida que en la lección, y la página `fig08_03.html` en tu Chrome dice `body` en el renglón «dos cuadros después».
@@ -2050,7 +2126,7 @@ Responde sin mirar la lección:
 - [Testing Library, API de React Testing Library](https://testing-library.com/docs/react-testing-library/api): `render`, lo que devuelve, y cuándo `cleanup` es automático y cuándo no. Consultado el 21 de octubre de 2026.
 - [Testing Library, `user-event`](https://testing-library.com/docs/user-event/intro) y [su teclado](https://testing-library.com/docs/user-event/keyboard): interacciones completas frente a eventos sueltos, `setup()` antes de dibujar, y cómo se escriben las teclas. Consultado el 21 de octubre de 2026.
 - [Vitest, «Test Environment»](https://vitest.dev/guide/environment.html): el entorno `node` por omisión y el entorno `jsdom`. Consultado el 21 de octubre de 2026.
-- [Vitest, `globals`](https://vitest.dev/config/globals.html): por qué vale `false` por omisión y qué bibliotecas dependen de los globales para limpiar. Consultado el 21 de octubre de 2026.
+- [Vitest, `globals`](https://vitest.dev/config/globals.html) y [«Reporters»](https://vitest.dev/guide/reporters.html): por qué `globals` vale `false` por omisión y qué bibliotecas dependen de los globales para limpiar solas; qué reportero elige Vitest y cuál oculta la consola de las pruebas que pasan. Consultado el 21 de octubre de 2026.
 - [Vitest, `vi`](https://vitest.dev/api/vi.html), [`mock`](https://vitest.dev/api/mock.html) y [«Hooks»](https://vitest.dev/api/hooks.html): `vi.fn`, `vi.spyOn`, `vi.stubGlobal`, `vi.unstubAllGlobals`, `mock.calls`, `mockRestore`, `afterEach` y `onTestFinished`. Consultado el 21 de octubre de 2026.
 - [React, `act`](https://react.dev/reference/react/act): aplicar los cambios pendientes antes de comparar, `IS_REACT_ACT_ENVIRONMENT`, y por qué React Testing Library ya lo usa por ti. Consultado el 21 de octubre de 2026.
 - [React Router, `createMemoryRouter`](https://reactrouter.com/api/data-routers/createMemoryRouter): el enrutador con historial en memoria e `initialEntries`. Consultado el 21 de octubre de 2026.

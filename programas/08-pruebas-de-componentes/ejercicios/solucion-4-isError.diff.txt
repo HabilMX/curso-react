@@ -1,0 +1,4 @@
+21c21
+<   if (consulta.isError && consulta.data === undefined) {
+---
+>   if (consulta.isError) {

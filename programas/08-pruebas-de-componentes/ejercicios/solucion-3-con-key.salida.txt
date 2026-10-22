@@ -1,0 +1,12 @@
+$ npx vitest run --reporter=default src/detalle/EditorNota.test.tsx
+
+ RUN  v5.0.5 ~/curso-react/revisor
+
+ ✓ src/detalle/EditorNota.test.tsx (1 test) 150ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  16:10:13
+   Duration  747ms (environment 50%, tests 22%, transform 12%, import 9%, setup 7%)
+
+[código de salida: 0]

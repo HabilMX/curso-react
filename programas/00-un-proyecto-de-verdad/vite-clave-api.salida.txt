@@ -1,0 +1,11 @@
+# Experimento de 0.4, corrido el 21-oct-2026 con Node.js 24.22.0 sobre una copia del punto de control.
+# Se agregó al final de src/main.tsx este renglón (y después se quitó):
+#   console.log("con prefijo:", import.meta.env.VITE_CLAVE_API, "sin prefijo:", import.meta.env.CLAVE_API);
+$ VITE_CLAVE_API=clave-de-mentira-123 CLAVE_API=otra-clave-456 npx vite build
+...
+✓ built in 739ms
+$ grep -o 'con prefijo:.\{0,80\}' dist/assets/*.js
+con prefijo:`,`clave-de-mentira-123`,`sin prefijo:`,void 0);
+$ npx tsc -b
+src/main.tsx(18,45): error TS2339: Property 'VITE_CLAVE_API' does not exist on type 'ImportMetaEnv'.
+src/main.tsx(18,93): error TS2339: Property 'CLAVE_API' does not exist on type 'ImportMetaEnv'.

@@ -8,10 +8,11 @@
 import { readdir, readFile } from "node:fs/promises";
 import { createServer, type ServerResponse } from "node:http";
 import { extname, join, relative, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const PUERTO = Number(process.env.PUERTO ?? "4180");
 const API_URL = process.env.API_URL ?? "http://127.0.0.1:3100";
-const RAIZ = new URL("../dist/", import.meta.url).pathname;
+const RAIZ = fileURLToPath(new URL("../dist/", import.meta.url));
 
 const TIPOS: Readonly<Record<string, string>> = {
   ".html": "text/html; charset=utf-8",

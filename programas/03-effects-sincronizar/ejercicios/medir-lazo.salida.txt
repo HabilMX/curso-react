@@ -1,0 +1,26 @@
+# Repetición del 21-oct-2026 con Node.js 24.22.0 (macOS), Chrome sin ventana y npm run dev. Las horas son UTC y distintas de las del texto; los desenlaces son los mismos.
+# Guion: node medir.mjs lazo   (sobre: copia-lazo; cambios en copia-lazo.diff.txt)
+## Lo que vio el guion
+22:07:16.769 abre http://localhost:5173/
+
+## Bitácora del servidor de práctica (npm run servidor)
+22:07:12.732 servidor de práctica en http://127.0.0.1:3100
+22:07:16.921 GET /api/estados cancelada por el cliente
+22:07:17.230 GET /api/estados 200
+22:07:17.546 GET /api/estados 200
+22:07:17.851 GET /api/estados 200
+22:07:18.156 GET /api/estados 200
+22:07:18.464 GET /api/estados 200
+22:07:18.767 GET /api/estados 200
+22:07:19.071 GET /api/estados 200
+22:07:19.378 GET /api/estados 200
+22:07:19.683 GET /api/estados 200
+22:07:19.987 GET /api/estados 200
+22:07:20.295 GET /api/estados 200
+22:07:20.599 GET /api/estados 200
+22:07:20.904 GET /api/estados 200
+22:07:21.215 GET /api/estados 200
+22:07:21.523 GET /api/estados 200
+22:07:21.831 GET /api/estados 200
+22:07:21.895 GET /api/estados cancelada por el cliente
+22:07:22.975 servidor de práctica detenido

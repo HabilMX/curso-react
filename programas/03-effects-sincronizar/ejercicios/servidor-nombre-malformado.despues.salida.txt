@@ -1,0 +1,13 @@
+# Despues del arreglo (mismo comando, mismo dia):
+$ curl --path-as-is -s -w " %{http_code}\n" http://127.0.0.1:3100/api/servicios/%
+{"detalle":"nombre de servicio inválido"} 400
+$ curl -s -w " %{http_code}\n" http://127.0.0.1:3100/api/servicios/cat%C3%A1logo
+{"nombre":"catálogo","estado":{"nombre":"catálogo","tipo":"disponible","codigoHttp":200,"duracionMs":42},"revisiones":0,"ultimaRevision":"2026-10-21T22:02:19.579Z"} 200
+$ curl -s -w " %{http_code}\n" http://127.0.0.1:3100/api/servicios/nada
+{"detalle":"no existe el servicio nada"} 404
+(el proceso sigue vivo; bitácora del servidor:)
+vivo
+22:02:19.583 servidor de práctica en http://127.0.0.1:3100
+22:02:21.023 GET /api/servicios/% 400
+22:02:21.231 GET /api/servicios/cat%C3%A1logo 200
+22:02:21.438 GET /api/servicios/nada 404

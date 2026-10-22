@@ -1,0 +1,2 @@
+# Corrido el 21-oct-2026 con Node.js 24.22.0 en ~/curso-react/figuras/ (package.json y eslint.config.js de esta carpeta).
+$ npx eslint fig03_02.corregida.tsx   # sin problemas, código de salida 0

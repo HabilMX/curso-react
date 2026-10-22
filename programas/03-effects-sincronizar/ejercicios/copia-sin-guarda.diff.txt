@@ -1,0 +1,13 @@
+--- revisor/src/detalle/useDetalle.ts	2026-10-21 01:41:40
++++ copia-sin-guarda/src/detalle/useDetalle.ts	2026-10-21 16:02:58
+@@ -16,10 +16,6 @@
+     cargarDetalle(nombre, control.signal).then(
+       (detalle) => establecerCarga({ tipo: "listo", detalle }),
+       (error: unknown) => {
+-        if (control.signal.aborted) {
+-          return;
+-        }
+-
+         const detalle = error instanceof Error ? error.message : "falló la carga";
+         establecerCarga({ tipo: "error", detalle });
+       },

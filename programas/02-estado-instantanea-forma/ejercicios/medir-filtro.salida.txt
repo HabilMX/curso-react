@@ -1,0 +1,5 @@
+# Corrido el 21-oct-2026 con Node.js 24.22.0 (macOS), sobre una copia del punto de control. Rutas mostradas a partir de ~/curso-react.
+$ node medir.mjs filtro      # punto de control construido, servido con vite preview
+a. eliges catálogo: Detalle de catálogo
+b. marcas «Solo fallas»: pagos: falla (HTTP 503) | reportes: falla (tiempo límite agotado) · Detalle de catálogo
+c. desmarcas: Detalle de catálogo

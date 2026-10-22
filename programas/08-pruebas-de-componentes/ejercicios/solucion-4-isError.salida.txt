@@ -1,0 +1,33 @@
+$ npx vitest run --reporter=default src/reporte/DatosViejos.test.tsx
+
+ RUN  v5.0.5 ~/curso-react/revisor
+
+ ❯ src/reporte/DatosViejos.test.tsx (2 tests | 1 failed) 505ms
+   × datos viejos: si la actualización falla, conserva la lista y lo avisa 433ms
+   ✓ actualizando: mientras llega el reporte nuevo, el viejo sigue a la vista 71ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/reporte/DatosViejos.test.tsx > datos viejos: si la actualización falla, conserva la lista y lo avisa
+AssertionError: expected 'No se pudo cargar el reporte: la API …' to be 'Mostrando el último reporte que llegó…' // Object.is equality
+
+Expected: "Mostrando el último reporte que llegó: la actualización falló (la API respondió 503)."
+Received: "No se pudo cargar el reporte: la API respondió 503Reintentar"
+
+ ❯ src/reporte/DatosViejos.test.tsx:20:29
+     18|
+     19|   const aviso = await screen.findByRole("alert");
+     20|   expect(aviso.textContent).toBe(
+       |                             ^
+     21|     "Mostrando el último reporte que llegó: la actualización falló (la…
+     22|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  09:10:36
+   Duration  2.24s (environment 43%, tests 24%, import 15%, transform 14%, setup 4%)
+
+[código de salida: 1]

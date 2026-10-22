@@ -1,0 +1,44 @@
+--- revisor/src/detalle/useDetalle.ts	2026-10-21 01:41:40
++++ copia-bandera/src/detalle/useDetalle.ts	2026-10-21 16:07:35
+@@ -11,12 +11,16 @@
+   const [carga, establecerCarga] = useState<CargaDetalle>({ tipo: "cargando" });
+ 
+   useEffect(() => {
+-    const control = new AbortController();
++    let ignorar = false;
+ 
+-    cargarDetalle(nombre, control.signal).then(
+-      (detalle) => establecerCarga({ tipo: "listo", detalle }),
++    cargarDetalle(nombre, new AbortController().signal).then(
++      (detalle) => {
++        if (!ignorar) {
++          establecerCarga({ tipo: "listo", detalle });
++        }
++      },
+       (error: unknown) => {
+-        if (control.signal.aborted) {
++        if (ignorar) {
+           return;
+         }
+ 
+@@ -25,7 +29,9 @@
+       },
+     );
+ 
+-    return () => control.abort();
++    return () => {
++      ignorar = true;
++    };
+   }, [nombre]);
+ 
+   return carga;
+--- revisor/src/reporte/ContenidoReporte.tsx	2026-10-21 01:41:41
++++ copia-bandera/src/reporte/ContenidoReporte.tsx	2026-10-21 16:07:35
+@@ -41,7 +41,6 @@
+           />
+           {seleccionado !== null && existe && (
+             <PanelDetalle
+-              key={seleccionado}
+               nombre={seleccionado}
+               notaGuardada={notas[seleccionado] ?? ""}
+               alGuardarNota={alGuardarNota}

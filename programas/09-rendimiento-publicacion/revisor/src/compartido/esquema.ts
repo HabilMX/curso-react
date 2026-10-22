@@ -28,6 +28,12 @@ export const urlHttp: Esquema<string> = {
       const url = new URL(valor.trim());
 
       if (url.protocol === "http:" || url.protocol === "https:") {
+        // Usuario y clave en la dirección son un secreto: se rechazan, y el mensaje
+        // no repite la dirección, porque terminaría pintado junto al campo.
+        if (url.username !== "" || url.password !== "") {
+          return { ok: false, detalle: "quita el usuario y la clave de la dirección" };
+        }
+
         return { ok: true, valor: url.href };
       }
     } catch {

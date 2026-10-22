@@ -12,6 +12,9 @@ const urlHttp: Esquema<string> = {
     try {
       const url = new URL(String(v).trim());
       if (url.protocol === "http:" || url.protocol === "https:") {
+        if (url.username !== "" || url.password !== "") {
+          return { ok: false, detalle: "quita el usuario y la clave de la dirección" };
+        }
         return { ok: true, valor: url.href };
       }
     } catch {

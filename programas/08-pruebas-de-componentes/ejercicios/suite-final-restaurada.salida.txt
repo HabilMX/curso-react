@@ -1,0 +1,14 @@
+$ npx vitest run --reporter=default src/alta src/app src/reporte/PaginaReporte.test.tsx
+
+ RUN  v5.0.5 ~/curso-react/revisor
+
+ ✓ src/app/rutas.test.tsx (3 tests) 80ms
+ ✓ src/reporte/PaginaReporte.test.tsx (7 tests) 187ms
+ ✓ src/alta/FormularioAlta.test.tsx (5 tests) 414ms
+
+ Test Files  3 passed (3)
+      Tests  15 passed (15)
+   Start at  09:10:41
+   Duration  1.22s (environment 53%, tests 24%, import 9%, setup 8%, transform 6%)
+
+[código de salida: 0]

@@ -1,0 +1,12 @@
+$ npx vitest run --reporter=default src/detalle/PaginaServicio.test.tsx
+
+ RUN  v5.0.5 ~/curso-react/revisor
+
+ ✓ src/detalle/PaginaServicio.test.tsx (3 tests) 280ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  16:10:45
+   Duration  2.11s (environment 59%, tests 14%, import 12%, transform 8%, setup 7%)
+
+[código de salida: 0]

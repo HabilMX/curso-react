@@ -1,0 +1,11 @@
+# Corrido el 21-oct-2026 con Node.js 24.22.0 (macOS) en ~/curso-react/figuras/, con el package.json de esta carpeta.
+$ node fig01_03.ejercicio2.js
+key={posicion}
+  filas creadas desde cero: 0 de 3
+  pagos (nació como catálogo) | inventario (nació como pagos) | reportes (nació como inventario)
+key={`${posicion}-${nombre}`}
+  filas creadas desde cero: 3 de 3
+  pagos | inventario | reportes
+key={nombre}
+  filas creadas desde cero: 0 de 3
+  pagos | inventario | reportes

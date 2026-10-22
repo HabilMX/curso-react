@@ -62,7 +62,7 @@ _data:_
 - Uma tela onde o contexto era desnecessário e bastavam as props:
 - Uma ação do reducer e o teste que escrevi para ela:
 
-## Lição 7 — Formulários, ações e acessibilidade
+## Lição 7 — Formulários, actions e acessibilidade
 
 _data:_
 

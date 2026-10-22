@@ -10,6 +10,7 @@
 //   node medir.mjs filtro        (solución 3)
 //   node medir.mjs sin-key       (solución 4; sobre una copia sin la key de DetalleSeleccion)
 //   node medir.mjs efecto        (El error que vas a ver; sobre la copia con el Effect)
+//   node medir.mjs alternar      (sección 2.4.3; volver a pulsar el servicio elegido)
 // Variables: DEPURACION (puerto de Chrome, 9222) y PAGINA (http://localhost:4173/).
 const depuracion = `http://127.0.0.1:${process.env.DEPURACION ?? "9222"}`;
 const direccion = process.env.PAGINA ?? "http://localhost:4173/";
@@ -81,6 +82,16 @@ if (escenario === "recorrido") {
   await hacer(`boton("Cerrar detalle").click()`);
   console.log("7. cierras el detalle");
   console.log("   ¿hay detalle?:", await leer(`document.querySelector("aside") !== null`), "· pagos aria-pressed:", await leer(`boton("pagos").getAttribute("aria-pressed")`));
+} else if (escenario === "alternar") {
+  const hayDetalle = `document.querySelector("aside") !== null`;
+  const presionado = `boton("pagos").getAttribute("aria-pressed")`;
+  await hacer(`boton("pagos").click()`);
+  console.log("a. eliges pagos:", await detalle(), "· aria-pressed:", await leer(presionado));
+  await hacer(`boton("pagos").click()`);
+  console.log("b. pulsas pagos otra vez: ¿hay detalle?", await leer(hayDetalle), "· aria-pressed:", await leer(presionado));
+  await hacer(`boton("pagos").click()`);
+  await hacer(`boton("reportes").click()`);
+  console.log("c. eliges pagos y luego reportes:", await detalle(), "· pagos aria-pressed:", await leer(presionado));
 } else if (escenario === "filtro") {
   await hacer(`boton("catálogo").click()`);
   console.log("a. eliges catálogo:", await detalle());

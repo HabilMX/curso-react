@@ -1,0 +1,11 @@
+diff --color -u revisor/src/reporte/DetalleSeleccion.tsx copia-sinkey/src/reporte/DetalleSeleccion.tsx
+--- revisor/src/reporte/DetalleSeleccion.tsx	2026-10-21 01:40:26
++++ copia-sinkey/src/reporte/DetalleSeleccion.tsx	2026-10-21 15:53:38
+@@ -22,7 +22,6 @@
+           : `En falla: ${estado.detalle}`}
+       </p>
+       <EditorNota
+-        key={estado.nombre}
+         nombre={estado.nombre}
+         notaGuardada={notas[estado.nombre] ?? ""}
+         alGuardar={alGuardarNota}

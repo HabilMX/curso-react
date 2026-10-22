@@ -1,0 +1,13 @@
+# Corrido el 21-oct-2026; el servidor de esta carpeta, con Node.js 24.22.0, puerto 3100.
+$ curl -s -w "\n%{http_code} en %{time_total} s\n" http://127.0.0.1:3100/api/servicios/pagos
+{"nombre":"pagos","estado":{"nombre":"pagos","tipo":"falla","detalle":"HTTP 503"},"revisiones":0,"ultimaRevision":"2026-10-21T22:08:27.441Z"}
+200 en 1.506067 s
+$ curl -s -w "\n%{http_code} en %{time_total} s\n" http://127.0.0.1:3100/api/servicios/inventario
+{"nombre":"inventario","estado":{"nombre":"inventario","tipo":"disponible","codigoHttp":200,"duracionMs":118},"revisiones":0,"ultimaRevision":"2026-10-21T22:08:27.441Z"}
+200 en 0.206395 s
+$ curl -s -w "\n%{http_code} en %{time_total} s\n" http://127.0.0.1:3100/api/servicios/nada
+{"detalle":"no existe el servicio nada"}
+404 en 0.202472 s
+
+# Punto de control en Linux (contenedor oficial node:24.22.0-bookworm, copia limpia, npm ci, 21-oct-2026):
+# npm run lint sin avisos; npm run build -> dist/assets/index-CGNql20r.css e index-CTkBRgQQ.js (los mismos nombres que en macOS).

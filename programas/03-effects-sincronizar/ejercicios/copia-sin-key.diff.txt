@@ -1,0 +1,10 @@
+--- revisor/src/reporte/ContenidoReporte.tsx	2026-10-21 01:41:41
++++ copia-sin-key/src/reporte/ContenidoReporte.tsx	2026-10-21 16:02:58
+@@ -41,7 +41,6 @@
+           />
+           {seleccionado !== null && existe && (
+             <PanelDetalle
+-              key={seleccionado}
+               nombre={seleccionado}
+               notaGuardada={notas[seleccionado] ?? ""}
+               alGuardarNota={alGuardarNota}

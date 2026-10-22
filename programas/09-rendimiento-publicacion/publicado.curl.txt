@@ -1,0 +1,22 @@
+$ curl -sI http://127.0.0.1:4109/servicios/pagos
+HTTP/1.1 200 OK
+content-type: text/html; charset=utf-8
+cache-control: no-cache
+content-security-policy: default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'
+x-content-type-options: nosniff
+Date: Thu, 22 Oct 2026 19:29:34 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+$ curl -s -o /dev/null -w "%{http_code} %{content_type}\n" http://127.0.0.1:4109/assets/no-existe.js
+404 text/plain; charset=utf-8
+$ curl -sI http://127.0.0.1:4109/assets/index-Cs1CcfeN.js | grep -i cache-control
+cache-control: public, max-age=31536000, immutable
+$ curl -s --path-as-is -o /dev/null -w "%{http_code} %{content_type}\n" http://127.0.0.1:4109/../../etc/passwd
+200 text/html; charset=utf-8
+$ curl -s -X POST -H "content-type: application/json" -d '{"nombre":"correo","url":"https://correo.example/","timeoutMs":1500}' -w " → %{http_code}\n" http://127.0.0.1:4109/api/servicios
+{"nombre":"correo","tipo":"disponible","codigoHttp":200,"duracionMs":75} → 201
+$ curl -sI http://127.0.0.1:4109/favicon.ico | head -3
+HTTP/1.1 200 OK
+content-type: text/html; charset=utf-8
+cache-control: no-cache

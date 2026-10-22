@@ -1,0 +1,230 @@
+$ npx vitest run --reporter=default src/detalle/PaginaServicio.test.tsx
+
+ RUN  v5.0.5 ~/curso-react/revisor
+
+ ❯ src/detalle/PaginaServicio.test.tsx (3 tests | 1 failed) 1346ms
+   ❯ la página de un servicio (3)
+     ✓ muestra el detalle del servicio de la dirección 151ms
+     ✓ volver a revisar deja un aviso en la bandeja 93ms
+     × si la actualización del detalle falla, conserva el detalle y la nota que se escribía 1102ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/detalle/PaginaServicio.test.tsx > la página de un servicio > si la actualización del detalle falla, conserva el detalle y la nota que se escribía
+TestingLibraryElementError: Unable to find an element with the text: /Mostrando el último detalle que llegó/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header>
+      <h1>
+        Revisor
+      </h1>
+      <nav
+        aria-label="Principal"
+      >
+        <a
+          class=""
+          data-discover="true"
+          href="/"
+        >
+          Reporte
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/servicios/nuevo"
+        >
+          Dar de alta
+        </a>
+      </nav>
+      <fieldset
+        class="preferencias"
+      >
+        <legend>
+          Preferencias
+        </legend>
+        <label>
+          <input
+            checked=""
+            type="checkbox"
+          />
+           
+          Mostrar duración
+        </label>
+        <label>
+          <input
+            type="checkbox"
+          />
+           
+          Vista compacta
+        </label>
+      </fieldset>
+    </header>
+    <section
+      aria-label="Avisos"
+      class="bandeja"
+    >
+      <div
+        aria-atomic="false"
+        role="status"
+      >
+        <ul>
+          <li
+            class="aviso-exito"
+          >
+            pagos se volvió a revisar: disponible
+             
+            <button
+              aria-label="Descartar: pagos se volvió a revisar: disponible"
+              type="button"
+            >
+              Descartar
+            </button>
+          </li>
+        </ul>
+      </div>
+    </section>
+    <main>
+      <section
+        aria-label="Servicio pagos"
+        class="tarjeta"
+      >
+        <h2>
+          Servicio pagos
+        </h2>
+        <p
+          role="alert"
+        >
+          No se pudo cargar el detalle: 
+          la API respondió 503
+        </p>
+        <p>
+          <a
+            data-discover="true"
+            href="/"
+          >
+            Volver al reporte
+          </a>
+        </p>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header>
+      <h1>
+        Revisor
+      </h1>
+      <nav
+        aria-label="Principal"
+      >
+        <a
+          class=""
+          data-discover="true"
+          href="/"
+        >
+          Reporte
+        </a>
+        <a
+          class=""
+          data-discover="true"
+          href="/servicios/nuevo"
+        >
+          Dar de alta
+        </a>
+      </nav>
+      <fieldset
+        class="preferencias"
+      >
+        <legend>
+          Preferencias
+        </legend>
+        <label>
+          <input
+            checked=""
+            type="checkbox"
+          />
+           
+          Mostrar duración
+        </label>
+        <label>
+          <input
+            type="checkbox"
+          />
+           
+          Vista compacta
+        </label>
+      </fieldset>
+    </header>
+    <section
+      aria-label="Avisos"
+      class="bandeja"
+    >
+      <div
+        aria-atomic="false"
+        role="status"
+      >
+        <ul>
+          <li
+            class="aviso-exito"
+          >
+            pagos se volvió a revisar: disponible
+             
+            <button
+              aria-label="Descartar: pagos se volvió a revisar: disponible"
+              type="button"
+            >
+              Descartar
+            </button>
+          </li>
+        </ul>
+      </div>
+    </section>
+    <main>
+      <section
+        aria-label="Servicio pagos"
+        class="tarjeta"
+      >
+        <h2>
+          Servicio pagos
+        </h2>
+        <p
+          role="alert"
+        >
+          No se pudo cargar el detalle: 
+          la API respondió 503
+        </p>
+        <p>
+          <a
+            data-discover="true"
+            href="/"
+          >
+            Volver al reporte
+          </a>
+        </p>
+      </section>
+    </main>
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ src/detalle/PaginaServicio.test.tsx:45:25
+     43|     await usuario.click(screen.getByRole("button", { name: "Volver a r…
+     44|
+     45|     expect(await screen.findByText(/Mostrando el último detalle que ll…
+       |                         ^
+     46|     expect(screen.getByText("En falla: HTTP 503")).toBeDefined();
+     47|     expect((screen.getByLabelText("Nota sobre pagos") as HTMLTextAreaE…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  16:10:48
+   Duration  2.43s (tests 58%, environment 33%, transform 3%, import 3%, setup 2%)
+
+[código de salida: 1]

@@ -1,0 +1,34 @@
+--- revisor/src/reporte/useReporte.ts	2026-10-21 01:41:41
++++ copia-lazo/src/reporte/useReporte.ts	2026-10-21 16:02:58
+@@ -1,4 +1,4 @@
+-import { useEffect, useEffectEvent, useState } from "react";
++import { useEffect, useState } from "react";
+ import type { ReportePublico } from "../compartido/contrato";
+ import type { Cargar } from "./cargar";
+ 
+@@ -14,7 +14,6 @@
+ ): { readonly carga: Carga; readonly recargar: () => void } {
+   const [carga, establecerCarga] = useState<Carga>({ tipo: "cargando" });
+   const [intento, establecerIntento] = useState(0);
+-  const avisarRecibido = useEffectEvent(alRecibir);
+ 
+   useEffect(() => {
+     const control = new AbortController();
+@@ -23,7 +22,7 @@
+       try {
+         const reporte = await cargar(control.signal);
+         establecerCarga({ tipo: "listo", reporte });
+-        avisarRecibido(reporte);
++        alRecibir(reporte);
+       } catch (error: unknown) {
+         if (control.signal.aborted) {
+           return;
+@@ -41,7 +40,7 @@
+       control.abort();
+       clearInterval(temporizador);
+     };
+-  }, [cargar, cadaMs, intento]);
++  }, [cargar, cadaMs, intento, alRecibir]);
+ 
+   function recargar(): void {
+     establecerCarga({ tipo: "cargando" });

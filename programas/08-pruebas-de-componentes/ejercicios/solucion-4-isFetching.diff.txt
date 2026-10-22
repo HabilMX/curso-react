@@ -1,0 +1,4 @@
+17c17
+<   if (consulta.isPending) {
+---
+>   if (consulta.isFetching) {

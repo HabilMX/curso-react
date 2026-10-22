@@ -34,8 +34,8 @@ function Controlado() {
   const [nombre, establecerNombre] = useState("correo");
   return (
     <>
-      <input aria-label="controlado" value={nombre} onChange={(e) => establecerNombre(e.target.value.toUpperCase())} />
-      <output>{nombre}</output>
+      <input aria-label="controlado" value={nombre} onChange={(e) => establecerNombre(e.target.value)} />
+      <output>{nombre.toUpperCase()}</output>
     </>
   );
 }
@@ -57,7 +57,9 @@ async function probar(titulo: string, arbol: React.ReactNode, texto: string): Pr
   }
 
   await act(async () => escribir(campo, texto));
-  console.log(`  escribí «${texto}» → el campo dice «${campo.value}»`);
+  const salida = contenedor.querySelector("output");
+  const derivado = salida === null ? "" : `; el <output> dice «${salida.textContent}»`;
+  console.log(`  escribí «${texto}» → el campo dice «${campo.value}»${derivado}`);
   await act(async () => raiz.unmount());
   contenedor.remove();
 }

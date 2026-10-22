@@ -21,7 +21,7 @@ export function FilaEstado({
   readonly estado: EstadoPublico;
   readonly seleccionado: boolean;
   readonly tieneNota: boolean;
-  readonly alSeleccionar: (nombre: string) => void;
+  readonly alSeleccionar: (nombre: string | null) => void;
 }) {
   return (
     <li className={estado.tipo}>
@@ -29,7 +29,7 @@ export function FilaEstado({
         type="button"
         className="seleccionar"
         aria-pressed={seleccionado}
-        onClick={() => alSeleccionar(estado.nombre)}
+        onClick={() => alSeleccionar(seleccionado ? null : estado.nombre)}
       >
         {estado.nombre}
       </button>
